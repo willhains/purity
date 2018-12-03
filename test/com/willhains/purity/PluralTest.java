@@ -302,4 +302,31 @@ public class PluralTest
 		assertThat(x.get(1), is("b"));
 		assertThat(x.get(2), is("c"));
 	}
+	
+	@Test
+	public void shouldMutateMultiplePluralsIndependently()
+	{
+		final Plural<String> x = Plural.of("a", "b");
+		final Plural<String> y = x.append("c");
+		final Plural<String> z = x.append("d");
+		assertThat(z, is(Plural.of("a", "b", "d")));
+		assertThat(y, is(Plural.of("a", "b", "c")));
+	}
+	
+	@Test
+	public void shouldNotStackOverflowWhenAppendingManyElements()
+	{
+		final int stackSize = 100_000;
+		Plural<Integer> x = Plural.empty();
+		for(int i = 0; i < stackSize; i++) x = x.append(i);
+		assertThat(x.size(), is(stackSize));
+	}
+	
+	@Test
+	public void shouldAddElementsToEnd()
+	{
+		final Plural<String> x = Plural.of("a", "b");
+		final Plural<String> y = x.append("c").append("d").append("e");
+		assertThat(y, is(Plural.of("a", "b", "c", "d", "e")));
+	}
 }

@@ -230,4 +230,6 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 			return list;
 		}));
 	}
+	
+	public Plural<Element> append(final Element element) { return _mutate(list -> list.add(element)); }
 }
