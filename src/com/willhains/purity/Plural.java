@@ -162,4 +162,20 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
+	
+	/// Lazy index of entries for fast contains() operation ///
+	
+	private Set<Element> _index;
+	private Set<Element> _index() { return _index == null ? _index = new HashSet<>(_prepareForRead()) : _index; }
+	
+	/**
+	 * Search the elements for one that equals the specified element.
+	 * Performance for repeated searches of the same {@link Plural} should be significantly faster than a {@link List}.
+	 *
+	 * @param element the element for which to search. Matched by {@link Object#equals}.
+	 * @return {@code true} if the element was present in the elements; {@code false} if not.
+	 */
+	public boolean contains(final Element element) { return _index().contains(element); }
+	public boolean containsAll(final Element... elements) { return _index().containsAll(Arrays.asList(elements)); }
+	public boolean containsAll(final Collection<Element> elements) { return _index().containsAll(elements); }
 }

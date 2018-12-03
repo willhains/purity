@@ -244,4 +244,23 @@ public class PluralTest
 		assertFalse(x.isEmpty());
 		assertThat(x.size(), is(1));
 	}
+	
+	@Test
+	public void shouldContainElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertTrue(x.contains("a"));
+		assertTrue(x.contains("c"));
+		assertTrue(x.containsAll(Arrays.asList("a", "b")));
+		assertTrue(x.containsAll("b", "c"));
+	}
+	
+	@Test
+	public void shouldNotContainElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertFalse(x.contains("d"));
+		assertFalse(x.containsAll(Arrays.asList("a", "d")));
+		assertFalse(x.containsAll("b", "e"));
+	}
 }
