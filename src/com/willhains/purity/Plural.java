@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -186,6 +187,14 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Element get(int elementAtIndex) { return _prepareForRead().get(elementAtIndex); }
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
+	
+	/** Apply {@code reducer} repeatedly to summarise all the elements as a single value. */
+	public <Result> Result reduce(final Result initialValue, final BiFunction<Result, Element, Result> reducer)
+	{
+		Result result = initialValue;
+		for(final Element element: this) { result = reducer.apply(result, element); }
+		return result;
+	}
 	
 	/// Lazy index of entries for fast contains() operation ///
 	

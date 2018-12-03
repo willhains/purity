@@ -438,4 +438,12 @@ public class PluralTest
 		final Plural<String> y = x.flatMap($ -> Plural.of($ + "1", $ + "2"));
 		assertThat(y, is(Plural.of("apple1", "apple2", "banana1", "banana2", "coconut1", "coconut2")));
 	}
+	
+	@Test
+	public void shouldCombineAllElementsToResult()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		final int length = x.reduce(0, ($, element) -> $ + element.length());
+		assertThat(length, is(18));
+	}
 }
