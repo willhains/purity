@@ -1,9 +1,12 @@
 package com.willhains.purity;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 /**
  * An immutable ordered collection of elements, that can be treated as a {@link Value}, so long as the {@link Element}s
@@ -114,6 +117,12 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	{
 		if(elements.isEmpty()) return empty();
 		return new Plural<>(new Reading<>(new ArrayList<>(elements)));
+	}
+	
+	/** @return a {@link Collector} that wraps the contents in a {@link Plural}. */
+	public static <@Value Element> Collector<Element, ?, Plural<Element>> toPlural()
+	{
+		return collectingAndThen(toList(), list -> new Plural<>(new Reading<>(list)));
 	}
 	
 	private MutationState<Element> _state;

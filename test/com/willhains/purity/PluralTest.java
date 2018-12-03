@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.willhains.purity.Plural.toPlural;
 import static java.util.stream.Collectors.joining;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -268,5 +269,14 @@ public class PluralTest
 		assertTrue(set.containsAll(Arrays.asList("a", "b", "c")));
 		assertThat(set.size(), is(3));
 		assertThat(set.stream().collect(joining("")), is("abc"));
+	}
+	
+	@Test
+	public void shouldCollectToPlural()
+	{
+		final List<String> list = Arrays.asList("a", "b", "c");
+		final Plural<String> x = list.stream().collect(toPlural());
+		assertThat(x.size(), is(3));
+		assertTrue(x.containsAll("a", "b", "c"));
 	}
 }
