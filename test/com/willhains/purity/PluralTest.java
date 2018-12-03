@@ -329,4 +329,12 @@ public class PluralTest
 		final Plural<String> y = x.append("c").append("d").append("e");
 		assertThat(y, is(Plural.of("a", "b", "c", "d", "e")));
 	}
+	
+	@Test
+	public void shouldRemoveFirstMatchingElement()
+	{
+		final Plural<String> x = Plural.of("a", "b", "a", "b", "c");
+		final Plural<String> y = x.delete("b");
+		assertThat(y, is(Plural.of("a", "a", "b", "c")));
+	}
 }
