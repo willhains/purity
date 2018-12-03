@@ -159,4 +159,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	@Override public Iterator<Element> iterator() { return asList().iterator(); }
 	public Stream<Element> stream() { return _prepareForRead().stream(); }
+	
+	public int size() { return _prepareForRead().size(); }
+	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 }

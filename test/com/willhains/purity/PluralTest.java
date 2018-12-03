@@ -228,4 +228,20 @@ public class PluralTest
 		final Plural<String> x = Plural.of("a", "b", "c");
 		assertFalse(x.equals(list));
 	}
+
+	@Test
+	public void shouldBeEmpty()
+	{
+		final Plural<String> x = Plural.empty();
+		assertTrue(x.isEmpty());
+		assertThat(x.size(), is(0));
+	}
+	
+	@Test
+	public void shouldBeNonEmpty()
+	{
+		final Plural<String> x = Plural.of("a");
+		assertFalse(x.isEmpty());
+		assertThat(x.size(), is(1));
+	}
 }
