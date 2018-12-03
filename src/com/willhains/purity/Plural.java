@@ -241,4 +241,32 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
 	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
+	
+	/**
+	 * @param start the index from which to start the new {@link Plural}.
+	 * @return a new {@link Plural} subset of this, starting at the specified index.
+	 */
+	public Plural<Element> fromIndex(final int start)
+	{
+		if(start < 0) throw new IndexOutOfBoundsException("start(" + start + ") < 0");
+		return _transform(list ->
+		{
+			final int end = list.size();
+			return list.subList(Math.min(end, start), end);
+		});
+	}
+	
+	/**
+	 * @param length the length to which to start the new {@link Plural}.
+	 * @return a new {@link Plural} subset of this, from index zero up to the specified length.
+	 */
+	public Plural<Element> truncate(final int length)
+	{
+		if(length < 0) throw new IndexOutOfBoundsException("length(" + length + ") < 0");
+		return _transform(list ->
+		{
+			final int end = Math.min(list.size(), length);
+			return list.subList(0, end);
+		});
+	}
 }

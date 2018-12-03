@@ -353,4 +353,49 @@ public class PluralTest
 		final Plural<String> y = x.filter(s -> s.startsWith("b"));
 		assertThat(y, is(Plural.of("banana", "blueberry")));
 	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapFromIndexTooLow()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.fromIndex(-1);
+	}
+	
+	@Test
+	public void shouldNormaliseWhenFromIndexTooHigh()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.fromIndex(4);
+	}
+	
+	@Test
+	public void shouldGetLastXElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.fromIndex(1);
+		assertThat(y, is(Plural.of("b", "c")));
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapTruncateIndexTooLow()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.truncate(-1);
+		assertThat(y, is(Plural.empty()));
+	}
+	
+	@Test
+	public void shouldNormaliseWhenTruncateIndexTooHigh()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.truncate(4);
+	}
+	
+	@Test
+	public void shouldGetFirstXElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.truncate(2);
+		assertThat(y, is(Plural.of("a", "b")));
+	}
 }
