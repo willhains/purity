@@ -279,4 +279,27 @@ public class PluralTest
 		assertThat(x.size(), is(3));
 		assertTrue(x.containsAll("a", "b", "c"));
 	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapIndexTooLow()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.get(-1);
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapIndexTooHigh()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.get(3);
+	}
+	
+	@Test
+	public void shouldGetElementAtValidIndex()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertThat(x.get(0), is("a"));
+		assertThat(x.get(1), is("b"));
+		assertThat(x.get(2), is("c"));
+	}
 }
