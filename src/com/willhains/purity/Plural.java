@@ -3,8 +3,7 @@ package com.willhains.purity;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.*;
 
 /**
  * An immutable ordered collection of elements, that can be treated as a {@link Value}, so long as the {@link Element}s
@@ -156,6 +155,9 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	/** @return an immutable {@link List} containing the elements of this {@link Plural}. */
 	public List<Element> asList() { return unmodifiableList(_prepareForRead()); }
+	
+	/** @return an immutable {@link Set} containing the distinct elements of this {@link Plural}. */
+	public Set<Element> asSet() { return unmodifiableSet(_index()); }
 	
 	@Override public Iterator<Element> iterator() { return asList().iterator(); }
 	public Stream<Element> stream() { return _prepareForRead().stream(); }

@@ -3,10 +3,6 @@ package com.willhains.purity;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
@@ -262,5 +258,15 @@ public class PluralTest
 		assertFalse(x.contains("d"));
 		assertFalse(x.containsAll(Arrays.asList("a", "d")));
 		assertFalse(x.containsAll("b", "e"));
+	}
+	
+	@Test
+	public void shouldExportUniqueElementsInOrder()
+	{
+		final Plural<String> x = Plural.of("a", "a", "b", "a", "c", "b", "a");
+		final Set<String> set = x.asSet();
+		assertTrue(set.containsAll(Arrays.asList("a", "b", "c")));
+		assertThat(set.size(), is(3));
+		assertThat(set.stream().collect(joining("")), is("abc"));
 	}
 }
