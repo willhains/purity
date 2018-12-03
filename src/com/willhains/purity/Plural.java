@@ -2,6 +2,7 @@ package com.willhains.purity;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -233,4 +234,6 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	public Plural<Element> append(final Element element) { return _mutate(list -> list.add(element)); }
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
+	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
+	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
 }

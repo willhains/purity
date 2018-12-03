@@ -337,4 +337,20 @@ public class PluralTest
 		final Plural<String> y = x.delete("b");
 		assertThat(y, is(Plural.of("a", "a", "b", "c")));
 	}
+	
+	@Test
+	public void shouldRemoveMatchingElements()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "blueberry", "coconut", "date");
+		final Plural<String> y = x.deleteIf(s -> s.startsWith("b"));
+		assertThat(y, is(Plural.of("apple", "coconut", "date")));
+	}
+	
+	@Test
+	public void shouldKeepMatchingElements()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "blueberry", "coconut", "date");
+		final Plural<String> y = x.filter(s -> s.startsWith("b"));
+		assertThat(y, is(Plural.of("banana", "blueberry")));
+	}
 }
