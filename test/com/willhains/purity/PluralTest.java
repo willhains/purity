@@ -398,4 +398,44 @@ public class PluralTest
 		final Plural<String> y = x.truncate(2);
 		assertThat(y, is(Plural.of("a", "b")));
 	}
+	
+	@Test
+	public void shouldExtractZeroLengthPlurals()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertThat(x.fromIndex(3), is(Plural.empty()));
+		assertThat(x.truncate(0), is(Plural.empty()));
+	}
+	
+	@Test
+	public void shouldConvertSingleElements()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		final Plural<String> y = x.map(String::toUpperCase);
+		assertThat(y, is(Plural.of("APPLE", "BANANA", "COCONUT")));
+	}
+	
+	@Test
+	public void shouldConvertToEmpty()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		final Plural<String> y = x.flatMap($ -> Plural.empty());
+		assertThat(y, is(Plural.empty()));
+	}
+	
+	@Test
+	public void shouldConvertToSameSize()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		final Plural<Integer> y = x.flatMap($ -> Plural.of($.length()));
+		assertThat(y, is(Plural.of(5, 6, 7)));
+	}
+	
+	@Test
+	public void shouldConvertToLarger()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		final Plural<String> y = x.flatMap($ -> Plural.of($ + "1", $ + "2"));
+		assertThat(y, is(Plural.of("apple1", "apple2", "banana1", "banana2", "coconut1", "coconut2")));
+	}
 }

@@ -2,8 +2,8 @@ package com.willhains.purity;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -205,14 +205,14 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	/// Mutations ///
 	
-	private static final class Mutating<@Value Element> implements MutationState<Element>
+	private static final class Mutating<@Value Element, @Value Converted> implements MutationState<Converted>
 	{
 		private static final int _MAX_GENERATION = 4096;
 		private final MutationState<Element> _inner;
-		private final UnaryOperator<List<Element>> _mutator;
+		private final Function<List<Element>, List<Converted>> _mutator;
 		private final int _generation;
 		
-		Mutating(final MutationState<Element> inner, final UnaryOperator<List<Element>> mutator)
+		Mutating(final MutationState<Element> inner, final Function<List<Element>, List<Converted>> mutator)
 		{
 			_inner = inner.generation() > _MAX_GENERATION ? inner.prepareForRead() : inner;
 			_mutator = mutator;
@@ -220,7 +220,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		}
 		
 		@Override public int generation() { return _generation; }
-		@Override public List<Element> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
+		@Override public List<Converted> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
 	}
 	
 	private Plural<Element> _mutate(final Consumer<List<Element>> mutator)
@@ -232,7 +232,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		}));
 	}
 	
-	private Plural<Element> _transform(final UnaryOperator<List<Element>> transformer)
+	private <Converted> Plural<Converted> _transform(final Function<List<Element>, List<Converted>> transformer)
 	{
 		return new Plural<>(new Mutating<>(_state, transformer));
 	}
@@ -267,6 +267,33 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		{
 			final int end = Math.min(list.size(), length);
 			return list.subList(0, end);
+		});
+	}
+	
+	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
+	public <@Value Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
+	{
+		return _transform(list ->
+		{
+			@SuppressWarnings("unchecked") final List<Object> before = (List<Object>)list;
+			for(final ListIterator<Object> i = before.listIterator(); i.hasNext();)
+			{
+				@SuppressWarnings("unchecked") final Element element = (Element)i.next();
+				i.set(mapper.apply(element));
+			}
+			@SuppressWarnings("unchecked") final List<Converted> after = (List<Converted>)before;
+			return after;
+		});
+	}
+	
+	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
+	public <@Value Converted> Plural<Converted> flatMap(final Function<Element, Plural<Converted>> mapper)
+	{
+		return _transform(list ->
+		{
+			final List<Converted> converted = new ArrayList<>();
+			list.forEach(element -> converted.addAll(mapper.apply(element)._prepareForRead()));
+			return converted;
 		});
 	}
 }
