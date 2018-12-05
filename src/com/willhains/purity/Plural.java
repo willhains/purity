@@ -305,4 +305,19 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 			return converted;
 		});
 	}
+	
+	/**
+	 * Zip together two {@link Plural}s into one, where the elements are {@link Pair}s of corresponding index positions.
+	 */
+	public <@Value Right> Plural<Pair<Element, Right>> zip(final Plural<Right> rightElements)
+	{
+		return _transform(left ->
+		{
+			final List<Right> right = rightElements._prepareForRead();
+			final int zipSize = Math.min(left.size(), right.size());
+			final List<Pair<Element, Right>> zipped = new ArrayList<>(zipSize);
+			for(int i = 0; i < zipSize; i++) zipped.add(Pair.of(left.get(i), right.get(i)));
+			return zipped;
+		});
+	}
 }

@@ -446,4 +446,21 @@ public class PluralTest
 		final int length = x.reduce(0, ($, element) -> $ + element.length());
 		assertThat(length, is(18));
 	}
+	
+	@Test
+	public void shouldZipToSizeOfShorterPlural()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c", "d");
+		final Plural<String> y = Plural.of("apple", "banana", "coconut");
+		assertThat(x.zip(y), is(Plural.of(
+			Pair.of("a", "apple"),
+			Pair.of("b", "banana"),
+			Pair.of("c", "coconut")
+		)));
+		assertThat(y.zip(x), is(Plural.of(
+			Pair.of("apple", "a"),
+			Pair.of("banana", "b"),
+			Pair.of("coconut", "c")
+		)));
+	}
 }
