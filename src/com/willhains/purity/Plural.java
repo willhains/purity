@@ -232,6 +232,11 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		}));
 	}
 	
+	private Plural<Element> _transform(final UnaryOperator<List<Element>> transformer)
+	{
+		return new Plural<>(new Mutating<>(_state, transformer));
+	}
+	
 	public Plural<Element> append(final Element element) { return _mutate(list -> list.add(element)); }
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
