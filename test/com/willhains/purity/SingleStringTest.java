@@ -254,4 +254,12 @@ public class SingleStringTest
 		final Name x = new Name("Will Hains");
 		assertThat(x.replaceLiteral("i", "_"), is(new Name("W_ll Ha_ns")));
 	}
+	
+	@Test
+	public void shouldSplitAndConstructTokens()
+	{
+		final Name x = new Name("Will Hains");
+		class T extends SingleString<T> { T(final String s) { super(s, T::new); } }
+		assertThat(x.split(" ", T::new), is(Plural.of(new T("Will"), new T("Hains"))));
+	}
 }

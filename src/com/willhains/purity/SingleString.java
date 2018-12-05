@@ -132,4 +132,12 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	{
 		return map(s -> s.replace(literal, replacement));
 	}
+	
+	/** Split the raw string into tokens by delimiter {@code regex}. */
+	public final <@Value Token> Plural<Token> split(
+		final String regex,
+	    final Function<String, Token> tokenConstructor)
+	{
+		return Plural.copy(raw.split(regex)).map(tokenConstructor);
+	}
 }
