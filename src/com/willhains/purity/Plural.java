@@ -1,6 +1,8 @@
 package com.willhains.purity;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -125,6 +127,11 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		return collectingAndThen(toList(), list -> new Plural<>(new Reading<>(list)));
 	}
 	
+	// A Plural may be in one of two states: Reading, or Mutating. A Plural in Mutating state may change to the
+	// equivalent Reading state, but not the reverse. The Reading state is always the final state of a Plural.
+	// A Mutating state has exactly one possible equivalent Reading state. The Mutating state itself cannot change.
+	// This property is mutable and non-volatile, because even if multiple threads observe it in a different state,
+	// each can only mutate it to the same eventual Reading state, so all threads always observe the same result.
 	private MutationState<Element> _state;
 	private Plural(final MutationState<Element> state) { _state = state; }
 	
@@ -143,7 +150,9 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	private @Value interface MutationState<@Value Element>
 	{
-		Reading<Element> prepareForRead();
+		int generation();
+		default Reading<Element> prepareForRead() { return new Reading<>(prepareForWrite()); }
+		List<Element> prepareForWrite();
 	}
 	
 	// The state where all mutations have been applied to the underlying collection, and it can now be read
@@ -151,7 +160,9 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	{
 		private final List<Element> _elements;
 		Reading(final List<Element> elements) { _elements = elements; }
+		@Override public int generation() { return 0; }
 		@Override public Reading<Element> prepareForRead() { return this; }
+		@Override public List<Element> prepareForWrite() { return new ArrayList<>(_elements); }
 	}
 	
 	// Apply all mutations, collapsing them to the resulting collection, then return that collection
@@ -190,4 +201,33 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public boolean contains(final Element element) { return _index().contains(element); }
 	public boolean containsAll(final Element... elements) { return _index().containsAll(Arrays.asList(elements)); }
 	public boolean containsAll(final Collection<Element> elements) { return _index().containsAll(elements); }
+	
+	/// Mutations ///
+	
+	private static final class Mutating<@Value Element> implements MutationState<Element>
+	{
+		private static final int _MAX_GENERATION = 4096;
+		private final MutationState<Element> _inner;
+		private final UnaryOperator<List<Element>> _mutator;
+		private final int _generation;
+		
+		Mutating(final MutationState<Element> inner, final UnaryOperator<List<Element>> mutator)
+		{
+			_inner = inner.generation() > _MAX_GENERATION ? inner.prepareForRead() : inner;
+			_mutator = mutator;
+			_generation = _inner.generation() + 1;
+		}
+		
+		@Override public int generation() { return _generation; }
+		@Override public List<Element> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
+	}
+	
+	private Plural<Element> _mutate(final Consumer<List<Element>> mutator)
+	{
+		return new Plural<>(new Mutating<>(_state, list ->
+		{
+			mutator.accept(list);
+			return list;
+		}));
+	}
 }
