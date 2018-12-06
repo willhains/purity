@@ -530,4 +530,28 @@ public class PluralTest
 		assertFalse(x.getFirst().isPresent());
 		assertFalse(x.getLast().isPresent());
 	}
+	
+	@Test
+	public void shouldRemoveFirstElement()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.deleteFirst();
+		assertThat(y, is(Plural.of("b", "c")));
+	}
+	
+	@Test
+	public void shouldRemoveLastElement()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.deleteLast();
+		assertThat(y, is(Plural.of("a", "b")));
+	}
+	
+	@Test
+	public void shouldRemoveNothingWithoutError()
+	{
+		final Plural<String> x = Plural.empty();
+		assertThat(x.deleteFirst(), is(x));
+		assertThat(x.deleteLast(), is(x));
+	}
 }

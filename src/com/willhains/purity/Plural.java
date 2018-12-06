@@ -279,6 +279,18 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		return new Plural<>(new Mutating<>(_state, list -> list.stream().distinct().collect(toList())), true);
 	}
 	
+	/** @return a new {@link Plural} with the first element removed. */
+	public Plural<Element> deleteFirst()
+	{
+		return _mutate(list -> { if(!list.isEmpty()) list.remove(0); });
+	}
+	
+	/** @return a new {@link Plural} with the last element removed. */
+	public Plural<Element> deleteLast()
+	{
+		return _mutate(list -> { if(!list.isEmpty()) list.remove(list.size() - 1); });
+	}
+	
 	/**
 	 * @param start the index from which to start the new {@link Plural}.
 	 * @return a new {@link Plural} subset of this, starting at the specified index.
