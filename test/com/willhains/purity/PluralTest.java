@@ -463,4 +463,12 @@ public class PluralTest
 			Pair.of("coconut", "c")
 		)));
 	}
+	
+	@Test
+	public void shouldJoinWithDelimiter()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertThat(x.join(""), is("abc"));
+		assertThat(x.join("-"), is("a-b-c"));
+	}
 }

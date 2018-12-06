@@ -9,8 +9,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * An immutable ordered collection of elements, that can be treated as a {@link Value}, so long as the {@link Element}s
@@ -187,6 +186,9 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Element get(int elementAtIndex) { return _prepareForRead().get(elementAtIndex); }
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
+	
+	/** @return a string containing all the elements, separated by a delimiter. */
+	public String join(final CharSequence delim) { return stream().map(Object::toString).collect(joining(delim)); }
 	
 	/** Apply {@code reducer} repeatedly to summarise all the elements as a single value. */
 	public <Result> Result reduce(final Result initialValue, final BiFunction<Result, Element, Result> reducer)
