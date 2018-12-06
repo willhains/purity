@@ -249,6 +249,8 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	public Plural<Element> append(final Element element) { return _mutate(list -> list.add(element)); }
+	public Plural<Element> append(final Plural<Element> p) { return _mutate(list -> list.addAll(p._prepareForRead())); }
+	public Plural<Element> append(final Collection<Element> c) { return _mutate(list -> list.addAll(c)); }
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
 	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }

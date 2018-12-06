@@ -471,4 +471,22 @@ public class PluralTest
 		assertThat(x.join(""), is("abc"));
 		assertThat(x.join("-"), is("a-b-c"));
 	}
+	
+	@Test
+	public void shouldAddAllFromPlural()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = Plural.of("d", "e", "f");
+		final Plural<String> xy = x.append(y);
+		assertThat(xy.join(""), is("abcdef"));
+	}
+	
+	@Test
+	public void shouldAddAllFromCollection()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final List<String> y = Arrays.asList("d", "e", "f");
+		final Plural xy = x.append(y);
+		assertThat(xy.join(""), is("abcdef"));
+	}
 }
