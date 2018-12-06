@@ -505,4 +505,29 @@ public class PluralTest
 		final Plural<String> z = y.distinct();
 		assertThat(z, is(sameInstance(y)));
 	}
+	
+	public void shouldReturnFirstElement()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Optional<String> first = x.getFirst();
+		assertTrue(first.isPresent());
+		assertThat(first.get(), is("a"));
+	}
+	
+	@Test
+	public void shouldReturnLastElement()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Optional<String> last = x.getLast();
+		assertTrue(last.isPresent());
+		assertThat(last.get(), is("c"));
+	}
+	
+	@Test
+	public void shouldReturnEmptyOptionalsFromEmptyPlural()
+	{
+		final Plural<String> x = Plural.empty();
+		assertFalse(x.getFirst().isPresent());
+		assertFalse(x.getLast().isPresent());
+	}
 }

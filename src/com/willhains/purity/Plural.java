@@ -189,6 +189,21 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 	
+	/** @return the first element of this collection; empty if the collection is empty. */
+	public Optional<Element> getFirst()
+	{
+		final List<Element> list = _prepareForRead();
+		return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+	}
+	
+	/** @return the last element of this collection; empty if the collection is empty. */
+	public Optional<Element> getLast()
+	{
+		final List<Element> list = _prepareForRead();
+		final int size = list.size();
+		return size == 0 ? Optional.empty() : Optional.of(list.get(size - 1));
+	}
+	
 	/** @return a string containing all the elements, separated by a delimiter. */
 	public String join(final CharSequence delim) { return stream().map(Object::toString).collect(joining(delim)); }
 	
