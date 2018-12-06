@@ -489,4 +489,20 @@ public class PluralTest
 		final Plural xy = x.append(y);
 		assertThat(xy.join(""), is("abcdef"));
 	}
+	
+	@Test
+	public void shouldRetainOnlyUniqueElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "a", "b", "c");
+		assertThat(x.distinct().join(""), is("abc"));
+	}
+	
+	@Test
+	public void shouldKeepAlreadyDistinctPlural()
+	{
+		final Plural<String> x = Plural.of("a", "b", "a", "b", "c");
+		final Plural<String> y = x.distinct();
+		final Plural<String> z = y.distinct();
+		assertThat(z, is(sameInstance(y)));
+	}
 }

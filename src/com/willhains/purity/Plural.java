@@ -133,8 +133,10 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	// A Mutating state has exactly one possible equivalent Reading state. The Mutating state itself cannot change.
 	// This property is mutable and non-volatile, because even if multiple threads observe it in a different state,
 	// each can only mutate it to the same eventual Reading state, so all threads always observe the same result.
+	private final boolean _distinct;
 	private MutationState<Element> _state;
-	private Plural(final MutationState<Element> state) { _state = state; }
+	private Plural(final MutationState<Element> state) { this(state, false); }
+	private Plural(final MutationState<Element> state, final boolean distinct) { _state = state; _distinct = distinct; }
 	
 	@Override
 	public boolean equals(final Object other)
@@ -254,6 +256,13 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
 	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
+	
+	/** @return a {@link Plural} containing only the set of unique elements (by {@link Object#equals}). */
+	public Plural<Element> distinct()
+	{
+		if(_distinct) return this;
+		return new Plural<>(new Mutating<>(_state, list -> list.stream().distinct().collect(toList())), true);
+	}
 	
 	/**
 	 * @param start the index from which to start the new {@link Plural}.
