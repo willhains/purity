@@ -554,4 +554,28 @@ public class PluralTest
 		assertThat(x.deleteFirst(), is(x));
 		assertThat(x.deleteLast(), is(x));
 	}
+	
+	@Test
+	public void shouldRequireAllToMatch()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		assertTrue(x.allMatch(s -> s.length() > 3));
+		assertFalse(x.allMatch(s -> s.startsWith("b")));
+	}
+	
+	@Test
+	public void shouldRequireAtLeastOneToMatch()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		assertTrue(x.anyMatch(s -> s.startsWith("b")));
+		assertFalse(x.anyMatch(String::isEmpty));
+	}
+	
+	@Test
+	public void shouldRequireAllToNotMatch()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "coconut");
+		assertTrue(x.noneMatch(String::isEmpty));
+		assertFalse(x.noneMatch(s -> s.startsWith("b")));
+	}
 }

@@ -188,6 +188,9 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Element get(int elementAtIndex) { return _prepareForRead().get(elementAtIndex); }
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
+	public boolean allMatch(final Predicate<Element> condition) { return stream().allMatch(condition); }
+	public boolean anyMatch(final Predicate<Element> condition) { return stream().anyMatch(condition); }
+	public boolean noneMatch(final Predicate<Element> condition) { return stream().noneMatch(condition); }
 	
 	/** @return the first element of this collection; empty if the collection is empty. */
 	public Optional<Element> getFirst()
