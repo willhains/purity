@@ -600,7 +600,30 @@ public class PluralTest
 	@Test
 	public void shouldSortByComparator()
 	{
-		final Plural<String> x = Plural.of("a", "c", "b");
-		assertThat(x.sortBy(String::compareTo), is(Plural.of("a", "b", "c")));
+		final Plural<String> x = Plural.of("acrobatics", "coconut", "banana");
+		final Comparator<String> comparator = Comparator.comparingInt(s -> s.lastIndexOf('a'));
+		assertThat(x.sortedBy(comparator), is(Plural.of("coconut", "acrobatics", "banana")));
+	}
+	
+	@Test
+	public void shouldSortByProperty()
+	{
+		final Plural<String> x = Plural.of("acrobatics", "coconut", "banana");
+		assertThat(x.sortedBy(String::length), is(Plural.of("banana", "coconut", "acrobatics")));
+	}
+	
+	@Test
+	public void shouldSortByCompareTo()
+	{
+		final Plural<String> x = Plural.of("acrobatics", "coconut", "banana");
+		assertThat(x.sorted(), is(Plural.of("acrobatics", "banana", "coconut")));
+	}
+	
+	@Test
+	public void shouldSortByToString()
+	{
+		class Name extends Single<String, Name> { Name(final String raw) { super(raw, Name::new); } }
+		final Plural<Name> x = Plural.of(new Name("Will"), new Name("Hains"));
+		assertThat(x.sorted(), is(Plural.of(new Name("Hains"), new Name("Will"))));
 	}
 }

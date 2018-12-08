@@ -9,6 +9,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 
 /**
@@ -366,5 +367,26 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		});
 	}
 	
-	public Plural<Element> sortBy(final Comparator<Element> order) { return _mutate(list -> sort(list, order)); }
+	/** @return a new {@link Plural}, sorted by the specified comparator order. */
+	public Plural<Element> sortedBy(final Comparator<Element> order) { return _mutate(list -> sort(list, order)); }
+	
+	/** @return a new {@link Plural}, sorted by the {@link Comparable} element's order. */
+	public <Property extends Comparable<Property>> Plural<Element> sortedBy(final Function<Element, Property> property)
+	{
+		return sortedBy(comparing(property));
+	}
+	
+	/** @return a new {@link Plural}, sorted by the elements' natural order. */
+	public Plural<Element> sorted()
+	{
+		return sortedBy((a, b) ->
+		{
+			if(a instanceof Comparable)
+			{
+				@SuppressWarnings("unchecked") final Comparable<Element> comparableA = (Comparable<Element>)a;
+				return comparableA.compareTo(b);
+			}
+			return a.toString().compareTo(b.toString());
+		});
+	}
 }
