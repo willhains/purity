@@ -578,4 +578,22 @@ public class PluralTest
 		assertTrue(x.noneMatch(String::isEmpty));
 		assertFalse(x.noneMatch(s -> s.startsWith("b")));
 	}
+	
+	@Test
+	public void shouldFindMaxUnlessEmpty()
+	{
+		final Plural<String> x = Plural.empty();
+		final Plural<String> y = Plural.of("apple", "banana", "coconut");
+		assertFalse(x.maxBy(String::compareTo).isPresent());
+		assertThat(y.maxBy(String::compareTo).get(), is("coconut"));
+	}
+	
+	@Test
+	public void shouldFindMinUnlessEmpty()
+	{
+		final Plural<String> x = Plural.empty();
+		final Plural<String> y = Plural.of("apple", "banana", "coconut");
+		assertFalse(x.minBy(String::compareTo).isPresent());
+		assertThat(y.minBy(String::compareTo).get(), is("apple"));
+	}
 }

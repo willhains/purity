@@ -191,6 +191,8 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public boolean allMatch(final Predicate<Element> condition) { return stream().allMatch(condition); }
 	public boolean anyMatch(final Predicate<Element> condition) { return stream().anyMatch(condition); }
 	public boolean noneMatch(final Predicate<Element> condition) { return stream().noneMatch(condition); }
+	public Optional<Element> maxBy(final Comparator<Element> comparator) { return stream().max(comparator); }
+	public Optional<Element> minBy(final Comparator<Element> comparator) { return stream().min(comparator); }
 	
 	/** @return the first element of this collection; empty if the collection is empty. */
 	public Optional<Element> getFirst()
