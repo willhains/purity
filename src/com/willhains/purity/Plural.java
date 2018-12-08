@@ -365,4 +365,6 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 			return zipped;
 		});
 	}
+	
+	public Plural<Element> sortBy(final Comparator<Element> order) { return _mutate(list -> sort(list, order)); }
 }

@@ -596,4 +596,11 @@ public class PluralTest
 		assertFalse(x.minBy(String::compareTo).isPresent());
 		assertThat(y.minBy(String::compareTo).get(), is("apple"));
 	}
+	
+	@Test
+	public void shouldSortByComparator()
+	{
+		final Plural<String> x = Plural.of("a", "c", "b");
+		assertThat(x.sortBy(String::compareTo), is(Plural.of("a", "b", "c")));
+	}
 }
