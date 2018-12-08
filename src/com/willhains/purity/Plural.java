@@ -30,6 +30,12 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		return empty;
 	}
 	
+	/** @return {@link #empty()} if {@code possiblyNullElement} is {@code null}. */
+	public static <@Value Element> Plural<Element> ofNullable(final Element possiblyNullElement)
+	{
+		return possiblyNullElement == null ? empty() : Plural.of(possiblyNullElement);
+	}
+	
 	/**
 	 * @param e1 (e2, e3, ...) elements of the collection.
 	 * @param <E> the type of elements.

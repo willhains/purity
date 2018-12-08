@@ -626,4 +626,13 @@ public class PluralTest
 		final Plural<Name> x = Plural.of(new Name("Will"), new Name("Hains"));
 		assertThat(x.sorted(), is(Plural.of(new Name("Hains"), new Name("Will"))));
 	}
+	
+	@Test
+	public void shouldReturnEmptyOnlyIfElementIsNull()
+	{
+		final Plural<String> x = Plural.ofNullable("apple");
+		final Plural<String> y = Plural.ofNullable(null);
+		assertFalse(x.isEmpty());
+		assertTrue(y.isEmpty());
+	}
 }
