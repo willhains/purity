@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
@@ -12,7 +13,7 @@ import static java.util.Collections.unmodifiableList;
  * @author willhains
  * @param <Element> the type of each element contained within.
  */
-public final @Value class Plural<@Value Element>
+public final @Value class Plural<@Value Element> implements Iterable<Element>
 {
 	private static final Plural<?> _EMPTY = new Plural<>(new Reading<>(Collections.emptyList()));
 	
@@ -101,6 +102,7 @@ public final @Value class Plural<@Value Element>
 	/** Copy {@code elements} into a new {@link Plural} value. */
 	public static <@Value Element> Plural<Element> copy(final Iterable<Element> elements)
 	{
+		if(elements instanceof Plural) return (Plural<Element>)elements;
 		if(elements instanceof Collection) return copy((Collection<Element>)elements);
 		final ArrayList<Element> list = new ArrayList<>();
 		elements.forEach(list::add);
@@ -154,4 +156,7 @@ public final @Value class Plural<@Value Element>
 	
 	/** @return an immutable {@link List} containing the elements of this {@link Plural}. */
 	public List<Element> asList() { return unmodifiableList(_prepareForRead()); }
+	
+	@Override public Iterator<Element> iterator() { return asList().iterator(); }
+	public Stream<Element> stream() { return _prepareForRead().stream(); }
 }

@@ -3,6 +3,11 @@ package com.willhains.purity;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static org.hamcrest.CoreMatchers.*;
@@ -118,6 +123,33 @@ public class PluralTest
 	}
 	
 	@Test
+	public void shouldIterateOverAllElements()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final StringBuilder sb = new StringBuilder();
+		for(final String s: x) sb.append(s);
+		assertThat(sb.toString(), is("abc"));
+	}
+	
+	@Test
+	public void shouldGenerateIndependentStreams()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Stream<String> s1 = x.stream();
+		final Stream<String> s2 = x.stream();
+		assertThat(s1.collect(joining("")), is("abc"));
+		assertThat(s2.collect(joining(",")), is("a,b,c"));
+	}
+	
+	@Test
+	public void shouldKeepPlural()
+	{
+		final Plural<String> x = Plural.of("a", "b");
+		final Plural<String> y = Plural.copy(x);
+		assertThat(y, is(sameInstance(x)));
+	}
+	
+	@Test
 	public void shouldCopyCollection()
 	{
 		final List<String> list = new ArrayList<>();
@@ -165,9 +197,9 @@ public class PluralTest
 		};
 		final Plural<Character> x = Plural.copy(iterable);
 		assertThat(x.asList().size(), is(3));
-		assertThat(x.toString(), containsString("a"));
-		assertThat(x.toString(), containsString("b"));
-		assertThat(x.toString(), containsString("c"));
+		final StringBuilder sb = new StringBuilder();
+		x.forEach(sb::append);
+		assertThat(sb.toString(), is("abc"));
 	}
 	
 	@Test
