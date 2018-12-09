@@ -201,6 +201,30 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Optional<Element> maxBy(final Comparator<Element> comparator) { return stream().max(comparator); }
 	public Optional<Element> minBy(final Comparator<Element> comparator) { return stream().min(comparator); }
 	
+	/** @return the index of the first element that satisfies the predicate; empty if none do. */
+	public OptionalInt indexOf(final Predicate<Element> where)
+	{
+		final List<Element> list = _prepareForRead();
+		for(int i = 0; i < list.size(); i++)
+		{
+			final Element element = list.get(i);
+			if(where.test(element)) return OptionalInt.of(i);
+		}
+		return OptionalInt.empty();
+	}
+	
+	/** @return the index of the last element that satisfies the predicate; empty if none do. */
+	public OptionalInt lastIndexOf(final Predicate<Element> where)
+	{
+		final List<Element> list = _prepareForRead();
+		for(int i = list.size() - 1; i >= 0; i--)
+		{
+			final Element element = list.get(i);
+			if(where.test(element)) return OptionalInt.of(i);
+		}
+		return OptionalInt.empty();
+	}
+	
 	/** @return the first element of this collection; empty if the collection is empty. */
 	public Optional<Element> getFirst()
 	{

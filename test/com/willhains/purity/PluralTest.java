@@ -681,4 +681,26 @@ public class PluralTest
 		final Plural<String> y = x.delete(1);
 		assertThat(y, is(Plural.of("a", "c")));
 	}
+	
+	@Test
+	public void shouldReturnEmptyWhenIndexNotFound()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertFalse(x.indexOf(s -> s.startsWith("x")).isPresent());
+		assertFalse(x.lastIndexOf(s -> s.startsWith("x")).isPresent());
+	}
+	
+	@Test
+	public void shouldReturnFirstIndexOfMatching()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "basketball", "coconut");
+		assertThat(x.indexOf(s -> s.startsWith("b")).getAsInt(), is(1));
+	}
+	
+	@Test
+	public void shouldReturnLastIndexOfMatching()
+	{
+		final Plural<String> x = Plural.of("apple", "banana", "basketball", "coconut");
+		assertThat(x.lastIndexOf(s -> s.startsWith("b")).getAsInt(), is(2));
+	}
 }
