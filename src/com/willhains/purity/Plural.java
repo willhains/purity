@@ -307,6 +307,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
 	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
+	public Plural<Element> reverse() { return _mutate(Collections::reverse); }
 	
 	/** @return a {@link Plural} containing only the set of unique elements (by {@link Object#equals}). */
 	public Plural<Element> distinct()

@@ -703,4 +703,13 @@ public class PluralTest
 		final Plural<String> x = Plural.of("apple", "banana", "basketball", "coconut");
 		assertThat(x.lastIndexOf(s -> s.startsWith("b")).getAsInt(), is(2));
 	}
+	
+	@Test
+	public void shouldReverseLists()
+	{
+		assertTrue(Plural.empty().reverse().isEmpty());
+		final Plural<String> x = Plural.of("a", "b", "c");
+		assertThat(x.reverse(), is(Plural.of("c", "b", "a")));
+		assertThat(x, is(Plural.of("a", "b", "c")));
+	}
 }
