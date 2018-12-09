@@ -342,6 +342,13 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		});
 	}
 	
+	/** @return a new {@link Plural}, with the element at the specified index removed. */
+	public Plural<Element> delete(final int atIndex)
+	{
+		if(atIndex < 0) throw new IndexOutOfBoundsException("atIndex(" + atIndex + ") < 0");
+		return _mutate(list -> { if(atIndex < list.size()) list.remove(atIndex); });
+	}
+	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
 	public <@Value Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
 	{
