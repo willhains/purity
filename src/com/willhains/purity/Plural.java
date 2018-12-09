@@ -331,6 +331,17 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		});
 	}
 	
+	/** @return a new {@link Plural}, with the specified element inserted at the specified index. */
+	public Plural<Element> insert(final Element element, int atIndex)
+	{
+		if(atIndex < 0) throw new IndexOutOfBoundsException("atIndex(" + atIndex + ") < 0");
+		return _mutate(list ->
+		{
+			final int index = Math.min(atIndex, list.size());
+			list.add(index, element);
+		});
+	}
+	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
 	public <@Value Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
 	{

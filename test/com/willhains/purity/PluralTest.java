@@ -635,4 +635,27 @@ public class PluralTest
 		assertFalse(x.isEmpty());
 		assertTrue(y.isEmpty());
 	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapInsertIndexTooLow()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.insert("d", -1);
+	}
+	
+	@Test
+	public void shouldNormaliseWhenInsertIndexTooHigh()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.insert("d", 4);
+		assertThat(y, is(Plural.of("a", "b", "c", "d")));
+	}
+	
+	@Test
+	public void shouldInsertElementAtIndex()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.insert("a.5", 1);
+		assertThat(y, is(Plural.of("a", "a.5", "b", "c")));
+	}
 }
