@@ -190,6 +190,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public Set<Element> asSet() { return unmodifiableSet(_index()); }
 	
 	@Override public Iterator<Element> iterator() { return asList().iterator(); }
+	public ListIterator<Element> listIterator() { return asList().listIterator(); }
 	public Stream<Element> stream() { return _prepareForRead().stream(); }
 	
 	public Element get(int elementAtIndex) { return _prepareForRead().get(elementAtIndex); }
