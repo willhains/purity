@@ -3,7 +3,9 @@ package com.willhains.purity;
 import org.junit.Test;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static com.willhains.purity.Pair.toIndex;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -183,5 +185,17 @@ public class PairTest
 		final Pair<Height, Weight> y = x.mapRight(w -> w.plus(1));
 		assertThat(y.left.raw, is(173.5));
 		assertThat(y.right.raw, is(80.4));
+	}
+	
+	@Test
+	public void shouldUseLeftAsKeyAndRightAsValue()
+	{
+		final Stream<Pair<String, Integer>> pairStream = Stream.of(
+			Pair.of("a", 1),
+			Pair.of("b", 2));
+		final Index<String, Integer> index = pairStream.collect(toIndex());
+		assertThat(index.asMap().size(), is(2));
+		assertThat(index.asMap().get("a"), is(1));
+		assertThat(index.asMap().get("b"), is(2));
 	}
 }

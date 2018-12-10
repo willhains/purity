@@ -3,8 +3,11 @@ package com.willhains.purity;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * A tuple of two values.
@@ -74,5 +77,10 @@ public final @Value class Pair<@Value Left, @Value Right>
 	public <@Value Converted> Pair<Left, Converted> mapRight(final Function<? super Right, ? extends Converted> mapper)
 	{
 		return new Pair<>(left, requireNonNull(mapper).apply(right));
+	}
+	
+	public static <Left, Right> Collector<Pair<Left, Right>, ?, Index<Left, Right>> toIndex()
+	{
+		return collectingAndThen(toMap(pair -> pair.left, pair -> pair.right), Index::copy);
 	}
 }
