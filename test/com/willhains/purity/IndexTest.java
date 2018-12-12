@@ -127,4 +127,20 @@ public class IndexTest
 		x.stream().forEach(pair -> string.append(pair.left).append('=').append(pair.right).append('|'));
 		assertThat(string.toString(), is("a=1|b=2|"));
 	}
+	
+	@Test
+	public void shouldBeEmpty()
+	{
+		final Index<String, Integer> x = Index.empty();
+		assertTrue(x.isEmpty());
+		assertThat(x.size(), is(0));
+	}
+	
+	@Test
+	public void shouldBeNonEmpty()
+	{
+		final Index<String, Integer> x = Index.of(Pair.of("a", 1));
+		assertFalse(x.isEmpty());
+		assertThat(x.size(), is(1));
+	}
 }

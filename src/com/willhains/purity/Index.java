@@ -95,4 +95,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return asMap().entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue()));
 	}
+	
+	public int size() { return _prepareForRead().size(); }
+	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 }
