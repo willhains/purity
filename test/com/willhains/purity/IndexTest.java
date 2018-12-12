@@ -76,4 +76,55 @@ public class IndexTest
 		map.put("a", 3);
 		assertThat(x.asMap().get("a"), is(1));
 	}
+	
+	@Test
+	public void shouldIterateEntriesAsPairs()
+	{
+		final Map<String, Integer> map = new HashMap<>();
+		map.put("a", 1);
+		map.put("b", 2);
+		final Index<String, Integer> x = Index.copy(map);
+		final StringBuilder string = new StringBuilder();
+		for(final Pair pair: x)
+		{
+			string.append(pair.left).append('=').append(pair.right).append('|');
+		}
+		assertThat(string.toString(), is("a=1|b=2|"));
+	}
+	
+	@Test
+	public void shouldCallbackOnEachKeyElement()
+	{
+		final Map<String, Integer> map = new HashMap<>();
+		map.put("a", 1);
+		map.put("b", 2);
+		final Index<String, Integer> x = Index.copy(map);
+		final StringBuilder string = new StringBuilder();
+		x.forEach((key, element) -> string.append(key).append('=').append(element).append('|'));
+		assertThat(string.toString(), is("a=1|b=2|"));
+	}
+	
+	@Test
+	public void shouldCallbackOnEachPair()
+	{
+		final Map<String, Integer> map = new HashMap<>();
+		map.put("a", 1);
+		map.put("b", 2);
+		final Index<String, Integer> x = Index.copy(map);
+		final StringBuilder string = new StringBuilder();
+		x.forEach(pair -> string.append(pair.left).append('=').append(pair.right).append('|'));
+		assertThat(string.toString(), is("a=1|b=2|"));
+	}
+	
+	@Test
+	public void shouldStreamKeyElementPairs()
+	{
+		final Map<String, Integer> map = new HashMap<>();
+		map.put("a", 1);
+		map.put("b", 2);
+		final Index<String, Integer> x = Index.copy(map);
+		final StringBuilder string = new StringBuilder();
+		x.stream().forEach(pair -> string.append(pair.left).append('=').append(pair.right).append('|'));
+		assertThat(string.toString(), is("a=1|b=2|"));
+	}
 }

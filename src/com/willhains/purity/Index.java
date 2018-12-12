@@ -2,7 +2,9 @@ package com.willhains.purity;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableMap;
@@ -15,7 +17,7 @@ import static java.util.Collections.unmodifiableMap;
  * @param <Key> the type of key used to index the elements.
  * @param <Element> the type of each element contained within.
  */
-public final @Value class Index<@Value Key, @Value Element>
+public final @Value class Index<@Value Key, @Value Element> implements Iterable<Pair<Key, Element>>
 {
 	private static final Index<?, ?> _EMPTY = new Index<>(new Reading<>(Collections.emptyMap()));
 	
@@ -86,4 +88,11 @@ public final @Value class Index<@Value Key, @Value Element>
 	}
 	
 	public Map<Key, Element> asMap() { return unmodifiableMap(_prepareForRead()); }
+	public void forEach(final BiConsumer<Key, Element> action) { _prepareForRead().forEach(action); }
+	public Iterator<Pair<Key, Element>> iterator() { return stream().iterator(); }
+	
+	public Stream<Pair<Key, Element>> stream()
+	{
+		return asMap().entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue()));
+	}
 }
