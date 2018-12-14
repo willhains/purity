@@ -1,9 +1,6 @@
 package com.willhains.purity;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Stream;
 
@@ -648,14 +645,17 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	/// Mutations ///
 	
-	private static final class Mutating<@Value Key, @Value Element> implements MutationState<Key, Element>
+	private static final class Mutating<@Value Key, @Value Element, @Value ConvertedKey, @Value ConvertedElement>
+		implements MutationState<ConvertedKey, ConvertedElement>
 	{
 		private static final int _MAX_GENERATION = 4096;
 		private final MutationState<Key, Element> _inner;
-		private final UnaryOperator<Map<Key, Element>> _mutator;
+		private final Function<Map<Key, Element>, Map<ConvertedKey, ConvertedElement>> _mutator;
 		private final int _generation;
 		
-		Mutating(final MutationState<Key, Element> inner, final UnaryOperator<Map<Key, Element>> mutator)
+		Mutating(
+			final MutationState<Key, Element> inner,
+			final Function<Map<Key, Element>, Map<ConvertedKey, ConvertedElement>> mutator)
 		{
 			_inner = inner.generation() > _MAX_GENERATION ? inner.prepareForRead() : inner;
 			_mutator = mutator;
@@ -663,7 +663,10 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		}
 		
 		@Override public int generation() { return _generation; }
-		@Override public Map<Key, Element> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
+		@Override public Map<ConvertedKey, ConvertedElement> prepareForWrite()
+		{
+			return _mutator.apply(_inner.prepareForWrite());
+		}
 	}
 	
 	private Index<Key, Element> _mutate(final Consumer<Map<Key, Element>> mutator)
@@ -680,6 +683,12 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return _mutate(map -> map.put(key, element));
 	}
 	
+	private <@Value ConvertedKey, @Value ConvertedElement> Index<ConvertedKey, ConvertedElement> _transform(
+		final Function<Map<Key, Element>, Map<ConvertedKey, ConvertedElement>> transformer)
+	{
+		return new Index<>(new Mutating<>(_state, transformer));
+	}
+	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
 	
 	public Index<Key, Element> deleteIf(final BiPredicate<Key, Element> where)
@@ -688,4 +697,24 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	public Index<Key, Element> filter(final BiPredicate<Key, Element> where) { return deleteIf(where.negate()); }
+	
+	public <@Value Converted> Index<Converted, Element> mapKeys(final Function<Key, Converted> mapper)
+	{
+		return _transform(before ->
+		{
+			final Map<Converted, Element> after = new HashMap<>(before.size());
+			before.forEach((key, element) -> after.put(mapper.apply(key), element));
+			return after;
+		});
+	}
+	
+	public <@Value Converted> Index<Key, Converted> mapElements(final Function<Element, Converted> mapper)
+	{
+		return _transform(before ->
+		{
+			final Map<Key, Converted> after = new HashMap<>(before.size());
+			before.forEach((key, element) -> after.put(key, mapper.apply(element)));
+			return after;
+		});
+	}
 }
