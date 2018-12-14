@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
@@ -683,4 +681,11 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
+	
+	public Index<Key, Element> deleteIf(final BiPredicate<Key, Element> where)
+	{
+		return _mutate(map -> map.entrySet().removeIf(entry -> where.test(entry.getKey(), entry.getValue())));
+	}
+	
+	public Index<Key, Element> filter(final BiPredicate<Key, Element> where) { return deleteIf(where.negate()); }
 }
