@@ -681,4 +681,6 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return _mutate(map -> map.put(key, element));
 	}
+	
+	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
 }
