@@ -676,4 +676,9 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 			return map;
 		}));
 	}
+	
+	public Index<Key, Element> append(final Key key, final Element element)
+	{
+		return _mutate(map -> map.put(key, element));
+	}
 }
