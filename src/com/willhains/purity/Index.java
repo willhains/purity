@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
@@ -610,14 +612,18 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	private @Value interface MutationState<@Value Key, @Value Element>
 	{
-		Reading<Key, Element> prepareForRead();
+		int generation();
+		default Reading<Key, Element> prepareForRead() { return new Reading<>(prepareForWrite()); }
+		Map<Key, Element> prepareForWrite();
 	}
 	
 	private static final @Value class Reading<@Value Key, @Value Element> implements MutationState<Key, Element>
 	{
 		private final Map<Key, Element> _elements;
 		Reading(final Map<Key, Element> elements) { _elements = elements; }
+		@Override public int generation() { return 0; }
 		@Override public Reading<Key, Element> prepareForRead() { return this; }
+		@Override public Map<Key, Element> prepareForWrite() { return new HashMap<>(_elements); }
 	}
 	
 	private Map<Key, Element> _prepareForRead()
@@ -641,4 +647,33 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	public boolean containsKey(final Key key) { return _prepareForRead().containsKey(key); }
 	public boolean containsElement(final Element element) { return _prepareForRead().containsValue(element); }
 	public Element get(final Key elementForKey) { return _prepareForRead().get(elementForKey); }
+	
+	/// Mutations ///
+	
+	private static final class Mutating<@Value Key, @Value Element> implements MutationState<Key, Element>
+	{
+		private static final int _MAX_GENERATION = 4096;
+		private final MutationState<Key, Element> _inner;
+		private final UnaryOperator<Map<Key, Element>> _mutator;
+		private final int _generation;
+		
+		Mutating(final MutationState<Key, Element> inner, final UnaryOperator<Map<Key, Element>> mutator)
+		{
+			_inner = inner.generation() > _MAX_GENERATION ? inner.prepareForRead() : inner;
+			_mutator = mutator;
+			_generation = _inner.generation() + 1;
+		}
+		
+		@Override public int generation() { return _generation; }
+		@Override public Map<Key, Element> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
+	}
+	
+	private Index<Key, Element> _mutate(final Consumer<Map<Key, Element>> mutator)
+	{
+		return new Index<>(new Mutating<>(_state, map ->
+		{
+			mutator.accept(map);
+			return map;
+		}));
+	}
 }
