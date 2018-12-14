@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -26,6 +27,545 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		@SuppressWarnings("unchecked") final Index<Key, Element> empty = (Index<Key, Element>)_EMPTY;
 		return empty;
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1)
+	{
+		final Map<Key, Element> map = singletonMap(key1, element1);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2)
+	{
+		final Map<Key, Element> map = new HashMap<>(2);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3)
+	{
+		final Map<Key, Element> map = new HashMap<>(3);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4)
+	{
+		final Map<Key, Element> map = new HashMap<>(4);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5)
+	{
+		final Map<Key, Element> map = new HashMap<>(5);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6)
+	{
+		final Map<Key, Element> map = new HashMap<>(6);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7)
+	{
+		final Map<Key, Element> map = new HashMap<>(7);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8)
+	{
+		final Map<Key, Element> map = new HashMap<>(8);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9)
+	{
+		final Map<Key, Element> map = new HashMap<>(9);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10)
+	{
+		final Map<Key, Element> map = new HashMap<>(10);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11)
+	{
+		final Map<Key, Element> map = new HashMap<>(11);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12)
+	{
+		final Map<Key, Element> map = new HashMap<>(12);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13)
+	{
+		final Map<Key, Element> map = new HashMap<>(13);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14)
+	{
+		final Map<Key, Element> map = new HashMap<>(14);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15)
+	{
+		final Map<Key, Element> map = new HashMap<>(15);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15,
+		final Key key16, final Element element16)
+	{
+		final Map<Key, Element> map = new HashMap<>(16);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		map.put(key16, element16);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15,
+		final Key key16, final Element element16,
+		final Key key17, final Element element17)
+	{
+		final Map<Key, Element> map = new HashMap<>(17);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		map.put(key16, element16);
+		map.put(key17, element17);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15,
+		final Key key16, final Element element16,
+		final Key key17, final Element element17,
+		final Key key18, final Element element18)
+	{
+		final Map<Key, Element> map = new HashMap<>(18);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		map.put(key16, element16);
+		map.put(key17, element17);
+		map.put(key18, element18);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15,
+		final Key key16, final Element element16,
+		final Key key17, final Element element17,
+		final Key key18, final Element element18,
+		final Key key19, final Element element19)
+	{
+		final Map<Key, Element> map = new HashMap<>(19);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		map.put(key16, element16);
+		map.put(key17, element17);
+		map.put(key18, element18);
+		map.put(key19, element19);
+		return new Index<>(new Reading<>(map));
+	}
+	
+	public static <@Value Key, @Value Element> Index<Key, Element> of(
+		final Key key1, final Element element1,
+		final Key key2, final Element element2,
+		final Key key3, final Element element3,
+		final Key key4, final Element element4,
+		final Key key5, final Element element5,
+		final Key key6, final Element element6,
+		final Key key7, final Element element7,
+		final Key key8, final Element element8,
+		final Key key9, final Element element9,
+		final Key key10, final Element element10,
+		final Key key11, final Element element11,
+		final Key key12, final Element element12,
+		final Key key13, final Element element13,
+		final Key key14, final Element element14,
+		final Key key15, final Element element15,
+		final Key key16, final Element element16,
+		final Key key17, final Element element17,
+		final Key key18, final Element element18,
+		final Key key19, final Element element19,
+		final Key key20, final Element element20)
+	{
+		final Map<Key, Element> map = new HashMap<>(20);
+		map.put(key1, element1);
+		map.put(key2, element2);
+		map.put(key3, element3);
+		map.put(key4, element4);
+		map.put(key5, element5);
+		map.put(key6, element6);
+		map.put(key7, element7);
+		map.put(key8, element8);
+		map.put(key9, element9);
+		map.put(key10, element10);
+		map.put(key11, element11);
+		map.put(key12, element12);
+		map.put(key13, element13);
+		map.put(key14, element14);
+		map.put(key15, element15);
+		map.put(key16, element16);
+		map.put(key17, element17);
+		map.put(key18, element18);
+		map.put(key19, element19);
+		map.put(key20, element20);
+		return new Index<>(new Reading<>(map));
 	}
 	
 	/**

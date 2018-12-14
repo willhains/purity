@@ -25,26 +25,13 @@ public class IndexTest
 	@Test
 	public void shouldCreateWithOneElement()
 	{
-		final Index<String, String> x = Index.of(Pair.of("a", "x"));
-		final Index<String, String> y = Index.of(Pair.of("b", "y"));
+		final Index<String, String> x = Index.of("a", "x");
+		final Index<String, String> y = Index.of("b", "y");
 		assertThat(x.asMap().size(), is(1));
 		assertNotEquals(x, y);
 		assertThat(x.toString(), containsString("a"));
 	}
 	
-	@Test
-	public void shouldCreateWithMoreElements()
-	{
-		final Index<String, Integer> x0 = Index.of();
-		final Index<String, Integer> x1 = Index.of(Pair.of("a", 1));
-		final Index<String, Integer> x2 = Index.of(Pair.of("a", 1), Pair.of("b", 2));
-		assertTrue(x0.asMap().isEmpty());
-		assertThat(x1.asMap().toString(), containsString("a"));
-		assertThat(x1.asMap().toString(), containsString("1"));
-		assertThat(x2.asMap().toString(), containsString("b"));
-		assertThat(x2.asMap().toString(), containsString("2"));
-	}
-
 	@Test
 	public void shouldCopyMap()
 	{
@@ -139,7 +126,7 @@ public class IndexTest
 	@Test
 	public void shouldBeNonEmpty()
 	{
-		final Index<String, Integer> x = Index.of(Pair.of("a", 1));
+		final Index<String, Integer> x = Index.of("a", 1);
 		assertFalse(x.isEmpty());
 		assertThat(x.size(), is(1));
 	}
