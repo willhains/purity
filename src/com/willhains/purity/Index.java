@@ -638,4 +638,6 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
+	public boolean containsKey(final Key key) { return _prepareForRead().containsKey(key); }
+	public boolean containsElement(final Element element) { return _prepareForRead().containsValue(element); }
 }
