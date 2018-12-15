@@ -689,7 +689,18 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return _mutate(map -> map.put(key, element));
 	}
 	
+	public Index<Key, Element> append(final Index<Key, Element> elements)
+	{
+		return append(elements._prepareForRead());
+	}
+	
+	public Index<Key, Element> append(final Map<Key, Element> elements)
+	{
+		return _mutate(map -> map.putAll(elements));
+	}
+	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
+	public Index<Key, Element> delete(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
 	
 	public Index<Key, Element> deleteIf(final BiPredicate<Key, Element> where)
 	{
@@ -714,6 +725,22 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		{
 			final Map<Key, Converted> after = new HashMap<>(before.size());
 			before.forEach((key, element) -> after.put(key, mapper.apply(key, element)));
+			return after;
+		});
+	}
+	
+	public Index<Element, Key> flip()
+	{
+		return flip((first, second) -> second);
+	}
+	
+	public Index<Element, Key> flip(final BinaryOperator<Key> combiner)
+	{
+		return _transform(before ->
+		{
+			final Map<Element, Key> after = new HashMap<>(before.size());
+			before.forEach((key2, element) -> after.compute(element, ($, key1) ->
+				key1 == null ? key2 : combiner.apply(key1, key2)));
 			return after;
 		});
 	}
