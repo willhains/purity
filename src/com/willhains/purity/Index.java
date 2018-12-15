@@ -678,15 +678,15 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		}));
 	}
 	
-	public Index<Key, Element> append(final Key key, final Element element)
-	{
-		return _mutate(map -> map.put(key, element));
-	}
-	
 	private <@Value ConvertedKey, @Value ConvertedElement> Index<ConvertedKey, ConvertedElement> _transform(
 		final Function<Map<Key, Element>, Map<ConvertedKey, ConvertedElement>> transformer)
 	{
 		return new Index<>(new Mutating<>(_state, transformer));
+	}
+	
+	public Index<Key, Element> append(final Key key, final Element element)
+	{
+		return _mutate(map -> map.put(key, element));
 	}
 	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
@@ -698,22 +698,22 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	public Index<Key, Element> filter(final BiPredicate<Key, Element> where) { return deleteIf(where.negate()); }
 	
-	public <@Value Converted> Index<Converted, Element> mapKeys(final Function<Key, Converted> mapper)
+	public <@Value Converted> Index<Converted, Element> mapKeys(final BiFunction<Key, Element, Converted> mapper)
 	{
 		return _transform(before ->
 		{
 			final Map<Converted, Element> after = new HashMap<>(before.size());
-			before.forEach((key, element) -> after.put(mapper.apply(key), element));
+			before.forEach((key, element) -> after.put(mapper.apply(key, element), element));
 			return after;
 		});
 	}
 	
-	public <@Value Converted> Index<Key, Converted> mapElements(final Function<Element, Converted> mapper)
+	public <@Value Converted> Index<Key, Converted> mapElements(final BiFunction<Key, Element, Converted> mapper)
 	{
 		return _transform(before ->
 		{
 			final Map<Key, Converted> after = new HashMap<>(before.size());
-			before.forEach((key, element) -> after.put(key, mapper.apply(element)));
+			before.forEach((key, element) -> after.put(key, mapper.apply(key, element)));
 			return after;
 		});
 	}
