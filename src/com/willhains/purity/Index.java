@@ -646,6 +646,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 	public boolean containsKey(final Key key) { return _prepareForRead().containsKey(key); }
 	public boolean containsElement(final Element element) { return _prepareForRead().containsValue(element); }
+	public void ifPresent(final Key key, final Consumer<Element> then) { get(key).ifPresent(then); }
 	
 	/// Mutations ///
 	
