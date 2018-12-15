@@ -4,6 +4,22 @@
 
 Build robust, *value-based* applications in Java.
 
+## Motivation
+
+You are here because...
+
+- You have tasted the sweet elixir of [value semantics][values], and you want it in Java, without an endless sea of boilerplate.
+- You have been bitten by the evils of [Stringly-typed][stringly] code one too many times.
+- Pulling all-nighters to troubleshoot bugs was fun when you were a fresh young programmer, but you're a grown-up now, and you just want the code to work.
+- You've heard promises of code reuse for years, but never seen it actually happen.
+- You expect your app will grow in size and complexity, and you don't want to have to continually rewrite everything to avoid a [spaghetti mess][spaghetti].
+- You believe in the virtues of unit testing, but somehow it always feels like a frustrating chore.
+- Performance is important to you, but code correctness and clarity are even more important in the long run.
+
+[stringly]: http://wiki.c2.com/?StringlyTyped
+[spaghetti]: https://en.wikipedia.org/wiki/Spaghetti_code
+[values]: docs/value-semantics.md
+
 ## Development Status
 
 Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
