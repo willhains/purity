@@ -694,6 +694,11 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return _mutate(map -> map.put(key, element));
 	}
 	
+	public Index<Key, Element> append(final Pair<Key, Element> pair)
+	{
+		return _mutate(map -> map.put(pair.left, pair.right));
+	}
+	
 	public Index<Key, Element> append(final Index<Key, Element> elements)
 	{
 		return append(elements._prepareForRead());
