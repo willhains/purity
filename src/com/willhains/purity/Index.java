@@ -637,11 +637,15 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return asMap().entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue()));
 	}
 	
+	public Optional<Element> get(final Key elementForKey)
+	{
+		return Optional.ofNullable(_prepareForRead().get(elementForKey));
+	}
+	
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 	public boolean containsKey(final Key key) { return _prepareForRead().containsKey(key); }
 	public boolean containsElement(final Element element) { return _prepareForRead().containsValue(element); }
-	public Element get(final Key elementForKey) { return _prepareForRead().get(elementForKey); }
 	
 	/// Mutations ///
 	
