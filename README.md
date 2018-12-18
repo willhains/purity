@@ -77,6 +77,22 @@ public final @Value class HostName extends SingleString<HostName>
 
 Validating raw data in the constructors of `@Value` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
 
+## Value-Based Collections
+
+Purity also provides pure value alternatives to Java's collections.
+
+- Use `Plural` in place of `List`
+- Use `Plural.distinct()` in place of `Set`
+- Use `Index` in place of `Map`
+
+Each includes methods to present immutable `List`/`Set`/`Map` views of the data, for interoperability with traditional collection-based APIs.
+
+```java
+// TODO: Code sample of Plural usage
+```
+
+`Plural` and `Index` employ a lazy mutation technique to enable fast mutation-like operations with value semantics, that minimises data copying, while maintaining thread safety without locks. You can call `append()`, `delete()`, and other mutating methods many times without triggering a data copy, and freely pass instances between threads without synchronisation, just like any other value type.
+
 ## Development Status
 
 Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
