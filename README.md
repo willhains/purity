@@ -51,6 +51,45 @@ At a high level, refactoring a codebase to Purity is done in four steps:
 3. **Move** *all conditional branches* to `@Value` types, and write tests for them. Non-`@Value` types should be as dumb and simple as possible, since they are inherently difficult to test, and are therefore the source of most bugs.
 4. **Rearrange** the ownership graphs of non-`@Value` types to minimise or eliminate singletons. Since singletons are globally-accessible, they must be thread-safe `@Barrier`s, and you want as few of those as possible.
 
+## Value Wrapping
+
+Purity provides a set of `Single*` base types to wrap single values. Use these to encapsulate all the leaf values in types of your own, so that they may have sensible names and APIs that fit into the conceptual domain of your application.
+
+For example, `String`s are *everywhere*, but they are not much more typesafe than byte arrays. All `String`s are potentially invalid, untrustworthy, raw data. Wrap them to make them pure, safe, clear, and dependable.
+
+```java
+public final @Value class HostName extends SingleString<HostName>
+{
+	public HostName(String hostName) { super(hostName, HostName::new); }
+}
+```
+
+Purity's value-wrapping base types are:
+
+- `SingleString`, for `String`-based values
+- `SingleInt`, for `int`-based values
+- `SingleLong`, for `long`-based values
+- `SingleDouble`, for `double`-based values
+- `SingleDecimal`, for `BigDecimal`-based values
+- `Single`, for values based on other types
+
+Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply in the constructor, to ensure *every* instance of your value type is *always* valid.
+
+```java
+public final @Value class HostName extends SingleString<HostName>
+{
+	private static final Rule rules = Rule.build(
+		trimWhitespace,
+		validCharacters(letters + numbers + "-._"),
+		minLength(1),
+		maxLength(255));
+
+	public HostName(String hostName) { super(hostName, rules, HostName::new); }
+}
+```
+
+Validating raw data in the constructors of `@Value` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
+
 ## Development Status
 
 Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
