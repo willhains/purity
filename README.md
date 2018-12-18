@@ -33,6 +33,24 @@ You are here because...
 [spaghetti]: https://en.wikipedia.org/wiki/Spaghetti_code
 [values]: docs/value-semantics.md
 
+## Annotations
+
+There are four categories of types in a well-written, value-based application. Purity introduces four annotations to help document and identify them.
+
+1. `@Value` = a pure, immutable [value type][values]
+2. `@Mutable` = holds data that may change
+3. `@IO` = connects to an external input and/or output
+4. `@Barrier` = provides concurrency protection
+
+Generally, a class should not belong to more than one of these categories. Specifically, a `@Value` class must not belong to any other categories, as that would violate the [definition of "value"][values].
+
+At a high level, refactoring a codebase to Purity is done in four steps:
+
+1. **Wrap** *everything* that isn't yours in a class of your own. Give each a name that makes sense in the context of your application. Add only the methods you need, and give the methods names and arguments that make sense for your app.
+2. **Classify** every type according to the four categories above, adding the Purity annotations to document their purpose.
+3. **Move** *all conditional branches* to `@Value` types, and write tests for them. Non-`@Value` types should be as dumb and simple as possible, since they are inherently difficult to test, and are therefore the source of most bugs.
+4. **Rearrange** the ownership graphs of non-`@Value` types to minimise or eliminate singletons. Since singletons are globally-accessible, they must be thread-safe `@Barrier`s, and you want as few of those as possible.
+
 ## Development Status
 
 Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
