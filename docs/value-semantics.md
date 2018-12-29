@@ -6,6 +6,16 @@
 
 [hickey]: https://www.youtube.com/watch?v=-6BsiVyC1kM
 
+What is a value? Think of an obvious example: the integer `3`.
+
+```java
+int x = 3;
+int y = x;
+x++;
+System.out.println(x); // prints "4"
+System.out.println(y); // prints "3"
+```
+
 > Variables mutate; **values** never change.
 >
 > — [Justin Spahr-Summers][jss]
