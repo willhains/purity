@@ -1,10 +1,16 @@
 # Value Semantics
 
-> A value is a fact.
->
-> — [Rich Hickey][hickey]
+What is a value? Think of an obvious example: the integer `3`.
 
-[hickey]: TODO: link to "The Value of Values" talk, and check quote.
+```java
+int x = 3;
+int y = x;
+x++;
+System.out.println(x); // prints "4"
+System.out.println(y); // prints "3"
+```
+
+Here, we see the *variable* `x` can change, but not the *value* `3`. Mutating `x` does not mutate `y`, and it is impossible to mutate the value `3` itself.
 
 > Variables mutate; values never change.
 >
