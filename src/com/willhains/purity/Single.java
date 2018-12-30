@@ -1,31 +1,36 @@
 package com.willhains.purity;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * A value type wrapping an underlying immutable type.
  * This supertype and its abstract subtypes make it easy to implement pure {@link Value} types.
- *
+ * 
  * <pre>
- * public final @Value class HostName extends Single&lt;String&gt;
+ * public final @Value class HostName extends Single&lt;String, HostName&gt;
  * {
  *     public HostName(final String hostname)
  *     {
- *         super(hostname);
+ *         super(hostname, HostName::new);
  *         // validate the value of hostname here
  *     }
- *
+ *     
  *     // add domain methods here
  * }
  * </pre>
  *
  * @author willhains
  * @param <Raw> The underlying type. Must be strictly immutable.
+ * @param <This> Self-reference to the subclass type itself.
  */
-public abstract @Value class Single<Raw>
+public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 {
+	// The single-argument constructor of the subclass
+	private final Function<? super Raw, ? extends This> _constructor;
+	
 	/**
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
@@ -34,10 +39,12 @@ public abstract @Value class Single<Raw>
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
-	protected Single(final Raw rawValue)
+	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
 	{
 		raw = requireNonNull(rawValue);
+		_constructor = requireNonNull(constructor);
 	}
 	
 	@Override
@@ -62,7 +69,7 @@ public abstract @Value class Single<Raw>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final Single<Raw> that = (Single<Raw>)other;
+		@SuppressWarnings("unchecked") final This that = (This)other;
 		
 		final Raw thisRaw = this.raw;
 		final Raw thatRaw = that.raw;
