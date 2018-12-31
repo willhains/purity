@@ -2,6 +2,8 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static com.willhains.purity.Rule.validUnless;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -238,5 +240,21 @@ public class SingleTest
 		final Height x = new Height(100f);
 		assertFalse(x.isNot(Float::isFinite));
 		assertTrue(x.isNot(f -> f.isInfinite()));
+	}
+	
+	@Test
+	public void shouldPassFilterOnMatchingCondition()
+	{
+		final Height x = new Height(100f);
+		final Optional<Height> opX = x.filter($ -> $ > 50f);
+		assertThat(opX.get(), is(x));
+	}
+	
+	@Test
+	public void shouldFailFilterOnNonMatchingCondition()
+	{
+		final Height x = new Height(100f);
+		final Optional<Height> opX = x.filter($ -> $ > 1000f);
+		assertFalse(opX.isPresent());
 	}
 }
