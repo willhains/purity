@@ -1,7 +1,10 @@
 package com.willhains.purity;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -115,4 +118,20 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 		if(raw instanceof char[]) return Arrays.toString((char[])raw);
 		return Arrays.toString((short[])raw);
 	}
+	
+	/**
+	 * Test the raw value with {@code condition}.
+	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
+	 * <pre>
+	 * optional.filter(x -&gt; x.is(String::isEmpty))
+	 * </pre>
+	 *
+	 * @param condition a {@link Predicate} that tests the raw value type.
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
+	 *         {@code false} otherwise.
+	 */
+	public final boolean is(final Predicate<? super Raw> condition) { return condition.test(raw); }
+	
+	/** Reverse of {@link #is(Predicate)}. */
+	public final boolean isNot(final Predicate<? super Raw> condition) { return !is(condition); }
 }
