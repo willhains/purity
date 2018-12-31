@@ -3,6 +3,7 @@ package com.willhains.purity;
 import org.junit.Test;
 
 import static com.willhains.purity.Rule.rules;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -120,5 +121,13 @@ public class SingleStringTest
 	{
 		class A extends SingleString<A> { A(String a) { super(a, A::new, rules(minLength(2), maxLength(5))); } }
 		new A("abcdef");
+	}
+	
+	@Test
+	public void shouldTrimToSameType()
+	{
+		final Name x = new Name("Will ");
+		assertThat(x.trim(), is(instanceOf(Name.class)));
+		assertThat(x.trim(), is(new Name("Will")));
 	}
 }
