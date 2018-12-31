@@ -2,6 +2,7 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
+import static com.willhains.purity.Rule.validUnless;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -9,13 +10,11 @@ public class SingleTest
 {
 	public static final class Height extends Single<Float, Height>
 	{
-		public Height(final Float rawValue)
-		{
-			super(rawValue, Height::new);
-			if(rawValue < 0) throw new IllegalArgumentException();
-			if(rawValue.isNaN()) throw new IllegalArgumentException();
-			if(rawValue.isInfinite()) throw new IllegalArgumentException();
-		}
+		private static final Rule<Float> rules = Rule.rules(
+			validUnless(raw -> raw.floatValue() < 0f, raw -> raw + " < 0"),
+			validUnless(raw -> raw.isNaN(), "Not a number"),
+			validUnless(raw -> raw.isInfinite(), "Must be finite"));
+		public Height(final Float rawValue) { super(rawValue, Height::new, rules); }
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -24,10 +23,17 @@ public class SingleTest
 		new Height(null);
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void shouldAllowCustomValidations()
 	{
-		new Height(-1f);
+		try { new Height(-1f); }
+		catch(final IllegalArgumentException e) { assertThat(e.getMessage(), is("-1.0 < 0")); }
+		
+		try { new Height(Float.NaN); }
+		catch(final IllegalArgumentException e) { assertThat(e.getMessage(), is("Not a number")); }
+		
+		try { new Height(Float.POSITIVE_INFINITY); }
+		catch(final IllegalArgumentException e) { assertThat(e.getMessage(), is("Must be finite")); }
 	}
 	
 	@Test

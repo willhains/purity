@@ -12,10 +12,12 @@ import static java.util.Objects.requireNonNull;
  * <pre>
  * public final @Value class HostName extends Single&lt;String, HostName&gt;
  * {
+ *     private static final Rule&lt;String&gt; rules = Rule.rules(
+ *         String:toLowerCase,
+ *         validUnless(String::isEmpty, "Host name must not be empty"));
  *     public HostName(final String hostname)
  *     {
- *         super(hostname, HostName::new);
- *         // validate the value of hostname here
+ *         super(hostname, HostName::new, rules);
  *     }
  *     
  *     // add domain methods here
@@ -45,6 +47,16 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	{
 		raw = requireNonNull(rawValue);
 		_constructor = requireNonNull(constructor);
+	}
+	
+	/**
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param rules Validation and data normalisation rules for the raw underlying value.
+	 */
+	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor, final Rule<Raw> rules)
+	{
+		this(rules.apply(rawValue), constructor);
 	}
 	
 	@Override
