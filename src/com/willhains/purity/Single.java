@@ -146,4 +146,26 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
+	
+	/**
+	 * Construct a new value of this type with the raw underlying value converted by {@code mapper}.
+	 *
+	 * @param mapper The mapping function to apply to the raw underlying value.
+	 * @return A new instance of this type.
+	 */
+	public final This map(final Function<? super Raw, ? extends Raw> mapper)
+	{
+		final Raw mapped = mapper.apply(raw);
+		@SuppressWarnings("unchecked") final This self = (This)this;
+		if(mapped.equals(raw)) return self;
+		return _constructor.apply(mapped);
+	}
+	
+	/**
+	 * Construct a new value of this type with the raw underlying value converted by {@code mapper}.
+	 *
+	 * @param mapper The mapping function to apply to the raw underlying value.
+	 * @return The value returned by {@code mapper}.
+	 */
+	public final This flatMap(final Function<? super Raw, ? extends This> mapper) { return mapper.apply(raw); }
 }

@@ -257,4 +257,28 @@ public class SingleTest
 		final Optional<Height> opX = x.filter($ -> $ > 1000f);
 		assertFalse(opX.isPresent());
 	}
+	
+	@Test
+	public void shouldMapToSameValue()
+	{
+		final Height x = new Height(100f);
+		final Height y = x.map(f -> f);
+		assertTrue(x.equals(y));
+	}
+	
+	@Test
+	public void shouldMapToNewValue()
+	{
+		final Height x = new Height(100f);
+		final Height y = x.map(f -> f + 1);
+		assertThat(y.raw, equalTo(101f));
+	}
+	
+	@Test
+	public void shouldFlatMapToNewValue()
+	{
+		final Height x = new Height(100f);
+		final Height y = x.flatMap(f -> new Height(f + 1));
+		assertThat(y.raw, equalTo(101f));
+	}
 }
