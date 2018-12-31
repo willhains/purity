@@ -134,4 +134,16 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	
 	/** Reverse of {@link #is(Predicate)}. */
 	public final boolean isNot(final Predicate<? super Raw> condition) { return !is(condition); }
+	
+	/**
+	 * Test the raw value by {@code condition}.
+	 *
+	 * @return an {@link Optional} containing this instance if the condition is met; empty otherwise.
+	 * @see #is(Predicate)
+	 */
+	public final Optional<This> filter(final Predicate<? super Raw> condition)
+	{
+		@SuppressWarnings("unchecked") final This self = (This)this;
+		return Optional.of(self).filter(it -> it.is(condition));
+	}
 }
