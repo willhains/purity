@@ -94,6 +94,22 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 		return map(s -> s.substring(start, end));
 	}
 	
+	/** @return a new value of the same type, wrapping only the first (up to) {@code length} characters. */
+	public final This left(final int length)
+	{
+		final int lengthOfString = length();
+		final int lengthOfSubstring = Math.min(lengthOfString, length);
+		return subSequence(0, lengthOfSubstring);
+	}
+	
+	/** @return a new value of the same type, wrapping only the last (up to) {@code length} characters. */
+	public final This right(final int length)
+	{
+		final int lengthOfString = length();
+		final int lengthOfSubstring = Math.min(lengthOfString, length);
+		return subSequence(lengthOfString - lengthOfSubstring, lengthOfString);
+	}
+	
 	/** @return a new value of the same type from the trimmed string. */
 	public final This trim() { return map(String::trim); }
 	

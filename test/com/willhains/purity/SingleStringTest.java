@@ -123,6 +123,62 @@ public class SingleStringTest
 		new A("abcdef");
 	}
 	
+	@Test(expected = StringIndexOutOfBoundsException.class)
+	public void shouldTrapNegativeLeftLength()
+	{
+		final Name x = new Name("Will Hains");
+		x.left(-1);
+	}
+	
+	@Test(expected = StringIndexOutOfBoundsException.class)
+	public void shouldTrapNegativeRightLength()
+	{
+		final Name x = new Name("Will Hains");
+		x.right(-1);
+	}
+	
+	@Test
+	public void shouldReturnLeftZeroLengthSubstring()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.left(0), is(new Name("")));
+	}
+	
+	@Test
+	public void shouldReturnRightZeroLengthSubstring()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.right(0), is(new Name("")));
+	}
+	
+	@Test
+	public void shouldReturnLeftSubstring()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.left(4), is(new Name("Will")));
+	}
+	
+	@Test
+	public void shouldReturnRightSubstring()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.right(5), is(new Name("Hains")));
+	}
+	
+	@Test
+	public void shouldReturnWholeLeftString()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.left(100), is(new Name("Will Hains")));
+	}
+	
+	@Test
+	public void shouldReturnWholeRightString()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.right(100), is(new Name("Will Hains")));
+	}
+	
 	@Test
 	public void shouldTrimToSameType()
 	{
