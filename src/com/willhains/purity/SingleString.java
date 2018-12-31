@@ -96,4 +96,16 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	
 	/** @return a new value of the same type from the trimmed string. */
 	public final This trim() { return map(String::trim); }
+	
+	/** @return a new value of the same type with all instances of the specified pattern replaced. */
+	public final This replaceRegex(final String regex, final String replacement)
+	{
+		return map(s -> s.replaceAll(regex, replacement));
+	}
+	
+	/** @return a new value of the same type with all instances of the specified literal string replaced. */
+	public final This replaceLiteral(final String literal, final String replacement)
+	{
+		return map(s -> s.replace(literal, replacement));
+	}
 }
