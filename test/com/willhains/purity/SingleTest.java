@@ -223,4 +223,20 @@ public class SingleTest
 		assertTrue(a8.contains("a")); assertTrue(a8.contains("b")); assertTrue(a8.contains("c"));
 		assertTrue(a9.contains("1")); assertTrue(a9.contains("2")); assertTrue(a9.contains("3"));
 	}
+	
+	@Test
+	public void shouldTestRawValue()
+	{
+		final Height x = new Height(100f);
+		assertTrue(x.is(Float::isFinite));
+		assertFalse(x.is(f -> f.isNaN()));
+	}
+	
+	@Test
+	public void shouldTestRawValueAndNegate()
+	{
+		final Height x = new Height(100f);
+		assertFalse(x.isNot(Float::isFinite));
+		assertTrue(x.isNot(f -> f.isInfinite()));
+	}
 }
