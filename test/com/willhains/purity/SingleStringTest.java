@@ -5,7 +5,7 @@ import org.junit.Test;
 import static com.willhains.purity.Rule.rules;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class SingleStringTest
 {
@@ -185,6 +185,22 @@ public class SingleStringTest
 		final Name x = new Name("Will ");
 		assertThat(x.trim(), is(instanceOf(Name.class)));
 		assertThat(x.trim(), is(new Name("Will")));
+	}
+	
+	@Test
+	public void shouldDetectEmpty()
+	{
+		final Name x = new Name("");
+		assertTrue(x.isEmpty());
+		assertFalse(x.isNotEmpty());
+	}
+	
+	@Test
+	public void shouldDetectNonEmpty()
+	{
+		final Name x = new Name("Will Hains");
+		assertTrue(x.isNotEmpty());
+		assertFalse(x.isEmpty());
 	}
 	
 	@Test

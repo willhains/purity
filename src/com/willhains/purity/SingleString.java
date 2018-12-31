@@ -113,6 +113,12 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	/** @return a new value of the same type from the trimmed string. */
 	public final This trim() { return map(String::trim); }
 	
+	/** @return {@code true} if the raw string is zero-length; {@code false} otherwise. */
+	public final boolean isEmpty() { return is(String::isEmpty); }
+	
+	/** @return {@code true} if the raw string is non-zero-length; {@code false} otherwise. */
+	public final boolean isNotEmpty() { return isNot(String::isEmpty); }
+	
 	/** @return a new value of the same type with all instances of the specified pattern replaced. */
 	public final This replaceRegex(final String regex, final String replacement)
 	{
