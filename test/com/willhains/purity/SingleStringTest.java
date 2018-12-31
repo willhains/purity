@@ -130,4 +130,32 @@ public class SingleStringTest
 		assertThat(x.trim(), is(instanceOf(Name.class)));
 		assertThat(x.trim(), is(new Name("Will")));
 	}
+	
+	@Test
+	public void shouldReplaceNothingMatchingPattern()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.replaceRegex("[0-9]+", "_"), is(x));
+	}
+	
+	@Test
+	public void shouldReplaceVowels()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.replaceRegex("[aieou]", "_"), is(new Name("W_ll H__ns")));
+	}
+	
+	@Test
+	public void shouldReplaceNothing()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.replaceLiteral("x", "_"), is(x));
+	}
+	
+	@Test
+	public void shouldReplace()
+	{
+		final Name x = new Name("Will Hains");
+		assertThat(x.replaceLiteral("i", "_"), is(new Name("W_ll Ha_ns")));
+	}
 }
