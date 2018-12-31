@@ -93,4 +93,7 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	{
 		return map(s -> s.substring(start, end));
 	}
+	
+	/** @return a new value of the same type from the trimmed string. */
+	public final This trim() { return map(String::trim); }
 }
