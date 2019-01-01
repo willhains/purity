@@ -1,0 +1,241 @@
+package com.willhains.purity;
+
+import org.junit.Test;
+
+import java.util.Optional;
+
+import static com.willhains.purity.IntRule.rules;
+import static com.willhains.purity.IntRule.validUnless;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
+public class SingleIntTest
+{
+	public static final @Value class Count extends SingleInt<Count>
+	{
+		public Count(final int rawValue) { super(rawValue, Count::new); }
+	}
+	
+	@Test
+	public void shouldReturnRawValueAfterConstruction()
+	{
+		assertThat(new Count(173).raw, equalTo(173));
+	}
+	
+	@Test
+	public void shouldAlwaysBeUnequalToNull()
+	{
+		final Count x = new Count(123);
+		assertFalse(x.equals(null));
+	}
+	
+	@Test
+	public void shouldAlwaysBeUnequalToDifferentClass()
+	{
+		class Count2 extends SingleInt<Count2> { public Count2(int x) { super(x, Count2::new); } }
+		final Count x = new Count(123);
+		final Count2 y = new Count2(123);
+		assertFalse(x.equals(y));
+	}
+	
+	@Test
+	public void shouldBeReflexive()
+	{
+		final Count x = new Count(123);
+		assertTrue(x.equals(x));
+	}
+	
+	@Test
+	public void shouldBeSymmetric()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(100);
+		assertTrue(x.equals(y));
+		assertTrue(y.equals(x));
+		final Count z = new Count(101);
+		assertFalse(x.equals(z));
+		assertFalse(z.equals(x));
+	}
+	
+	@Test
+	public void shouldBeTransitive()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(100);
+		final Count z = new Count(100);
+		assertTrue(x.equals(y));
+		assertTrue(y.equals(z));
+		assertTrue(x.equals(z));
+		final Count w = new Count(101);
+		assertFalse(w.equals(y));
+		assertFalse(w.equals(z));
+	}
+	
+	@Test
+	public void shouldBeConsistent()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(100);
+		final Count z = new Count(101);
+		assertTrue(x.equals(y));
+		assertFalse(x.equals(z));
+		assertTrue(x.equals(y));
+		assertFalse(x.equals(z));
+		final int xHash1 = x.hashCode();
+		final int xHash2 = x.hashCode();
+		assertThat(xHash1, equalTo(xHash2));
+	}
+	
+	@Test
+	public void shouldHaveSameHashCode()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(100);
+		assertTrue(x.equals(y));
+		final int xHash = x.hashCode();
+		final int yHash = y.hashCode();
+		assertThat(xHash, equalTo(yHash));
+	}
+	
+	@Test
+	public void shouldGenerateSameStringAsUnderlying()
+	{
+		final Count x = new Count(100);
+		assertThat(x.toString(), equalTo("100"));
+	}
+	
+	@Test
+	public void shouldAcceptBetweenInclusive()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, rules(min(2), max(5))); } }
+		new A(2);
+		new A(5);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldTrapLessThanExclusive()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, min(2)); } }
+		new A(1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldTrapGreaterThanExclusive()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, max(5)); } }
+		new A(6);
+	}
+	
+	@Test
+	public void shouldAcceptBetweenExclusive()
+	{
+		class A extends SingleInt<A> { A(int a)
+		{
+			super(a, A::new, rules(greaterThan(2), lessThan(5))); }
+		}
+		new A(3);
+		new A(4);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldTrapLessThanInclusive()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, greaterThan(2)); } }
+		new A(2);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldTrapGreaterThanInclusive()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, lessThan(5)); } }
+		new A(5);
+	}
+	
+	@Test
+	public void shouldPassThroughValueWithinRange()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, rules(floor(2), ceiling(5))); } }
+		assertThat(new A(3).raw, is(3));
+	}
+	
+	@Test
+	public void shouldAdjustValueBelowFloor()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, floor(2)); } }
+		assertThat(new A(1).raw, is(2));
+	}
+	
+	@Test
+	public void shouldAdjustValueAboveCeiling()
+	{
+		class A extends SingleInt<A> { A(int a) { super(a, A::new, ceiling(5)); } }
+		assertThat(new A(6).raw, is(5));
+	}
+	
+	@Test
+	public void shouldTestRawValue()
+	{
+		final Count x = new Count(100);
+		assertTrue(x.is(i -> i < 1000));
+		assertFalse(x.is(i -> i > 1000));
+	}
+	
+	@Test
+	public void shouldTestRawValueAndNegate()
+	{
+		final Count x = new Count(100);
+		assertFalse(x.isNot(i -> i < 1000));
+		assertTrue(x.isNot(i -> i > 1000));
+	}
+	
+	@Test
+	public void shouldPassFilterOnMatchingCondition()
+	{
+		final Count x = new Count(100);
+		final Optional<Count> opX = x.filter($ -> $ > 50);
+		assertThat(opX.get(), is(x));
+	}
+	
+	@Test
+	public void shouldFailFilterOnNonMatchingCondition()
+	{
+		final Count x = new Count(100);
+		final Optional<Count> opX = x.filter($ -> $ > 1000);
+		assertFalse(opX.isPresent());
+	}
+	
+	@Test
+	public void shouldMapToNewValue()
+	{
+		final Count x = new Count(100);
+		final Count y = x.map(f -> f + 1);
+		assertThat(y.raw, equalTo(101));
+	}
+	
+	@Test
+	public void shouldMapToSameValue()
+	{
+		final Count x = new Count(100);
+		final Count y = x.map(f -> f + 0);
+		assertEquals(x, y);
+	}
+	
+	@Test
+	public void shouldFlatMapToNewValue()
+	{
+		final Count x = new Count(100);
+		final Count y = x.flatMap(f -> new Count(f + 1));
+		assertThat(y.raw, equalTo(101));
+	}
+	
+	@Test
+	public void customRules()
+	{
+		class A extends SingleInt<A>
+		{
+			A(int a) { super(a, A::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
+		}
+		new A(2);
+	}
+}
