@@ -65,17 +65,23 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	@Override
 	public final int hashCode()
 	{
-		if(!raw.getClass().isArray()) return raw.hashCode();
+		return hashCode(this.raw);
+	}
+	
+	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
+	public static int hashCode(Object object)
+	{
+		if(!object.getClass().isArray()) return object.hashCode();
 		
-		if(raw instanceof Object[]) return Arrays.deepHashCode((Object[])raw);
-		if(raw instanceof int[]) return Arrays.hashCode((int[])raw);
-		if(raw instanceof byte[]) return Arrays.hashCode((byte[])raw);
-		if(raw instanceof boolean[]) return Arrays.hashCode((boolean[])raw);
-		if(raw instanceof long[]) return Arrays.hashCode((long[])raw);
-		if(raw instanceof double[]) return Arrays.hashCode((double[])raw);
-		if(raw instanceof float[]) return Arrays.hashCode((float[])raw);
-		if(raw instanceof char[]) return Arrays.hashCode((char[])raw);
-		return Arrays.hashCode((short[])raw);
+		if(object instanceof Object[]) return Arrays.deepHashCode((Object[]) object);
+		if(object instanceof int[]) return Arrays.hashCode((int[]) object);
+		if(object instanceof byte[]) return Arrays.hashCode((byte[]) object);
+		if(object instanceof boolean[]) return Arrays.hashCode((boolean[]) object);
+		if(object instanceof long[]) return Arrays.hashCode((long[]) object);
+		if(object instanceof double[]) return Arrays.hashCode((double[]) object);
+		if(object instanceof float[]) return Arrays.hashCode((float[]) object);
+		if(object instanceof char[]) return Arrays.hashCode((char[]) object);
+		return Arrays.hashCode((short[]) object);
 	}
 	
 	@Override
@@ -85,38 +91,48 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
 		@SuppressWarnings("unchecked") final This that = (This)other;
+		return equals(this.raw, that.raw);
+	}
+	
+	/** Compare two objects for equality. If they are arrays, compare their elements. */
+	public static boolean equals(Object object1, Object object2)
+	{
+		if(object1 == object2) return true;
+		if(object1 == null || object2 == null) return false;
+		if(object1.equals(object2)) return true;
+		if(!object1.getClass().isArray()) return false;
 		
-		final Raw thisRaw = this.raw;
-		final Raw thatRaw = that.raw;
-		if(thisRaw == thatRaw) return true;
-		if(thisRaw.equals(thatRaw)) return true;
-		if(!thisRaw.getClass().isArray()) return false;
-		
-		if(thisRaw instanceof Object[]) return Arrays.deepEquals((Object[])thisRaw, (Object[])thatRaw);
-		if(thisRaw instanceof int[]) return Arrays.equals((int[])thisRaw, (int[])thatRaw);
-		if(thisRaw instanceof byte[]) return Arrays.equals((byte[])thisRaw, (byte[])thatRaw);
-		if(thisRaw instanceof boolean[]) return Arrays.equals((boolean[])thisRaw, (boolean[])thatRaw);
-		if(thisRaw instanceof long[]) return Arrays.equals((long[])thisRaw, (long[])thatRaw);
-		if(thisRaw instanceof double[]) return Arrays.equals((double[])thisRaw, (double[])thatRaw);
-		if(thisRaw instanceof float[]) return Arrays.equals((float[])thisRaw, (float[])thatRaw);
-		if(thisRaw instanceof char[]) return Arrays.equals((char[])thisRaw, (char[])thatRaw);
-		return Arrays.equals((short[])thisRaw, (short[])thatRaw);
+		if(object1 instanceof Object[]) return Arrays.deepEquals((Object[])object1, (Object[])object2);
+		if(object1 instanceof int[]) return Arrays.equals((int[])object1, (int[])object2);
+		if(object1 instanceof byte[]) return Arrays.equals((byte[])object1, (byte[])object2);
+		if(object1 instanceof boolean[]) return Arrays.equals((boolean[])object1, (boolean[])object2);
+		if(object1 instanceof long[]) return Arrays.equals((long[])object1, (long[])object2);
+		if(object1 instanceof double[]) return Arrays.equals((double[])object1, (double[])object2);
+		if(object1 instanceof float[]) return Arrays.equals((float[])object1, (float[])object2);
+		if(object1 instanceof char[]) return Arrays.equals((char[])object1, (char[])object2);
+		return Arrays.equals((short[])object1, (short[])object2);
 	}
 	
 	@Override
 	public String toString()
 	{
-		if(!raw.getClass().isArray()) return String.valueOf(raw);
+		return toString(this.raw);
+	}
+	
+	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */
+	public static String toString(Object object)
+	{
+		if(!object.getClass().isArray()) return String.valueOf(object);
 		
-		if(raw instanceof Object[]) return Arrays.toString((Object[])raw);
-		if(raw instanceof int[]) return Arrays.toString((int[])raw);
-		if(raw instanceof byte[]) return Arrays.toString((byte[])raw);
-		if(raw instanceof boolean[]) return Arrays.toString((boolean[])raw);
-		if(raw instanceof long[]) return Arrays.toString((long[])raw);
-		if(raw instanceof double[]) return Arrays.toString((double[])raw);
-		if(raw instanceof float[]) return Arrays.toString((float[])raw);
-		if(raw instanceof char[]) return Arrays.toString((char[])raw);
-		return Arrays.toString((short[])raw);
+		if(object instanceof Object[]) return Arrays.toString((Object[]) object);
+		if(object instanceof int[]) return Arrays.toString((int[]) object);
+		if(object instanceof byte[]) return Arrays.toString((byte[]) object);
+		if(object instanceof boolean[]) return Arrays.toString((boolean[]) object);
+		if(object instanceof long[]) return Arrays.toString((long[]) object);
+		if(object instanceof double[]) return Arrays.toString((double[]) object);
+		if(object instanceof float[]) return Arrays.toString((float[]) object);
+		if(object instanceof char[]) return Arrays.toString((char[]) object);
+		return Arrays.toString((short[]) object);
 	}
 	
 	/**
