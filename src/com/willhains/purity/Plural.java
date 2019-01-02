@@ -37,78 +37,25 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	/**
-	 * @param e1 (e2, e3, ...) elements of the collection.
-	 * @param <E> the type of elements.
-	 * @return a {@link Plural} containing the specified elements.
+	 * Wrap a single element in a {@link Plural}.
+	 *
+	 * @param element the single element to populate the plural.
+	 * @param <E> the type of the element.
+	 * @return a {@link Plural} containing the specified single element.
 	 */
-	// @formatter:off
-	public static <@Value E> Plural<E> of(E e1) { return new Plural<>(new Reading<>(singletonList(e1))); }
-	public static <@Value E> Plural<E> of(E e1, E e2) { return _wrap(e1, e2); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3) { return _wrap(e1, e2, e3); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4) { return _wrap(e1, e2, e3, e4); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5) { return _wrap(e1, e2, e3, e4, e5); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6) { return _wrap(e1, e2, e3, e4, e5, e6); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) { return _wrap(e1, e2, e3, e4, e5, e6, e7); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15, E e16) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15, E e16, E e17) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15, E e16, E e17, E e18) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15, E e16, E e17, E e18, E e19) { return _wrap(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19); }
-	public static <@Value E> Plural<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E e13, E e14, E e15, E e16, E e17, E e18, E e19, E e20, E... more)
-	// @formatter:on
-	{
-		final int argsLength = 20;
-		if(more.length > Integer.MAX_VALUE - argsLength) throw new IllegalArgumentException("too many elements");
-		final Object[] objectArray = new Object[argsLength + more.length];
-		objectArray[0] = e1;
-		objectArray[1] = e2;
-		objectArray[2] = e3;
-		objectArray[3] = e4;
-		objectArray[4] = e5;
-		objectArray[5] = e6;
-		objectArray[6] = e7;
-		objectArray[7] = e8;
-		objectArray[8] = e9;
-		objectArray[9] = e10;
-		objectArray[10] = e11;
-		objectArray[11] = e12;
-		objectArray[12] = e13;
-		objectArray[13] = e14;
-		objectArray[14] = e15;
-		objectArray[15] = e16;
-		objectArray[16] = e17;
-		objectArray[17] = e18;
-		objectArray[18] = e19;
-		objectArray[19] = e20;
-		System.arraycopy(more, 0, objectArray, argsLength, more.length);
-		@SuppressWarnings("unchecked") final E[] elementArray = (E[])objectArray;
-		return _wrap(elementArray);
-	}
-	
-	// Wrap the elements array in a Plural without defensive copy
-	@SafeVarargs
-	private static <@Value Element> Plural<Element> _wrap(final Element... elements)
-	{
-		switch(elements.length)
-		{
-			case 0: return empty();
-			case 1: return of(elements[0]);
-			default: return new Plural<>(new Reading<>(Arrays.asList(elements)));
-		}
-	}
+	public static <@Value E> Plural<E> of(E element) { return new Plural<>(new Reading<>(singletonList(element))); }
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
 	@SafeVarargs
-	public static <@Value Element> Plural<Element> copy(final Element... elements)
+	public static <@Value Element> Plural<Element> of(Element... elements)
 	{
-		return _wrap(elements.clone());
+		final Element[] array = elements.clone();
+		switch(array.length)
+		{
+			case 0: return empty();
+			case 1: return of(array[0]);
+			default: return new Plural<>(new Reading<>(Arrays.asList(array)));
+		}
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */

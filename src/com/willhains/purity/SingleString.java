@@ -138,6 +138,6 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 		final String regex,
 	    final Function<String, Token> tokenConstructor)
 	{
-		return Plural.copy(raw.split(regex)).map(tokenConstructor);
+		return Plural.of(raw.split(regex)).map(tokenConstructor);
 	}
 }

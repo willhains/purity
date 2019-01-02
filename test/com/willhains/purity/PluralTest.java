@@ -16,7 +16,7 @@ public class PluralTest
 	public void shouldCreateEmpty()
 	{
 		final Plural<Object> x = Plural.empty();
-		final Plural<Object> y = Plural.copy(new Object[0]);
+		final Plural<Object> y = Plural.of(new Object[0]);
 		assertTrue(x.asList().isEmpty());
 		assertTrue(y.asList().isEmpty());
 		assertEquals(x, y);
@@ -34,61 +34,10 @@ public class PluralTest
 	}
 	
 	@Test
-	public void shouldCreateWithUpToTwentyElements()
+	public void shouldCreateWithMultipleElements()
 	{
-		// @formatter:off
 		final Plural<String> x2 = Plural.of("a", "b");
-		final Plural<String> x3 = Plural.of("a", "b", "c");
-		final Plural<String> x4 = Plural.of("a", "b", "c", "d");
-		final Plural<String> x5 = Plural.of("a", "b", "c", "d", "e");
-		final Plural<String> x6 = Plural.of("a", "b", "c", "d", "e", "f");
-		final Plural<String> x7 = Plural.of("a", "b", "c", "d", "e", "f", "g");
-		final Plural<String> x8 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h");
-		final Plural<String> x9 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i");
-		final Plural<String> x10 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
-		final Plural<String> x11 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k");
-		final Plural<String> x12 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l");
-		final Plural<String> x13 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m");
-		final Plural<String> x14 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n");
-		final Plural<String> x15 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o");
-		final Plural<String> x16 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p");
-		final Plural<String> x17 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q");
-		final Plural<String> x18 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r");
-		final Plural<String> x19 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s");
-		final Plural<String> x20 = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t");
 		assertThat(x2.asList().stream().collect(joining("")), is("ab"));
-		assertThat(x3.asList().stream().collect(joining("")), is("abc"));
-		assertThat(x4.asList().stream().collect(joining("")), is("abcd"));
-		assertThat(x5.asList().stream().collect(joining("")), is("abcde"));
-		assertThat(x6.asList().stream().collect(joining("")), is("abcdef"));
-		assertThat(x7.asList().stream().collect(joining("")), is("abcdefg"));
-		assertThat(x8.asList().stream().collect(joining("")), is("abcdefgh"));
-		assertThat(x9.asList().stream().collect(joining("")), is("abcdefghi"));
-		assertThat(x10.asList().stream().collect(joining("")), is("abcdefghij"));
-		assertThat(x11.asList().stream().collect(joining("")), is("abcdefghijk"));
-		assertThat(x12.asList().stream().collect(joining("")), is("abcdefghijkl"));
-		assertThat(x13.asList().stream().collect(joining("")), is("abcdefghijklm"));
-		assertThat(x14.asList().stream().collect(joining("")), is("abcdefghijklmn"));
-		assertThat(x15.asList().stream().collect(joining("")), is("abcdefghijklmno"));
-		assertThat(x16.asList().stream().collect(joining("")), is("abcdefghijklmnop"));
-		assertThat(x17.asList().stream().collect(joining("")), is("abcdefghijklmnopq"));
-		assertThat(x18.asList().stream().collect(joining("")), is("abcdefghijklmnopqr"));
-		assertThat(x19.asList().stream().collect(joining("")), is("abcdefghijklmnopqrs"));
-		assertThat(x20.asList().stream().collect(joining("")), is("abcdefghijklmnopqrst"));
-		// @formatter:on
-	}
-	
-	@Test
-	public void shouldCreateWithMoreElements()
-	{
-		// @formatter:off
-		final Plural<Integer> x21 = Plural.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
-		final Plural<Integer> x22 = Plural.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22);
-		final Plural<Integer> x23 = Plural.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
-		assertThat(x21.asList().stream().map($ -> $.toString()).collect(joining(",")), is("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21"));
-		assertThat(x22.asList().stream().map($ -> $.toString()).collect(joining(",")), is("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22"));
-		assertThat(x23.asList().stream().map($ -> $.toString()).collect(joining(",")), is("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"));
-		// @formatter:on
 	}
 	
 	@Test
@@ -97,9 +46,9 @@ public class PluralTest
 		final String[] s0 = {};
 		final String[] s1 = {"a"};
 		final String[] s2 = {"a", "b"};
-		final Plural<String> x0 = Plural.copy(s0);
-		final Plural<String> x1 = Plural.copy(s1);
-		final Plural<String> x2 = Plural.copy(s2);
+		final Plural<String> x0 = Plural.of(s0);
+		final Plural<String> x1 = Plural.of(s1);
+		final Plural<String> x2 = Plural.of(s2);
 		assertThat(x0.asList().stream().collect(joining("")), is(""));
 		assertThat(x1.asList().stream().collect(joining("")), is("a"));
 		assertThat(x2.asList().stream().collect(joining("")), is("ab"));
@@ -110,10 +59,10 @@ public class PluralTest
 	{
 		// @formatter:off
 		final String[] strings = {"u", "v", "w"};
-		final Plural<String> x = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", strings);
+		final Plural<String> x = Plural.of(strings);
 		strings[1] = "1";
-		assertThat(x, is(Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w")));
-		final Plural<String> y = Plural.copy(strings);
+		assertThat(x, is(Plural.of("u", "v", "w")));
+		final Plural<String> y = Plural.of(strings);
 		strings[2] = "2";
 		assertThat(y, is(Plural.of("u", "1", "w")));
 		// @formatter:on
