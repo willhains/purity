@@ -38,11 +38,6 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	 *
 	 * @see Pair#toIndex()
 	 */
-	public static <@Value Key, @Value Element> Index<Key, Element> of(final Pair<Key, Element>... pairs)
-	{
-		return Stream.of(pairs).collect(Pair.toIndex());
-	}
-	
 	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Iterable<Pair<Key, Element>> pairs)
 	{
 		final Map<Key, Element> map = new HashMap<>();
