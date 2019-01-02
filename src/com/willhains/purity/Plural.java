@@ -179,7 +179,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	private List<Element> _prepareForRead()
 	{
 		final Reading<Element> state = _state.prepareForRead();
-		_state = state;
+		if(state != _state) _state = state;
 		return state._elements;
 	}
 	

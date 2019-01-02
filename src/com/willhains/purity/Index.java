@@ -624,7 +624,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	private Map<Key, Element> _prepareForRead()
 	{
 		final Reading<Key, Element> state = _state.prepareForRead();
-		_state = state;
+		if(state != _state) _state = state;
 		return state._elements;
 	}
 	
