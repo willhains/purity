@@ -51,12 +51,18 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return new Index<>(new Reading<>(map));
 	}
 	
+	/** Copy a {@link Map} as am {@link Index}. */
 	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Map<Key, Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
 		return new Index<>(new Reading<>(new HashMap<>(elements)));
 	}
 	
+	// An Index may be in one of two states: Reading, or Mutating. An Index in Mutating state may change to the
+	// equivalent Reading state, but not the reverse. The Reading state is always the final state of an Index.
+	// A Mutating state has exactly one possible equivalent Reading state. The Mutating state itself cannot change.
+	// This property is mutable and non-volatile, because even if multiple threads observe it in a different state,
+	// each can only mutate it to the same eventual Reading state, so all threads always observe the same result.
 	private MutationState<Key, Element> _state;
 	private Index(final MutationState<Key, Element> state) { _state = state; }
 	
@@ -75,11 +81,28 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	private @Value interface MutationState<@Value Key, @Value Element>
 	{
+		/**
+		 * The number of mutation wrappers applied. Automatically collapse when this gets up to a certain threshold, to
+		 * avoid a stack overflow.
+		 */
 		int generation();
+		
+		/**
+		 * Apply all pending mutations, collapsing to a single {@link Reading} state.
+		 *
+		 * @return the resulting {@link Reading} state.
+		 */
 		default Reading<Key, Element> prepareForRead() { return new Reading<>(prepareForWrite()); }
+		
+		/**
+		 * Create a mutable {@link Map} copy of the data, and apply the mutations to it.
+		 *
+		 * @return the mutated data as a {@link Map}.
+		 */
 		Map<Key, Element> prepareForWrite();
 	}
 	
+	// The state where all mutations have been applied to the underlying collection, and it can now be read
 	private static final @Value class Reading<@Value Key, @Value Element> implements MutationState<Key, Element>
 	{
 		private final Map<Key, Element> _elements;
@@ -89,6 +112,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		@Override public Map<Key, Element> prepareForWrite() { return new HashMap<>(_elements); }
 	}
 	
+	// Apply all mutations, collapsing them to the resulting collection, then return that collection
 	private Map<Key, Element> _prepareForRead()
 	{
 		final Reading<Key, Element> state = _state.prepareForRead();
@@ -96,15 +120,22 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return state._elements;
 	}
 	
+	/** @return an immutable {@link List} containing the elements of this {@link Plural}. */
 	public Map<Key, Element> asMap() { return unmodifiableMap(_prepareForRead()); }
+	
+	/** @see Map#forEach */
 	public void forEach(final BiConsumer<Key, Element> action) { _prepareForRead().forEach(action); }
+	
+	/** @return an {@link Iterator} over key-element {@link Pair}s. */
 	public Iterator<Pair<Key, Element>> iterator() { return stream().iterator(); }
 	
+	/** @return a {@link Stream} of key-element {@link Pair}s. */
 	public Stream<Pair<Key, Element>> stream()
 	{
 		return asMap().entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue()));
 	}
 	
+	/** @return the element indexed by {@code elementForKey}, or empty if there is none. */
 	public Optional<Element> get(final Key elementForKey)
 	{
 		return Optional.ofNullable(_prepareForRead().get(elementForKey));
@@ -180,13 +211,16 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
 	public Index<Key, Element> delete(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
 	
+	/** Delete elements where the key and element satisfy the {@code where} condition. */
 	public Index<Key, Element> deleteIf(final BiPredicate<Key, Element> where)
 	{
 		return _mutate(map -> map.entrySet().removeIf(entry -> where.test(entry.getKey(), entry.getValue())));
 	}
 	
+	/** Delete elements where the key and element do not satisfy the {@code where} condition. */
 	public Index<Key, Element> filter(final BiPredicate<Key, Element> where) { return deleteIf(where.negate()); }
 	
+	/** Convert the keys to new values using the mapper function. When two are the same, the latter will survive. */
 	public <@Value Converted> Index<Converted, Element> mapKeys(final BiFunction<Key, Element, Converted> mapper)
 	{
 		return _transform(before ->
@@ -197,6 +231,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		});
 	}
 	
+	/** Convert the elements to new values using the mapper function. */
 	public <@Value Converted> Index<Key, Converted> mapElements(final BiFunction<Key, Element, Converted> mapper)
 	{
 		return _transform(before ->
@@ -207,11 +242,13 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		});
 	}
 	
+	/** Same as {@link #flip(BinaryOperator)}, where the last mapping of hte same value survives. */
 	public Index<Element, Key> flip()
 	{
 		return flip((first, second) -> second);
 	}
 	
+	/** Reverse the index so that elements are keys, and vice-versa, with {@code combiner} to handle duplicates. */
 	public Index<Element, Key> flip(final BinaryOperator<Key> combiner)
 	{
 		return _transform(before ->

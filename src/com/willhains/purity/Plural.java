@@ -107,8 +107,24 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	private @Value interface MutationState<@Value Element>
 	{
+		/**
+		 * The number of mutation wrappers applied. Automatically collapse when this gets up to a certain threshold, to
+		 * avoid a stack overflow.
+		 */
 		int generation();
+		
+		/**
+		 * Apply all pending mutations, collapsing to a single {@link Reading} state.
+		 *
+		 * @return the resulting {@link Reading} state.
+		 */
 		default Reading<Element> prepareForRead() { return new Reading<>(prepareForWrite()); }
+		
+		/**
+		 * Create a mutable {@link Map} copy of the data, and apply the mutations to it.
+		 *
+		 * @return the mutated data as a {@link Map}.
+		 */
 		List<Element> prepareForWrite();
 	}
 	
