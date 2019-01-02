@@ -1,0 +1,87 @@
+package com.willhains.purity;
+
+import org.junit.Test;
+
+import java.text.DecimalFormat;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
+public class SingleNumberTest
+{
+	static final @Value class Height implements SingleNumber<Height>
+	{
+		final float raw;
+		Height(final float rawValue) { raw = rawValue; }
+		
+		@Override public Number asNumber() { return raw; }
+		
+		@Override public int compareTo(Height that) { return Float.compare(this.raw, that.raw); }
+		@Override public int compareToNumber(Number number) { return Float.compare(raw, number.floatValue()); }
+		
+		@Override public boolean isZero() { return raw == 0f; }
+		@Override public boolean isPositive() { return raw > 0f; }
+		@Override public boolean isNegative() { return raw < 0f; }
+		
+		@Override public Height plus(Number number) { return new Height(raw + number.floatValue()); }
+		@Override public Height minus(Number number) { return new Height(raw - number.floatValue()); }
+		@Override public Height multiplyBy(Number number) { return new Height(raw * number.floatValue()); }
+		@Override public Height divideBy(Number number) { return new Height(raw / number.floatValue()); }
+	}
+	
+	@Test
+	public void shouldFormatAsDecimal()
+	{
+		final Height x = new Height(12345.6789f);
+		assertThat(x.format(new DecimalFormat("#,###.00")), is("12,345.68"));
+		assertThat(x.format("#,###.00"), is("12,345.68"));
+	}
+	
+	@Test
+	public void shouldIdentifyZero()
+	{
+		final Height x = new Height(0.0f);
+		assertTrue(x.isZero());
+		assertFalse(x.isNonZero());
+	}
+	
+	@Test
+	public void shouldCompareLarger()
+	{
+		final Height x = new Height(10f);
+		
+		assertTrue(x.isGreaterThan(8));
+		assertTrue(x.isGreaterThan(8.0d));
+		assertTrue(x.isGreaterThan(8.0f));
+		assertTrue(x.isGreaterThanOrEqualTo(8));
+		assertTrue(x.isGreaterThanOrEqualTo(8.0d));
+		assertTrue(x.isGreaterThanOrEqualTo(8.0f));
+		
+		assertFalse(x.isGreaterThan(12));
+		assertFalse(x.isGreaterThan(12.0d));
+		assertFalse(x.isGreaterThan(12.0f));
+		assertFalse(x.isGreaterThanOrEqualTo(12));
+		assertFalse(x.isGreaterThanOrEqualTo(12.0d));
+		assertFalse(x.isGreaterThanOrEqualTo(12.0f));
+	}
+	
+	@Test
+	public void shouldCompareSmaller()
+	{
+		final Height x = new Height(10f);
+		
+		assertTrue(x.isLessThan(12));
+		assertTrue(x.isLessThan(12.0d));
+		assertTrue(x.isLessThan(12.0f));
+		assertTrue(x.isLessThanOrEqualTo(12));
+		assertTrue(x.isLessThanOrEqualTo(12.0d));
+		assertTrue(x.isLessThanOrEqualTo(12.0f));
+		
+		assertFalse(x.isLessThan(8));
+		assertFalse(x.isLessThan(8.0d));
+		assertFalse(x.isLessThan(8.0f));
+		assertFalse(x.isLessThanOrEqualTo(8));
+		assertFalse(x.isLessThanOrEqualTo(8.0d));
+		assertFalse(x.isLessThanOrEqualTo(8.0f));
+	}
+}

@@ -24,6 +24,13 @@ public class SingleDoubleTest
 	}
 	
 	@Test
+	public void shouldRepresentRawAsNumber()
+	{
+		final Height x = new Height(12.3d);
+		assertThat(x.asNumber(), is(x.raw));
+	}
+	
+	@Test
 	public void shouldAlwaysBeUnequalToNull()
 	{
 		final Height x = new Height(12.3);
@@ -275,6 +282,7 @@ public class SingleDoubleTest
 		final Height x = new Height(10.0);
 		final Height y = new Height(5.0);
 		assertTrue(x.compareTo(y) > 0);
+		assertTrue(x.compareToNumber(y.raw) > 0);
 	}
 	
 	@Test
@@ -283,6 +291,7 @@ public class SingleDoubleTest
 		final Height x = new Height(5.0);
 		final Height y = new Height(10.0);
 		assertTrue(x.compareTo(y) < 0);
+		assertTrue(x.compareToNumber(y.raw) < 0);
 	}
 	
 	@Test
@@ -292,7 +301,44 @@ public class SingleDoubleTest
 		final Height y = new Height(10.0);
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
+		assertTrue(x.compareToNumber(y.raw) == 0);
 	}
+	
+	@Test
+	public void shouldIdentifyZero()
+	{
+		final Height x = new Height(0.0);
+		assertTrue(x.isZero());
+		assertFalse(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyPositive()
+	{
+		final Height x = new Height(0.1);
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertTrue(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyNegative()
+	{
+		@Value class Factor extends SingleDouble<Factor> { Factor(double factor) { super(factor, Factor::new); } }
+		final Factor x = new Factor(-0.1);
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertTrue(x.isNegative());
+	}
+	
+	@Test public void shouldAdd() { assertThat(new Height(12.3).plus(0.7).raw, is(13.0)); }
+	@Test public void shouldSubtract() { assertThat(new Height(12.3).minus(0.3).raw, is(12.0)); }
+	@Test public void shouldMultiply() { assertThat(new Height(12.3).multiplyBy(10).raw, is(123.0)); }
+	@Test public void shouldDivide() { assertThat(new Height(12.8).divideBy(2).raw, is(6.4)); }
 	
 	@Test
 	public void shouldRoundHalfUp()

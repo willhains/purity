@@ -11,7 +11,7 @@ import static com.willhains.purity.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `double` version of {@link Single}. */
-public abstract @Value class SingleDouble<This extends SingleDouble<This>> implements SingleComparable<This>
+public abstract @Value class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>
 {
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;
@@ -90,7 +90,24 @@ public abstract @Value class SingleDouble<This extends SingleDouble<This>> imple
 	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
 	public static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
 	
+	@Override public Number asNumber() { return raw; }
+	
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
+	
+	@Override
+	public final int compareToNumber(final Number number)
+	{
+		return Double.compare(this.raw, number.doubleValue());
+	}
+	
+	@Override public boolean isZero() { return raw == 0d; }
+	@Override public boolean isPositive() { return raw > 0d; }
+	@Override public boolean isNegative() { return raw < 0d; }
+	
+	@Override public final This plus(final Number number) { return map($ -> $ + number.doubleValue()); }
+	@Override public final This minus(final Number number) { return map($ -> $ - number.doubleValue()); }
+	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.doubleValue()); }
+	@Override public final This divideBy(final Number number) { return map($ -> $ / number.doubleValue()); }
 	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }
