@@ -40,6 +40,13 @@ public class SingleIntTest
 	}
 	
 	@Test
+	public void shouldRepresentRawAsNumber()
+	{
+		final Count x = new Count(12);
+		assertThat(x.asNumber(), is(x.raw));
+	}
+	
+	@Test
 	public void shouldBeReflexive()
 	{
 		final Count x = new Count(123);
@@ -245,6 +252,7 @@ public class SingleIntTest
 		final Count x = new Count(100);
 		final Count y = new Count(50);
 		assertTrue(x.compareTo(y) > 0);
+		assertTrue(x.compareToNumber(y.raw) > 0);
 	}
 	
 	@Test
@@ -253,6 +261,7 @@ public class SingleIntTest
 		final Count x = new Count(50);
 		final Count y = new Count(100);
 		assertTrue(x.compareTo(y) < 0);
+		assertTrue(x.compareToNumber(y.raw) < 0);
 	}
 	
 	@Test
@@ -262,5 +271,42 @@ public class SingleIntTest
 		final Count y = new Count(100);
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
+		assertTrue(x.compareToNumber(y.raw) == 0);
 	}
+	
+	@Test
+	public void shouldIdentifyZero()
+	{
+		final Count x = new Count(0);
+		assertTrue(x.isZero());
+		assertFalse(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyPositive()
+	{
+		final Count x = new Count(1);
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertTrue(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyNegative()
+	{
+		@Value class Id extends SingleInt<Id> { Id(int id) { super(id, Id::new); } }
+		final Id x = new Id(-1);
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertTrue(x.isNegative());
+	}
+	
+	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw, is(12)); }
+	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw, is(2)); }
+	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw, is(15)); }
+	@Test public void shouldDivide() { assertThat(new Count(5).divideBy(2).raw, is(2)); }
 }

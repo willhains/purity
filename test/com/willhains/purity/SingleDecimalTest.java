@@ -36,6 +36,13 @@ public class SingleDecimalTest
 	}
 	
 	@Test
+	public void shouldRepresentRawAsNumber()
+	{
+		final Price x = new Price("12.3");
+		assertThat(x.asNumber(), is(x.raw));
+	}
+	
+	@Test
 	public void shouldNotUseScientificNotationByDefault()
 	{
 		final Price x = new Price("123456000000000000");
@@ -50,6 +57,7 @@ public class SingleDecimalTest
 		final Price x = new Price("10.0");
 		final Price y = new Price("5.0");
 		assertTrue(x.compareTo(y) > 0);
+		assertTrue(x.compareToNumber(y.raw) > 0);
 	}
 	
 	@Test
@@ -58,6 +66,7 @@ public class SingleDecimalTest
 		final Price x = new Price("5.0");
 		final Price y = new Price("10.0");
 		assertTrue(x.compareTo(y) < 0);
+		assertTrue(x.compareToNumber(y.raw) < 0);
 	}
 	
 	@Test
@@ -67,6 +76,77 @@ public class SingleDecimalTest
 		final Price y = new Price("10.0");
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
+		assertTrue(x.compareToNumber(y.raw) == 0);
+	}
+	
+	@Test
+	public void shouldIdentifyZero()
+	{
+		final Price x = new Price("0.0");
+		assertTrue(x.isZero());
+		assertFalse(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyPositive()
+	{
+		final Price x = new Price("0.1");
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertTrue(x.isPositive());
+		assertFalse(x.isNegative());
+	}
+	
+	@Test
+	public void shouldIdentifyNegative()
+	{
+		@Value class Factor extends SingleDecimal<Factor> { Factor(BigDecimal factor) { super(factor, Factor::new); } }
+		final Factor x = new Factor($(-0.1));
+		assertFalse(x.isZero());
+		assertTrue(x.isNonZero());
+		assertFalse(x.isPositive());
+		assertTrue(x.isNegative());
+	}
+	
+	@Test public void shouldAdd()
+	{
+		assertThat(new Price("12.3").plus("0.7").raw, is($("13.0")));
+	}
+	
+	@Test public void shouldSubtract()
+	{
+		assertThat(new Price("12.3").minus("0.3").raw, is($("12.0")));
+	}
+	
+	@Test public void shouldMultiply()
+	{
+		assertThat(new Price("12.3").multiplyBy("10").raw, is($("123.0")));
+	}
+	
+	@Test public void shouldDivide()
+	{
+		assertThat(new Price("12.8").divideBy(2).raw, is($("6.4")));
+	}
+	
+	@Test
+	public void shouldRoundHalfUp()
+	{
+		assertThat(new Price("14.5").round().raw, is($("15")));
+		assertThat(new Price("14.4").round().raw, is($("14")));
+	}
+	
+	@Test
+	public void shouldRoundDown()
+	{
+		assertThat(new Price("14.9").roundDown().raw, is($("14")));
+	}
+	
+	@Test
+	public void shouldRoundUp()
+	{
+		assertThat(new Price("14.1").roundUp().raw, is($("15")));
 	}
 	
 	@Test
@@ -160,5 +240,24 @@ public class SingleDecimalTest
 	{
 		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, ceiling($(5))); } }
 		assertThat(new A($(6)).raw, is($(5)));
+	}
+
+	@Test
+	public void shouldConvertStrings()
+	{
+		final Price x = new Price("10");
+		assertThat(x.plus("1.2").raw, is($("11.2")));
+		assertThat(x.minus("0.2").raw, is($("9.8")));
+		assertThat(x.multiplyBy("2.5").raw, is($("25.0")));
+		assertThat(x.divideBy("2.5").raw, is($("4")));
+	}
+	
+	@Test
+	public void shouldRoundToSpecifiedNumberOfPlaces()
+	{
+		assertThat(new Price("14").roundToPrecision(4).raw, is($("14.0000")));
+		assertThat(new Price("12.345").roundToPrecision(2).raw, is($("12.35")));
+		assertThat(new Price("12.345").roundToPrecision(3).raw, is($("12.345")));
+		assertThat(new Price("12345.6").roundToPrecision(0).raw, is($("12346")));
 	}
 }

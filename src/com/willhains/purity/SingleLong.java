@@ -12,7 +12,7 @@ import static com.willhains.purity.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `long` version of {@link Single}. */
-public abstract @Value class SingleLong<This extends SingleLong<This>> implements SingleComparable<This>
+public abstract @Value class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>
 {
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;
@@ -86,7 +86,24 @@ public abstract @Value class SingleLong<This extends SingleLong<This>> implement
 	/** Generate rule to normalise the raw long value to a maximum ceiling value. */
 	public static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
 	
+	@Override public Number asNumber() { return raw; }
+	
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw, that.raw); }
+	
+	@Override
+	public final int compareToNumber(final Number number)
+	{
+		return Long.compare(this.raw, number.longValue());
+	}
+	
+	@Override public boolean isZero() { return raw == 0L; }
+	@Override public boolean isPositive() { return raw > 0L; }
+	@Override public boolean isNegative() { return raw < 0L; }
+	
+	@Override public final This plus(final Number number) { return map($ -> $ + number.longValue()); }
+	@Override public final This minus(final Number number) { return map($ -> $ - number.longValue()); }
+	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.longValue()); }
+	@Override public final This divideBy(final Number number) { return map($ -> $ / number.longValue()); }
 	
 	/**
 	 * Test the raw value with {@code condition}.

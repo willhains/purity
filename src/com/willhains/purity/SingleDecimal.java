@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import static com.willhains.purity.Rule.validOnlyIf;
 import static com.willhains.purity.Rule.validUnless;
+import static java.math.RoundingMode.*;
 
 /**
  * A value type wrapping a {@link BigDecimal}.
@@ -14,7 +15,7 @@ import static com.willhains.purity.Rule.validUnless;
  */
 public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	extends Single<BigDecimal, This>
-	implements SingleComparable<This>
+	implements SingleNumber<This>
 {
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -95,6 +96,8 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
 	public static Rule<BigDecimal> ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
 	
+	@Override public Number asNumber() { return raw; }
+	
 	/**
 	 * Convert a value into a {@link BigDecimal} via its {@link Object#toString()} value.
 	 * The name of this function is a reminder to programmers to never use floating-point types for money.
@@ -107,4 +110,24 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	}
 	
 	@Override public final int compareTo(final This that) { return this.raw.compareTo(that.raw); }
+	@Override public final int compareToNumber(final Number number) { return this.raw.compareTo($(number)); }
+	
+	@Override public boolean isZero() { return raw.compareTo(BigDecimal.ZERO) == 0; }
+	@Override public boolean isPositive() { return raw.compareTo(BigDecimal.ZERO) > 0; }
+	@Override public boolean isNegative() { return raw.compareTo(BigDecimal.ZERO) < 0; }
+	
+	@Override public final This plus(final Number number) { return map(d -> d.add($(number))); }
+	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
+	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
+	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number))); }
+	
+	public final This plus(final String number) { return plus($(number)); }
+	public final This minus(final String number) { return minus($(number)); }
+	public final This multiplyBy(final String number) { return multiplyBy($(number)); }
+	public final This divideBy(final String number) { return divideBy($(number)); }
+	
+	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
+	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }
+	public final This roundDown() { return map(d -> d.setScale(0, FLOOR)); }
+	public final This roundToPrecision(final int decimals) { return map(d -> d.setScale(decimals, HALF_UP)); }
 }
