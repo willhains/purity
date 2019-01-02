@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * @param <Raw> The underlying type. Must be strictly immutable.
  * @param <This> Self-reference to the subclass type itself.
  */
-public abstract @Value class Single<Raw, This extends Single<Raw, This>>
+public abstract @Value class Single<Raw, This extends Single<Raw, This>> implements Pairable<This>
 {
 	// The single-argument constructor of the subclass
 	private final Function<? super Raw, ? extends This> _constructor;
