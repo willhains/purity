@@ -2,9 +2,12 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
+import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
 
 public class SingleNumberTest
@@ -83,5 +86,32 @@ public class SingleNumberTest
 		assertFalse(x.isLessThanOrEqualTo(8));
 		assertFalse(x.isLessThanOrEqualTo(8.0d));
 		assertFalse(x.isLessThanOrEqualTo(8.0f));
+	}
+	
+	@Test
+	public void shouldConvertAnythingToDecimal()
+	{
+		assertThat($("12345.67890"), is(new BigDecimal("12345.67890")));
+		assertThat($(12.3450), is(new BigDecimal("12.345")));
+		assertThat($(6), is(new BigDecimal("6")));
+		class Name extends SingleString<Name> { Name(final String x) { super(x, Name::new); } }
+		assertThat($(new Name("12.345")), is(new BigDecimal("12.345")));
+	}
+	
+	@Test
+	public void shouldKeepBigDecimal()
+	{
+		final BigDecimal x = new BigDecimal("123.4500");
+		assertThat($(x), is(sameInstance(x)));
+	}
+	
+	@Test
+	public void shouldConvertStrings()
+	{
+		final Height x = new Height(10f);
+		assertThat(x.plus("1.2").raw, is(11.2f));
+		assertThat(x.minus("0.2").raw, is(9.8f));
+		assertThat(x.multiplyBy("2.5").raw, is(25f));
+		assertThat(x.divideBy("2.5").raw, is(4f));
 	}
 }
