@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import static com.willhains.purity.Rule.validOnlyIf;
 import static com.willhains.purity.Rule.validUnless;
+import static com.willhains.purity.SingleNumber.$;
 import static java.math.RoundingMode.*;
 
 /**
@@ -98,17 +99,6 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	
 	@Override public Number asNumber() { return raw; }
 	
-	/**
-	 * Convert a value into a {@link BigDecimal} via its {@link Object#toString()} value.
-	 * The name of this function is a reminder to programmers to never use floating-point types for money.
-	 *
-	 * @param x any numeric object or primitive value.
-	 */
-	public static BigDecimal $(final Object x)
-	{
-		return x instanceof BigDecimal ? (BigDecimal)x : new BigDecimal(String.valueOf(x));
-	}
-	
 	@Override public final int compareTo(final This that) { return this.raw.compareTo(that.raw); }
 	@Override public final int compareToNumber(final Number number) { return this.raw.compareTo($(number)); }
 	
@@ -120,11 +110,6 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
 	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
 	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number))); }
-	
-	public final This plus(final String number) { return plus($(number)); }
-	public final This minus(final String number) { return minus($(number)); }
-	public final This multiplyBy(final String number) { return multiplyBy($(number)); }
-	public final This divideBy(final String number) { return divideBy($(number)); }
 	
 	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
 	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }

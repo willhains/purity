@@ -5,9 +5,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.willhains.purity.Rule.rules;
-import static com.willhains.purity.SingleDecimal.$;
+import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.*;
 
 public class SingleDecimalTest
@@ -150,23 +149,6 @@ public class SingleDecimalTest
 	}
 	
 	@Test
-	public void shouldConvertAnythingToDecimal()
-	{
-		assertThat($("12345.67890"), is(new BigDecimal("12345.67890")));
-		assertThat($(12.3450), is(new BigDecimal("12.345")));
-		assertThat($(6), is(new BigDecimal("6")));
-		class Name extends SingleString<Name> { Name(final String x) { super(x, Name::new); } }
-		assertThat($(new Name("12.345")), is(new BigDecimal("12.345")));
-	}
-	
-	@Test
-	public void shouldKeepBigDecimal()
-	{
-		final BigDecimal x = new BigDecimal("123.4500");
-		assertThat($(x), is(sameInstance(x)));
-	}
-	
-	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
 		class A extends SingleDecimal<A>
@@ -240,16 +222,6 @@ public class SingleDecimalTest
 	{
 		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, ceiling($(5))); } }
 		assertThat(new A($(6)).raw, is($(5)));
-	}
-
-	@Test
-	public void shouldConvertStrings()
-	{
-		final Price x = new Price("10");
-		assertThat(x.plus("1.2").raw, is($("11.2")));
-		assertThat(x.minus("0.2").raw, is($("9.8")));
-		assertThat(x.multiplyBy("2.5").raw, is($("25.0")));
-		assertThat(x.divideBy("2.5").raw, is($("4")));
 	}
 	
 	@Test
