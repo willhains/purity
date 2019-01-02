@@ -14,7 +14,7 @@ import static com.willhains.purity.Rule.validUnless;
  */
 public abstract @Value class SingleString<This extends SingleString<This>>
 	extends Single<String, This>
-	implements CharSequence
+	implements SingleComparable<This>, CharSequence
 {
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -37,6 +37,8 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	{
 		super(rawValue, constructor, rules);
 	}
+	
+	@Override public int compareTo(This that) { return this.raw.compareTo(that.raw); }
 	
 	/** Rule to trim whitespace from beginning and end of raw string value. */
 	public static final Rule<String> trimWhitespace = String::trim;

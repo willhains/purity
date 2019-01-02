@@ -15,6 +15,30 @@ public class SingleStringTest
 	}
 	
 	@Test
+	public void shouldCompareLess()
+	{
+		final Name x = new Name("Anthony");
+		final Name y = new Name("Barnaby");
+		assertTrue(x.compareTo(y) < 0);
+	}
+	
+	@Test
+	public void shouldCompareMore()
+	{
+		final Name x = new Name("Anthony");
+		final Name y = new Name("Barnaby");
+		assertTrue(y.compareTo(x) > 0);
+	}
+	
+	@Test
+	public void shouldCompareEqual()
+	{
+		final Name x = new Name("Anthony");
+		final Name y = new Name("Anthony");
+		assertTrue(x.compareTo(y) == 0);
+	}
+	
+	@Test
 	public void shouldReturnUntrimmedLength()
 	{
 		final Name x = new Name("Will ");

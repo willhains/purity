@@ -8,8 +8,7 @@ import static com.willhains.purity.Rule.rules;
 import static com.willhains.purity.SingleDecimal.$;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class SingleDecimalTest
 {
@@ -43,6 +42,31 @@ public class SingleDecimalTest
 		assertThat(x.toString(), is("123456000000000000"));
 		final Price y = new Price("0.000000000000000123");
 		assertThat(y.toString(), is("0.000000000000000123"));
+	}
+	
+	@Test
+	public void shouldCompareLarger()
+	{
+		final Price x = new Price("10.0");
+		final Price y = new Price("5.0");
+		assertTrue(x.compareTo(y) > 0);
+	}
+	
+	@Test
+	public void shouldCompareSmaller()
+	{
+		final Price x = new Price("5.0");
+		final Price y = new Price("10.0");
+		assertTrue(x.compareTo(y) < 0);
+	}
+	
+	@Test
+	public void shouldCompareEqual()
+	{
+		final Price x = new Price("10.0");
+		final Price y = new Price("10.0");
+		assertEquals(x, y);
+		assertTrue(x.compareTo(y) == 0);
 	}
 	
 	@Test
