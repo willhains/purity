@@ -12,7 +12,7 @@ import static com.willhains.purity.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `int` version of {@link Single}. */
-public abstract @Value class SingleInt<This extends SingleInt<This>>
+public abstract @Value class SingleInt<This extends SingleInt<This>> implements SingleComparable<This>
 {
 	// The single-argument constructor of the subclass
 	private final IntFunction<? extends This> _constructor;
@@ -85,6 +85,8 @@ public abstract @Value class SingleInt<This extends SingleInt<This>>
 	
 	/** Generate rule to normalise the raw integer value to a maximum ceiling value. */
 	public static IntRule ceiling(final int maxValue) { return raw -> Math.min(raw, maxValue); }
+	
+	@Override public final int compareTo(final This that) { return Integer.compare(this.raw, that.raw); }
 	
 	/**
 	 * Test the raw value with {@code condition}.

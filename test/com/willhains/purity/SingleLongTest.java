@@ -238,4 +238,29 @@ public class SingleLongTest
 		}
 		new A(2L);
 	}
+	
+	@Test
+	public void shouldCompareLarger()
+	{
+		final Count x = new Count(100L);
+		final Count y = new Count(50L);
+		assertTrue(x.compareTo(y) > 0);
+	}
+	
+	@Test
+	public void shouldCompareSmaller()
+	{
+		final Count x = new Count(50L);
+		final Count y = new Count(100L);
+		assertTrue(x.compareTo(y) < 0);
+	}
+	
+	@Test
+	public void shouldCompareEqual()
+	{
+		final Count x = new Count(100L);
+		final Count y = new Count(100L);
+		assertEquals(x, y);
+		assertTrue(x.compareTo(y) == 0);
+	}
 }

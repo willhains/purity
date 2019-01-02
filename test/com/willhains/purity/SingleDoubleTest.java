@@ -270,6 +270,31 @@ public class SingleDoubleTest
 	}
 	
 	@Test
+	public void shouldCompareLarger()
+	{
+		final Height x = new Height(10.0);
+		final Height y = new Height(5.0);
+		assertTrue(x.compareTo(y) > 0);
+	}
+	
+	@Test
+	public void shouldCompareSmaller()
+	{
+		final Height x = new Height(5.0);
+		final Height y = new Height(10.0);
+		assertTrue(x.compareTo(y) < 0);
+	}
+	
+	@Test
+	public void shouldCompareEqual()
+	{
+		final Height x = new Height(10.0);
+		final Height y = new Height(10.0);
+		assertEquals(x, y);
+		assertTrue(x.compareTo(y) == 0);
+	}
+	
+	@Test
 	public void shouldRoundHalfUp()
 	{
 		assertThat(new Height(14.5).round().raw, is(15.0));

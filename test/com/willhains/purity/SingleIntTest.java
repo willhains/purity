@@ -238,4 +238,29 @@ public class SingleIntTest
 		}
 		new A(2);
 	}
+	
+	@Test
+	public void shouldCompareLarger()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(50);
+		assertTrue(x.compareTo(y) > 0);
+	}
+	
+	@Test
+	public void shouldCompareSmaller()
+	{
+		final Count x = new Count(50);
+		final Count y = new Count(100);
+		assertTrue(x.compareTo(y) < 0);
+	}
+	
+	@Test
+	public void shouldCompareEqual()
+	{
+		final Count x = new Count(100);
+		final Count y = new Count(100);
+		assertEquals(x, y);
+		assertTrue(x.compareTo(y) == 0);
+	}
 }

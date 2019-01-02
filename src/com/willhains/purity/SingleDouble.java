@@ -11,7 +11,7 @@ import static com.willhains.purity.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `double` version of {@link Single}. */
-public abstract @Value class SingleDouble<This extends SingleDouble<This>>
+public abstract @Value class SingleDouble<This extends SingleDouble<This>> implements SingleComparable<This>
 {
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;
@@ -89,6 +89,8 @@ public abstract @Value class SingleDouble<This extends SingleDouble<This>>
 	
 	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
 	public static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
+	
+	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
 	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }

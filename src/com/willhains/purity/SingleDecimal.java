@@ -14,6 +14,7 @@ import static com.willhains.purity.Rule.validUnless;
  */
 public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	extends Single<BigDecimal, This>
+	implements SingleComparable<This>
 {
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -104,4 +105,6 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	{
 		return x instanceof BigDecimal ? (BigDecimal)x : new BigDecimal(String.valueOf(x));
 	}
+	
+	@Override public final int compareTo(final This that) { return this.raw.compareTo(that.raw); }
 }

@@ -12,7 +12,7 @@ import static com.willhains.purity.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `long` version of {@link Single}. */
-public abstract @Value class SingleLong<This extends SingleLong<This>>
+public abstract @Value class SingleLong<This extends SingleLong<This>> implements SingleComparable<This>
 {
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;
@@ -85,6 +85,8 @@ public abstract @Value class SingleLong<This extends SingleLong<This>>
 	
 	/** Generate rule to normalise the raw long value to a maximum ceiling value. */
 	public static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
+	
+	@Override public final int compareTo(final This that) { return Long.compare(this.raw, that.raw); }
 	
 	/**
 	 * Test the raw value with {@code condition}.
