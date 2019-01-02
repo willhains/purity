@@ -215,29 +215,48 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	/** Delete elements where the key and element do not satisfy the {@code where} condition. */
 	public Index<Key, Element> filter(final BiPredicate<Key, Element> where) { return deleteIf(where.negate()); }
 	
+	/**
+	 * Convert the keys and elements to new values using the mapper functions.
+	 * When two resulting keys are the same, the latter survives.
+	 */
+	public <@Value ConvertedKey, @Value ConvertedElement> Index<ConvertedKey, ConvertedElement> map(
+		final BiFunction<Key, Element, Pair<ConvertedKey, ConvertedElement>> mapper)
+	{
+		return _transform(before ->
+		{
+			final Map<ConvertedKey, ConvertedElement> after = new HashMap<>(before.size());
+			before.forEach((key, element) ->
+			{
+				final Pair<ConvertedKey, ConvertedElement> newPair = mapper.apply(key, element);
+				after.put(newPair.left, newPair.right);
+			});
+			return after;
+		});
+	}
+	
 	/** Convert the keys to new values using the mapper function. When two are the same, the latter will survive. */
-	public <@Value Converted> Index<Converted, Element> mapKeys(final BiFunction<Key, Element, Converted> mapper)
+	public <@Value Converted> Index<Converted, Element> mapKeys(final Function<Key, Converted> mapper)
 	{
 		return _transform(before ->
 		{
 			final Map<Converted, Element> after = new HashMap<>(before.size());
-			before.forEach((key, element) -> after.put(mapper.apply(key, element), element));
+			before.forEach((key, element) -> after.put(mapper.apply(key), element));
 			return after;
 		});
 	}
 	
 	/** Convert the elements to new values using the mapper function. */
-	public <@Value Converted> Index<Key, Converted> mapElements(final BiFunction<Key, Element, Converted> mapper)
+	public <@Value Converted> Index<Key, Converted> mapElements(final Function<Element, Converted> mapper)
 	{
 		return _transform(before ->
 		{
 			final Map<Key, Converted> after = new HashMap<>(before.size());
-			before.forEach((key, element) -> after.put(key, mapper.apply(key, element)));
+			before.forEach((key, element) -> after.put(key, mapper.apply(element)));
 			return after;
 		});
 	}
 	
-	/** Same as {@link #flip(BinaryOperator)}, where the last mapping of hte same value survives. */
+	/** Same as {@link #flip(BinaryOperator)}, where the last mapping of the same value survives. */
 	public Index<Element, Key> flip()
 	{
 		return flip((first, second) -> second);

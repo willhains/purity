@@ -52,6 +52,29 @@ public class IndexTest
 		assertThat(x.asMap().get("a"), is(1));
 		assertThat(x.asMap().get("b"), is(2));
 	}
+	
+	@Test
+	public void shouldCopyEmptyIterable()
+	{
+		final Iterable<Pair<String, Integer>> iterable = Arrays.asList();
+		final Index<String, Integer> x = Index.copy(iterable);
+		assertTrue(x.isEmpty());
+	}
+	
+	@Test
+	public void shouldNeverEqualNull()
+	{
+		final Index<String, Integer> x = Index.of("a", 1);
+		assertFalse(x.equals(null));
+	}
+	
+	@Test
+	public void shouldNeverEqualAnotherClass()
+	{
+		final Map<String, Integer> map = Map.of("a", 1);
+		final Index<String, Integer> x = Index.of("a", 1);
+		assertFalse(x.equals(map));
+	}
 
 	@Test
 	public void shouldBeImmutableAfterCopyConstructor()
@@ -129,5 +152,184 @@ public class IndexTest
 		final Index<String, Integer> x = Index.of("a", 1);
 		assertFalse(x.isEmpty());
 		assertThat(x.size(), is(1));
+	}
+	
+	@Test
+	public void shouldFindKey()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2);
+		assertTrue(x.containsKey("a"));
+		assertTrue(x.containsKey("b"));
+		assertTrue(x.containsElement(1));
+		assertTrue(x.containsElement(2));
+		assertThat(x.get("a").get(), is(1));
+		assertThat(x.get("b").get(), is(2));
+	}
+	
+	@Test
+	public void shouldNotFindKey()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2);
+		assertFalse(x.containsKey("c"));
+		assertFalse(x.containsElement(3));
+		assertFalse(x.get("c").isPresent());
+	}
+	
+	@Test
+	public void shouldInvokeConsumerOnlyIfKeyExists()
+	{
+		final StringBuilder string = new StringBuilder();
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		x.ifPresent("a", string::append);
+		x.ifPresent("b", string::append);
+		x.ifPresent("c", string::append);
+		x.ifPresent("d", string::append);
+		assertThat(string.toString(), is("123"));
+	}
+	
+	@Test
+	public void shouldMutateMultipleIndexesIndependently()
+	{
+		final Index<String, Integer> x = Index.of("a", 1);
+		final Index<String, Integer> y = x.append("b", 2);
+		final Index<String, Integer> z = x.append("c", 3);
+		assertThat(y, is(Index.of("a", 1).append("b", 2)));
+		assertThat(z, is(Index.of("a", 1).append("c", 3)));
+	}
+	
+	@Test
+	public void shouldNotStackOverflowWhenAppendingManyElements()
+	{
+		final int stackSize = 100_000;
+		Index<String, Integer> x = Index.empty();
+		for(int i = 0; i < stackSize; i++) x = x.append(Integer.toString(i), i);
+		assertThat(x.size(), is(stackSize));
+	}
+	
+	@Test
+	public void shouldAppendSingleElement()
+	{
+		final Index<String, Integer> x = Index.of("a", 1);
+		final Index<String, Integer> y = x.append("b", 2);
+		assertThat(y.get("a").get(), is(1));
+		assertThat(y.get("b").get(), is(2));
+		assertFalse(x.containsKey("b"));
+	}
+	
+	@Test
+	public void shouldOverwriteExistingKey()
+	{
+		final Index<String, Integer> x = Index.of("a", 1);
+		final Index<String, Integer> y = x.append("a", 2);
+		assertThat(x.get("a").get(), is(1));
+		assertThat(y.get("a").get(), is(2));
+	}
+	
+	@Test
+	public void shouldAppendSinglePair()
+	{
+		final Index<String, Integer> x = Index.of("a", 1);
+		final Index<String, Integer> y = x.append(Pair.of("b", 2));
+		assertThat(y.get("a").get(), is(1));
+		assertThat(y.get("b").get(), is(2));
+		assertFalse(x.containsKey("b"));
+	}
+	
+	@Test
+	public void shouldAppendMultipleElementsFromIndex()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2);
+		final Index<String, Integer> y = Index.copy(Map.of("b", 7, "c", 8, "d",9));
+		final Index<String, Integer> z = x.append(y);
+		assertThat(z.get("a").get(), is(1));
+		assertThat(z.get("b").get(), is(7));
+		assertThat(z.get("c").get(), is(8));
+		assertThat(z.get("d").get(), is(9));
+	}
+	
+	@Test
+	public void shouldAppendMultipleElementsFromMap()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2);
+		final Map<String, Integer> y = Map.of("b", 7, "c", 8, "d",9);
+		final Index<String, Integer> z = x.append(y);
+		assertThat(z.get("a").get(), is(1));
+		assertThat(z.get("b").get(), is(7));
+		assertThat(z.get("c").get(), is(8));
+		assertThat(z.get("d").get(), is(9));
+	}
+	
+	@Test
+	public void shouldDeleteSingleKey()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2);
+		final Index<String, Integer> y = x.delete("a");
+		assertThat(y, is(Index.of("b",2)));
+	}
+	
+	@Test
+	public void shouldDeleteMultipleKeys()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.delete(Plural.of("b", "c", "d"));
+		assertThat(y.get("a").get(), is(1));
+		assertFalse(y.get("b").isPresent());
+		assertFalse(y.get("c").isPresent());
+	}
+	
+	@Test
+	public void shouldDeleteByPredicate()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.deleteIf((key, element) -> element > 1);
+		assertThat(y, is(Index.of("a", 1)));
+	}
+	
+	@Test
+	public void shouldFilterByPredicate()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.filter((key, element) -> element > 2);
+		assertThat(y, is(Index.of("c", 3)));
+	}
+	
+	@Test
+	public void shouldConvertEntries()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.map((key, element) -> Pair.of(key.toUpperCase(), -element));
+		assertThat(y, is(Index.copy(Map.of("A", -1, "B", -2, "C", -3))));
+	}
+	
+	@Test
+	public void shouldConvertKeys()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.mapKeys(String::toUpperCase);
+		assertThat(y, is(Index.copy(Map.of("A", 1, "B", 2, "C", 3))));
+	}
+	
+	@Test
+	public void shouldConvertElements()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 3));
+		final Index<String, Integer> y = x.mapElements(element -> -element);
+		assertThat(y, is(Index.copy(Map.of("a", -1, "b", -2, "c", -3))));
+	}
+	
+	@Test
+	public void shouldFlipWithOriginalEntriesSurviving()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 2));
+		final Index<Integer, String> y = x.flip((first, second) -> first);
+		assertThat(y, is(Index.copy(Map.of(1, "a", 2, "b"))));
+	}
+	
+	@Test
+	public void shouldFlipWithLatterEntriesSurviving()
+	{
+		final Index<String, Integer> x = Index.copy(Map.of("a", 1, "b", 2, "c", 2));
+		final Index<Integer, String> y = x.flip();
+		assertThat(y, is(Index.copy(Map.of(1, "a", 2, "c"))));
 	}
 }
