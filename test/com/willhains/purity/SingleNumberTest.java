@@ -88,13 +88,14 @@ public class SingleNumberTest
 		assertFalse(x.isLessThanOrEqualTo(8.0f));
 	}
 	
+	static final class Name extends SingleString<Name> { Name(final String x) { super(x, Name::new); } }
+	
 	@Test
 	public void shouldConvertAnythingToDecimal()
 	{
 		assertThat($("12345.67890"), is(new BigDecimal("12345.67890")));
 		assertThat($(12.3450), is(new BigDecimal("12.345")));
 		assertThat($(6), is(new BigDecimal("6")));
-		class Name extends SingleString<Name> { Name(final String x) { super(x, Name::new); } }
 		assertThat($(new Name("12.345")), is(new BigDecimal("12.345")));
 	}
 	

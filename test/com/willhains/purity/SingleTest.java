@@ -51,10 +51,11 @@ public class SingleTest
 		assertFalse(x.equals(null));
 	}
 	
+	static final class Height2 extends Single<Float, Height2> { public Height2(Float x) { super(x, Height2::new); } }
+	
 	@Test
 	public void shouldAlwaysBeUnequalToDifferentClass()
 	{
-		class Height2 extends Single<Float, Height2> { public Height2(Float x) { super(x, Height2::new); } }
 		final Height x = new Height(123f);
 		final Height2 y = new Height2(123f);
 		assertFalse(x.equals(y));

@@ -30,10 +30,11 @@ public class SingleLongTest
 		assertFalse(x.equals(null));
 	}
 	
+	static final class Count2 extends SingleLong<Count2> { public Count2(long x) { super(x, Count2::new); } }
+	
 	@Test
 	public void shouldAlwaysBeUnequalToDifferentClass()
 	{
-		class Count2 extends SingleLong<Count2> { public Count2(long x) { super(x, Count2::new); } }
 		final Count x = new Count(123L);
 		final Count2 y = new Count2(123L);
 		assertFalse(x.equals(y));
@@ -112,72 +113,81 @@ public class SingleLongTest
 		assertThat(x.toString(), equalTo("100"));
 	}
 	
+	static final class A extends SingleLong<A> { A(long a) { super(a, A::new, rules(min(2L), max(5L))); } }
+	
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, rules(min(2L), max(5L))); } }
 		new A(2L);
 		new A(5L);
 	}
 	
+	static final class B extends SingleLong<B> { B(long a) { super(a, B::new, min(2L)); } }
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, min(2L)); } }
-		new A(1L);
+		new B(1L);
 	}
+	
+	static final class C extends SingleLong<C> { C(long a) { super(a, C::new, max(5L)); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, max(5L)); } }
-		new A(6L);
+		new C(6L);
+	}
+	
+	static final class D extends SingleLong<D> { D(long a)
+	{
+		super(a, D::new, rules(greaterThan(2L), lessThan(5L))); }
 	}
 	
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
-		class A extends SingleLong<A> { A(long a)
-		{
-			super(a, A::new, rules(greaterThan(2L), lessThan(5L))); }
-		}
-		new A(3L);
-		new A(4L);
+		new D(3L);
+		new D(4L);
 	}
+	
+	static final class E extends SingleLong<E> { E(long a) { super(a, E::new, greaterThan(2L)); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, greaterThan(2L)); } }
-		new A(2L);
+		new E(2L);
 	}
+	
+	static final class F extends SingleLong<F> { F(long a) { super(a, F::new, lessThan(5L)); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, lessThan(5L)); } }
-		new A(5L);
+		new F(5L);
 	}
+	
+	static final class G extends SingleLong<G> { G(long a) { super(a, G::new, rules(floor(2L), ceiling(5L))); } }
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, rules(floor(2L), ceiling(5L))); } }
-		assertThat(new A(3L).raw, is(3L));
+		assertThat(new G(3L).raw, is(3L));
 	}
+	
+	static final class H extends SingleLong<H> { H(long a) { super(a, H::new, floor(2L)); } }
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, floor(2L)); } }
-		assertThat(new A(1L).raw, is(2L));
+		assertThat(new H(1L).raw, is(2L));
 	}
+	
+	static final class I extends SingleLong<I> { I(long a) { super(a, I::new, ceiling(5L)); } }
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		class A extends SingleLong<A> { A(long a) { super(a, A::new, ceiling(5L)); } }
-		assertThat(new A(6L).raw, is(5L));
+		assertThat(new I(6L).raw, is(5L));
 	}
 	
 	@Test
@@ -236,14 +246,15 @@ public class SingleLongTest
 		assertThat(y.raw, equalTo(101L));
 	}
 	
+	static final class J extends SingleLong<J>
+	{
+		J(long a) { super(a, J::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
+	}
+	
 	@Test
 	public void customRules()
 	{
-		class A extends SingleLong<A>
-		{
-			A(long a) { super(a, A::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
-		}
-		new A(2L);
+		new J(2L);
 	}
 	
 	@Test
