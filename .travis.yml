@@ -1,0 +1,17 @@
+# JDK
+language: java
+jdk:
+- oraclejdk10
+
+# Release builds
+before_deploy:
+- mvn -DskipTests package
+- export jarfilename=$(ls target/purity-*.jar)
+deploy:
+  provider: releases
+  api_key:
+    secure: dNwBAzE8OXIq1MpHlP2Jgay2W+qiIdiY4dCs4IRj39w6sUUbd7NttX39Osu9L4/2zX4uFmzsm0tasCWaVTseZB+QfNJJOY1wQKj3MOcyCcUSxxBlbm8V/fZE4vxCnTg1xNYEbIKh+2b95U7oEsJmIWz4nB8m2sQT9P+JW2/ZmS2JOdQJgpY1iqk954RKC1y1ci24bd9GI9hyG3pdgOA9VBKaJXrtDgcRtOOjWRB/nnNEVTx2Hh8nD4wb36/41Nkeg+gppBwmHY6ymc8LRH+Mr3ZCofpgdb3ZPVlmLjtP8fZVszw1HwgY5kgKm2UbUl6XkCqbNFz4WesCEaGHdfkINmbXRlJTYYuDCMyJ3Srg6+lUL3PJ7pScabW9zmFTw6OU3QfuvdV1Mn+WDVV0UITRn6siktQdmLUQu7oSZYextm+UWNMtbJUUxXhzFE489CLd2uDlEiDsNMfMBay9RUMjz9yyvXcNcmqXQJwqu/C1QYGhrYKmT6UXJmVaBRUK16EZGJU5u5svB1wdP99TgC2HLPcRustjacMPdjxpIf0Mk7B8UzRp9PCcNmJ5NedjPcGn6rwZNgu8pFiLC2dw4SauhYuJQFTw7S8fwuHdzyzVJdEjxGh+jy9TEy3i5x2X0xMXnDMfF+xzFnefzKgrxqstIV56rqaQ1UB2/Art+HZzeLk=
+  file: ${jarfilename}
+  on:
+    repo: willhains/purity
+    tags: true
