@@ -71,7 +71,7 @@ public final @Value class HostName extends SingleString<HostName>
 		minLength(1),
 		maxLength(255));
 
-	public HostName(String hostName) { super(hostName, rules, HostName::new); }
+	public HostName(String hostName) { super(hostName, HostName::new, rules); }
 }
 ```
 
