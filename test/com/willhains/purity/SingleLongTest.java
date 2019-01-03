@@ -305,10 +305,11 @@ public class SingleLongTest
 		assertFalse(x.isNegative());
 	}
 	
+	static final @Value class Id extends SingleLong<Id> { Id(long id) { super(id, Id::new); } }
+	
 	@Test
 	public void shouldIdentifyNegative()
 	{
-		@Value class Id extends SingleLong<Id> { Id(long id) { super(id, Id::new); } }
 		final Id x = new Id(-1);
 		assertFalse(x.isZero());
 		assertTrue(x.isNonZero());
