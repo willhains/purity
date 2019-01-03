@@ -1,4 +1,7 @@
-# Purity [![Build Status][travis-status]][travis]
+# Purity
+
+[![Build Status][travis-status]][travis]
+
 [travis-status]: https://travis-ci.org/willhains/purity.svg?branch=master
 [travis]: https://travis-ci.org/willhains/purity
 
