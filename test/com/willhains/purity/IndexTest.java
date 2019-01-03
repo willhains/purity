@@ -2,9 +2,7 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -335,5 +333,21 @@ public class IndexTest
 		final Index<String, Integer> x = Index.of("a", 1).append("b", 2).append("c", 2);
 		final Index<Integer, String> y = x.flip();
 		assertThat(y, is(Index.of(1, "a").append(2, "c")));
+	}
+	
+	@Test(expected = UnsupportedOperationException.class)
+	public void shouldNotBeMutableViaKeysView()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2).append("c", 3);
+		final Set<String> keys = x.keys();
+		keys.remove("a");
+	}
+	
+	@Test(expected = UnsupportedOperationException.class)
+	public void shouldNotBeMutableViaElementsView()
+	{
+		final Index<String, Integer> x = Index.of("a", 1).append("b", 2).append("c", 3);
+		final Collection<Integer> elements = x.elements();
+		elements.remove(1);
 	}
 }

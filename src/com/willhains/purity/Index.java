@@ -142,6 +142,9 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	public boolean containsElement(final Element element) { return _prepareForRead().containsValue(element); }
 	public void ifPresent(final Key key, final Consumer<Element> then) { get(key).ifPresent(then); }
 	
+	public Set<Key> keys() { return Collections.unmodifiableSet(_prepareForRead().keySet()); }
+	public Collection<Element> elements() { return Collections.unmodifiableCollection(_prepareForRead().values()); }
+	
 	/// Mutations ///
 	
 	private static final class Mutating<@Value Key, @Value Element, @Value ConvertedKey, @Value ConvertedElement>
