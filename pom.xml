@@ -3,7 +3,7 @@
   <groupId>purity</groupId>
   <artifactId>purity</artifactId>
   <version>1.2.4</version>
-  <name>Equality</name>
+  <name>Purity</name>
   <description>Build robust, value-based applications in Java</description>
   <properties>
     <finalName>${project.artifactId}-${project.version}</finalName>
