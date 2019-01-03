@@ -98,10 +98,14 @@ public class SingleDecimalTest
 		assertFalse(x.isNegative());
 	}
 	
+	static final @Value class Factor extends SingleDecimal<Factor>
+	{
+		Factor(BigDecimal factor) { super(factor, Factor::new); }
+	}
+	
 	@Test
 	public void shouldIdentifyNegative()
 	{
-		@Value class Factor extends SingleDecimal<Factor> { Factor(BigDecimal factor) { super(factor, Factor::new); } }
 		final Factor x = new Factor($(-0.1));
 		assertFalse(x.isZero());
 		assertTrue(x.isNonZero());
@@ -148,80 +152,89 @@ public class SingleDecimalTest
 		assertThat(new Price("14.1").roundUp().raw, is($("15")));
 	}
 	
+	static final class A extends SingleDecimal<A>
+	{
+		A(BigDecimal a) { super(a, A::new, Rule.rules(min($(2)), max($(5)))); }
+	}
+	
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
-		class A extends SingleDecimal<A>
-		{
-			A(BigDecimal a) { super(a, A::new, Rule.rules(min($(2)), max($(5)))); }
-		}
 		new A($(2));
 		new A($(5));
 	}
 	
+	static final class B extends SingleDecimal<B> { B(BigDecimal a) { super(a, B::new, min($(2))); } }
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, min($(2))); } }
-		new A($(1));
+		new B($(1));
 	}
+	
+	static final class C extends SingleDecimal<C> { C(BigDecimal a) { super(a, C::new, max($(5))); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, max($(5))); } }
-		new A($(6));
+		new C($(6));
+	}
+	
+	static final class D extends SingleDecimal<D>
+	{
+		private D(BigDecimal a) { super(a, D::new); }
+		D(String a) { super(a, D::new, rules(greaterThan($(2)), lessThan($(5)))); }
 	}
 	
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
-		class A extends SingleDecimal<A>
-		{
-			private A(BigDecimal a) { super(a, A::new); }
-			A(String a) { super(a, A::new, rules(greaterThan($(2)), lessThan($(5)))); }
-		}
-		new A("3");
-		new A("4");
+		new D("3");
+		new D("4");
 	}
+	
+	static final class E extends SingleDecimal<E> { E(BigDecimal a) { super(a, E::new, greaterThan($(2))); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, greaterThan($(2))); } }
-		new A($(2));
+		new E($(2));
 	}
+	
+	static final class F extends SingleDecimal<F> { F(BigDecimal a) { super(a, F::new, lessThan($(5))); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, lessThan($(5))); } }
-		new A($(5));
+		new F($(5));
+	}
+	
+	static final class G extends SingleDecimal<G>
+	{
+		private G(BigDecimal a) { super(a, G::new); }
+		G(double a) { super(a, G::new, rules(floor($(2)), ceiling($(5)))); }
 	}
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		class A extends SingleDecimal<A>
-		{
-			private A(BigDecimal a) { super(a, A::new); }
-			A(double a) { super(a, A::new, rules(floor($(2)), ceiling($(5)))); }
-		}
-		assertThat(new A(3.0).raw, is($(3)));
+		assertThat(new G(3.0).raw, is($(3)));
 	}
+	
+	static final class H extends SingleDecimal<H> { H(BigDecimal a) { super(a, H::new, floor($(2))); } }
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, floor($(2))); } }
-		assertThat(new A($(1)).raw, is($(2)));
+		assertThat(new H($(1)).raw, is($(2)));
 	}
+	
+	static final class I extends SingleDecimal<I> { I(BigDecimal a) { super(a, I::new, ceiling($(5))); } }
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new, ceiling($(5))); } }
-		assertThat(new A($(6)).raw, is($(5)));
+		assertThat(new I($(6)).raw, is($(5)));
 	}
 	
 	@Test

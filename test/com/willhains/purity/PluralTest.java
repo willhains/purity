@@ -572,13 +572,14 @@ public class PluralTest
 		assertThat(x.sorted(), is(Plural.of("acrobatics", "banana", "coconut")));
 	}
 	
+	static final class Name extends Single<String, Name>
+	{
+		Name(final String raw) { super(raw, Name::new); }
+	}
+	
 	@Test
 	public void shouldSortByToString()
 	{
-		class Name extends Single<String, Name>
-		{
-			Name(final String raw) { super(raw, Name::new); }
-		}
 		final Plural<Name> x = Plural.of(new Name("Will"), new Name("Hains"));
 		assertThat(x.sorted(), is(Plural.of(new Name("Hains"), new Name("Will"))));
 	}
