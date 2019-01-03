@@ -12,6 +12,7 @@ deploy:
   api_key:
     secure: pJxPSSTlrd4CMev9AoDEhAqLrMBV3eIu/cEQislGZfmHPIcrrFYwve61oZPKypVLnMnf37hZoYQgs5BU/kVq0oMFY7VFVmd0MXiEaYQTZtwu6EestKpWrRJ2FsCPrvp6ZudtANCapwJncQQWMqM437c4x347fN1COwFVBVOFfDhSXDukwzMovOt15HQLZ7pptqU/7pQ1rc4lOzO7G9KXcwD1voJ6hGA4+7Rj1nTXmlK0EdhPfH6joAr07z2Ekyd+ZltfrPSCIuCaGrsXCZ10t5VjBCeFGi+pUoqHS6qucqsp9cV4TLOYOx8iagEPVSMHcre9reTFVQLRWUGDiC+8YqdB3/gmU7kJraRiM1v4GDzNFqHG4KXC1HsHWTPxK8gRkIP4cAj/3O4cZeeWrMDxqyytc+5DnQ4V6OdNfC5k6DltWRIv035n7/n0paq5OaVGBf8t6XSCeFYjWSXPyd15g1g7sF2T04DAl79dBWLbRSS9uQsyi8T6ftLfcmT4Aw+o9/b2GGH/5BB0LyHXJdW9fJdCo+Ch4T+gt8JfToq075eSrCTT3Tpx1tA8tJZ/pXHkE3QRvaco/ePb5oxrtqJ2J4JN7Wz2loKZBP+sn2CVYOhuIozV1UWeS0gbfUujIT9VSFVW13RErSW+PFbH/yoxGfA4h3D5faK5W8+oIOd78lo=
   file: ${jarfilename}
+  skip_cleanup: true
   on:
     repo: willhains/purity
     tags: true
