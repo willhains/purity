@@ -305,10 +305,11 @@ public class SingleIntTest
 		assertFalse(x.isNegative());
 	}
 	
+	static final @Value class Id extends SingleInt<Id> { Id(int id) { super(id, Id::new); } }
+	
 	@Test
 	public void shouldIdentifyNegative()
 	{
-		@Value class Id extends SingleInt<Id> { Id(int id) { super(id, Id::new); } }
 		final Id x = new Id(-1);
 		assertFalse(x.isZero());
 		assertTrue(x.isNonZero());
