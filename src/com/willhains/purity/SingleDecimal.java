@@ -97,7 +97,7 @@ public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
 	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
 	public static Rule<BigDecimal> ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
 	
-	@Override public Number asNumber() { return raw; }
+	@Override public BigDecimal asNumber() { return raw; }
 	
 	@Override public final int compareTo(final This that) { return this.raw.compareTo(that.raw); }
 	@Override public final int compareToNumber(final Number number) { return this.raw.compareTo($(number)); }
