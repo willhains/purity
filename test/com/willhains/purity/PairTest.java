@@ -32,7 +32,7 @@ public class PairTest
 	@Test
 	public void shouldHoldRawValuesAfterConstruction()
 	{
-		final Pair<Height, Weight> bmi = _height.pairWith(_weight);
+		final Pair<Height, Weight> bmi = Pair.of(_height, _weight);
 		assertThat(bmi.left, is(_height));
 		assertThat(bmi.right, is(_weight));
 	}
@@ -40,18 +40,18 @@ public class PairTest
 	@Test
 	public void shouldBeReflexive()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		assertTrue(x.equals(x));
 	}
 	
 	@Test
 	public void shouldBeSymmetric()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
-		final Pair<Height, Weight> y = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
+		final Pair<Height, Weight> y = Pair.of(_height, _weight);
 		assertTrue(x.equals(y));
 		assertTrue(y.equals(x));
-		final Pair<Height, Weight> z = _height.pairWith(_weight.plus(1));
+		final Pair<Height, Weight> z = Pair.of(_height, _weight.plus(1));
 		assertFalse(x.equals(z));
 		assertFalse(z.equals(x));
 	}
@@ -59,13 +59,13 @@ public class PairTest
 	@Test
 	public void shouldBeTransitive()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
-		final Pair<Height, Weight> y = _height.pairWith(_weight);
-		final Pair<Height, Weight> z = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
+		final Pair<Height, Weight> y = Pair.of(_height, _weight);
+		final Pair<Height, Weight> z = Pair.of(_height, _weight);
 		assertTrue(x.equals(y));
 		assertTrue(y.equals(z));
 		assertTrue(x.equals(z));
-		final Pair<Height, Weight> w = _height.pairWith(_weight.plus(1.0));
+		final Pair<Height, Weight> w = Pair.of(_height, _weight.plus(1.0));
 		assertFalse(w.equals(y));
 		assertFalse(w.equals(z));
 	}
@@ -73,9 +73,9 @@ public class PairTest
 	@Test
 	public void shouldBeConsistent()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
-		final Pair<Height, Weight> y = _height.pairWith(_weight);
-		final Pair<Height, Weight> z = _height.pairWith(_weight.plus(1.0));
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
+		final Pair<Height, Weight> y = Pair.of(_height, _weight);
+		final Pair<Height, Weight> z = Pair.of(_height, _weight.plus(1.0));
 		assertTrue(x.equals(y));
 		assertFalse(x.equals(z));
 		assertTrue(x.equals(y));
@@ -88,8 +88,8 @@ public class PairTest
 	@Test
 	public void shouldHaveSameHashCode()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
-		final Pair<Height, Weight> y = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
+		final Pair<Height, Weight> y = Pair.of(_height, _weight);
 		assertTrue(x.equals(y));
 		final int xHash = x.hashCode();
 		final int yHash = y.hashCode();
@@ -99,7 +99,7 @@ public class PairTest
 	@Test
 	public void shouldGenerateSameStringAsUnderlying()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		assertThat(x.toString(), containsString(x.left.toString()));
 		assertThat(x.toString(), containsString(x.right.toString()));
 	}
@@ -107,7 +107,7 @@ public class PairTest
 	@Test
 	public void shouldSwitchLeftAndRight()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Pair<Weight, Height> y = x.flip();
 		assertThat(y.left, is(x.right));
 		assertThat(y.right, is(x.left));
@@ -116,19 +116,19 @@ public class PairTest
 	@Test(expected = NullPointerException.class)
 	public void shouldTrapNullPredicateLeft()
 	{
-		_height.pairWith(_weight).filterLeft(null);
+		Pair.of(_height, _weight).filterLeft(null);
 	}
 	
 	@Test(expected = NullPointerException.class)
 	public void shouldTrapNullPredicateRight()
 	{
-		_height.pairWith(_weight).filterRight(null);
+		Pair.of(_height, _weight).filterRight(null);
 	}
 	
 	@Test
 	public void shouldPassFilterLeftOnMatchingCondition()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Optional<Pair<Height, Weight>> opX = x.filterLeft($ -> $.isGreaterThan(50f));
 		assertThat(opX.get(), is(x));
 	}
@@ -136,7 +136,7 @@ public class PairTest
 	@Test
 	public void shouldPassFilterRightOnMatchingCondition()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Optional<Pair<Height, Weight>> opX = x.filterRight($ -> $.isGreaterThan(50f));
 		assertThat(opX.get(), is(x));
 	}
@@ -144,7 +144,7 @@ public class PairTest
 	@Test
 	public void shouldFailFilterLeftOnNonMatchingCondition()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Optional<Pair<Height, Weight>> opX = x.filterLeft($ -> $.isGreaterThan(1000f));
 		assertFalse(opX.isPresent());
 	}
@@ -152,7 +152,7 @@ public class PairTest
 	@Test
 	public void shouldFailFilterRightOnNonMatchingCondition()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Optional<Pair<Height, Weight>> opX = x.filterRight($ -> $.isGreaterThan(1000f));
 		assertFalse(opX.isPresent());
 	}
@@ -160,19 +160,19 @@ public class PairTest
 	@Test(expected = NullPointerException.class)
 	public void shouldTrapNullMapperLeft()
 	{
-		_height.pairWith(_weight).mapLeft(null);
+		Pair.of(_height, _weight).mapLeft(null);
 	}
 	
 	@Test(expected = NullPointerException.class)
 	public void shouldTrapNullMapperRight()
 	{
-		_height.pairWith(_weight).mapRight(null);
+		Pair.of(_height, _weight).mapRight(null);
 	}
 
 	@Test
 	public void shouldMapLeftToNewValue()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Pair<Height, Weight> y = x.mapLeft(h -> h.plus(1));
 		assertThat(y.left.raw, is(174.5));
 		assertThat(y.right.raw, is(79.4));
@@ -181,7 +181,7 @@ public class PairTest
 	@Test
 	public void shouldMapRightToNewValue()
 	{
-		final Pair<Height, Weight> x = _height.pairWith(_weight);
+		final Pair<Height, Weight> x = Pair.of(_height, _weight);
 		final Pair<Height, Weight> y = x.mapRight(w -> w.plus(1));
 		assertThat(y.left.raw, is(173.5));
 		assertThat(y.right.raw, is(80.4));

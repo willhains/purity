@@ -6,7 +6,6 @@ Wrap naked data in your own value types.
 
 ```java
 public abstract @Value class Single<Raw, This extends Single<Raw, This>>
-    implements Pairable<This>
 
 public abstract @Value class SingleInt<This extends SingleInt<This>>
     implements SingleNumber<This>
