@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 public @Value interface Rule<Raw> extends Function<Raw, Raw>
 {
 	/** Combine multiple rules into a single rule. */
+	@SafeVarargs
 	static <Raw> Rule<Raw> rules(final Rule<Raw>... combiningRules)
 	{
 		return raw ->
