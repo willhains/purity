@@ -5,7 +5,7 @@
 [travis-status]: https://travis-ci.org/willhains/purity.svg?branch=master
 [travis]: https://travis-ci.org/willhains/purity
 
-Build robust, *value-based* applications in Java.
+Build robust, *value-oriented* applications in Java.
 
 ## Motivation
 
@@ -25,7 +25,7 @@ You are here because...
 
 ## Annotations
 
-There are four categories of types in a well-written, value-based application. Purity introduces four annotations to help document and identify them.
+There are four categories of types in a well-written, value-oriented application. Purity introduces four annotations to help document and identify them.
 
 1. `@Value` = a pure, immutable [value type][values]
 2. `@Mutable` = holds data that may change
