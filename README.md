@@ -53,7 +53,9 @@ At a high level, refactoring a codebase to Purity is done in four steps:
 
 ## Value Wrapping
 
-Purity provides a set of `Single*` base types to wrap single values. Use these to encapsulate all the leaf values in types of your own, so that they may have sensible names and APIs that fit into the conceptual domain of your application.
+Purity provides [a set of `Single*` base types][single] to wrap single values. Use these to encapsulate all the leaf values in types of your own, so that they may have sensible names and APIs that fit into the conceptual domain of your application.
+
+[single]: docs/Single.md
 
 For example, `String`s are *everywhere*, but they are not much more typesafe than byte arrays. All `String`s are potentially invalid, untrustworthy, raw data. Wrap them to make them pure, safe, clear, and dependable.
 
