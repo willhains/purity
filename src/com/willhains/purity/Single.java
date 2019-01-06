@@ -37,10 +37,10 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	private final Function<? super Raw, ? extends This> _constructor;
 	
 	/**
-	 * The raw underlying value. This property should be used only when passing the underlying value to
+	 * The raw underlying value. This property should be used only internally, or when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	public final Raw raw;
+	protected final Raw raw;
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
