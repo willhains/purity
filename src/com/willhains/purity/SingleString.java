@@ -38,6 +38,7 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 		super(rawValue, constructor, rules);
 	}
 	
+	@Override public String toString() { return raw; }
 	@Override public int compareTo(This that) { return this.raw.compareTo(that.raw); }
 	
 	/** Rule to trim whitespace from beginning and end of raw string value. */
