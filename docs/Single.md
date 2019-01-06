@@ -121,6 +121,13 @@ public final @Value class ModelNumber extends SingleString<ModelNumber>
 
 Purity provides several built-in constants and static factory methods to help you build your rules.
 
+#### `Rule.rules(...)`
+
+Use this method to chain together multiple rules into a composite rule, to be passed to the super constructor. It is 
+strongly recommended to declare your composite rule as a `static final` constant.
+
+The rules are executed in the same order they are provided to the `rules(...)` function.
+
 #### `min(minValue)`
 
 - Rule type: validation

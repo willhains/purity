@@ -70,7 +70,7 @@ Each base type includes a wide range of useful functions, including normalisatio
 ```java
 public final @Value class HostName extends SingleString<HostName>
 {
-	private static final Rule rules = Rule.build(
+	private static final Rule rules = Rule.rules(
 		trimWhitespace,
 		validCharacters(letters + numbers + "-._"),
 		minLength(1),
