@@ -84,7 +84,10 @@ If you are using a mutable type in an immutable way, you can use `Single` to wra
 public final @Value class TextSupport extends Single<EnumSet<TextOption>>
 {
 	private static final Rule<EnumSet<TextOption>> defensiveCopy = EnumSet::copyOf;
-	public TextSupport(EnumSet<TextOption> options) { super(options, TextSupport::new, defensiveCopy); }
+	public TextSupport(EnumSet<TextOption> options)
+	{
+		super(options, TextSupport::new, defensiveCopy);
+	}
 }
 ```
 
