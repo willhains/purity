@@ -11,21 +11,6 @@ import static java.util.Objects.requireNonNull;
 /**
  * A value type wrapping an underlying data type.
  * This supertype and its abstract subtypes make it easy to implement pure {@link Value} types.
- * 
- * <pre>
- * public final @Value class HostName extends Single&lt;String, HostName&gt;
- * {
- *     private static final Rule&lt;String&gt; rules = Rule.rules(
- *         String:toLowerCase,
- *         validUnless(String::isEmpty, "Host name must not be empty"));
- *     public HostName(final String hostname)
- *     {
- *         super(hostname, HostName::new, rules);
- *     }
- *     
- *     // add domain methods here
- * }
- * </pre>
  *
  * @author willhains
  * @param <Raw> The underlying type.
