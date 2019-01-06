@@ -6,22 +6,32 @@ Wrap naked data in your own value types.
 
 ```java
 public abstract @Value class Single<Raw, This extends Single<Raw, This>>
+```
 
+```java
 public abstract @Value class SingleInt<This extends SingleInt<This>>
     implements SingleNumber<This>
+```
 
+```java
 public abstract @Value class SingleLong<This extends SingleLong<This>>
     implements SingleNumber<This>
+```
 
+```java
 public abstract @Value class SingleDouble<This extends SingleDouble<This>>
     implements SingleNumber<This>
+```
 
+```java
 public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
-	extends Single<BigDecimal, This>
+    extends Single<BigDecimal, This>
     implements SingleNumber<This>
+```
 
+```java
 public abstract @Value class SingleString<This extends SingleString<This>>
-	extends Single<String, This>
+    extends Single<String, This>
     implements SingleComparable<This>, CharSequence
 ```
 
