@@ -4,7 +4,7 @@
   <artifactId>purity</artifactId>
   <version>0.1</version>
   <name>Purity</name>
-  <description>Build robust, value-based applications in Java</description>
+  <description>Build robust, value-oriented applications in Java</description>
   <properties>
     <finalName>${project.artifactId}-${project.version}</finalName>
   </properties>
