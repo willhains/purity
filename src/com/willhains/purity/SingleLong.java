@@ -86,7 +86,7 @@ public abstract @Value class SingleLong<This extends SingleLong<This>> implement
 	/** Generate rule to normalise the raw long value to a maximum ceiling value. */
 	public static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
 	
-	@Override public Number asNumber() { return raw; }
+	@Override public Long asNumber() { return raw; }
 	
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw, that.raw); }
 	

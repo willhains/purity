@@ -90,7 +90,7 @@ public abstract @Value class SingleDouble<This extends SingleDouble<This>> imple
 	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
 	public static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
 	
-	@Override public Number asNumber() { return raw; }
+	@Override public Double asNumber() { return raw; }
 	
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
 	

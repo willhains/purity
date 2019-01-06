@@ -86,7 +86,7 @@ public abstract @Value class SingleInt<This extends SingleInt<This>> implements 
 	/** Generate rule to normalise the raw integer value to a maximum ceiling value. */
 	public static IntRule ceiling(final int maxValue) { return raw -> Math.min(raw, maxValue); }
 	
-	@Override public Number asNumber() { return raw; }
+	@Override public Integer asNumber() { return raw; }
 	
 	@Override public final int compareTo(final This that) { return Integer.compare(this.raw, that.raw); }
 	
