@@ -223,11 +223,41 @@ When you need more than the built-in rules above, you can easily create your own
 private static final Rule<String> removeSpaces = raw -> raw.replace(" ", "");
 
 // Validation: throw exception when raw string begins with an underscore character
-private static final Rule<String> noLeadingUnderscore = raw ->
-{
-	if(raw.startsWith("_")) throw new IllegalArgumentException("no leading underscores!");
-}
+private static final Rule<String> noLeadingUnderscore =
+	validUnless(raw -> raw.startsWith("_"), "no leading underscores!");
 ```
+
+Purity provides validation rule factory methods, for building your own custom validations.
+
+#### `validUnless(condition,errorMessage)`
+
+- Rule type: validation
+- Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
+
+Throws an `IllegalArgumentException` with the specified `errorMessage` if `condition` evaluates to true.
+
+#### `validUnless(condition,errorMessageFactory)`
+
+- Rule type: validation
+- Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
+
+Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if 
+`condition` evaluates to true.
+
+#### `validOnlyIf(condition,errorMessage)`
+
+- Rule type: validation
+- Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
+
+Throws an `IllegalArgumentException` with the specified `errorMessage` if `condition` evaluates to false.
+
+#### `validOnlyIf(condition,errorMessageFactory)`
+
+- Rule type: validation
+- Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
+
+Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if 
+`condition` evaluates to false.
 
 ## Add Custom Operations
 
