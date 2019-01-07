@@ -49,7 +49,7 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 Wrapping naked values in your own custom value classes has many benefits:
 
 - **Naming.** You can give the class a name that describes the kind of information it contains. You can name methods, and method arguments. Well-named classes, methods, and arguments reduce the need for documentation and Javadoc comments, because you can make it obvious.
-- **Custom API.** You can expose only methods that make sense in the context of your app. For example, `.toLowerCase()` wouldn't make sends on a class for `ModelNumber`, so we wouldn't include it.
+- **Custom API.** You can expose only methods that make sense in the context of your app. For example, `.toLowerCase()` wouldn't make sense on a string-based value class `PhoneNumber`, so we wouldn't include it.
 - **Type Safety.** Most apps have an abundance of `String`s and `int`s all over the place. The compiler doesn't know anything about what data they represent, so you can easily mistake a customer name for a phone number, or whatever. Giving each kind of value its own class allows the compiler to do that checking for you.
 - **Code Clarity.** It's much easier to read code that deals with its data in terms of `ModelNumber`/`ProductCode`/`HostName`/`PhoneNumber` than code that uses `String`/`String`/`String`/`String`.
 - **Validation and Normalisation.** You can check and massage the raw data at construction time, to make sure it is always valid.
