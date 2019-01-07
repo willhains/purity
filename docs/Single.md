@@ -261,7 +261,7 @@ Throws an `IllegalArgumentException` and builds an error message with the specif
 
 ## Add Custom Operations
 
-Add methods to your value class related to the data it represents. Methods on value classes are easy to test, which means they tend to have fewer bugs. That’s why Purity encourages moving as much of your app’s logic as possible to methods of value classes.
+Turn your values into *smart values* by adding custom methods on your value class related to the data it represents. Methods on value classes are easy to test, which means they tend to have fewer bugs. That’s why Purity encourages moving as much of your app’s logic as possible to methods of value classes. As long as they don't mutate, do input/output, or mess with concurrency, go nuts!
 
 The `Single` base classes expose the raw value as a protected property `raw`. Use it to implement methods on your class.
 
