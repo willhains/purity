@@ -9,11 +9,11 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A value type wrapping an underlying data type.
+ * A value type wrapping an underlying immutable type.
  * This supertype and its abstract subtypes make it easy to implement pure {@link Value} types.
  *
  * @author willhains
- * @param <Raw> The underlying type.
+ * @param <Raw> The underlying type. Must be strictly immutable.
  * @param <This> Self-reference to the subclass type itself.
  */
 public abstract @Value class Single<Raw, This extends Single<Raw, This>>
@@ -28,7 +28,7 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	protected final Raw raw;
 	
 	/**
-	 * @param rawValue The raw value this object will represent.
+	 * @param rawValue The raw, immutable value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)

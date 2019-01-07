@@ -76,27 +76,6 @@ public final @Value class FamilyName extends SingleString<FamilyName>
 6. Add a constuctor with a single argument of the raw type.
 7. Call the super constructor with the raw value, and a method reference to your constructor (`YourClass::new`).
 
-### Wrap a Mutable Type to Make it Immutable
-
-If you are using a mutable type in an immutable way, you can use `Single` to wrap it and enforce that immutability.
-
-```java
-public final @Value class TextSupport extends Single<EnumSet<TextOption>>
-{
-	private static final Rule<EnumSet<TextOption>> defensiveCopy = EnumSet::copyOf;
-	public TextSupport(EnumSet<TextOption> options)
-	{
-		super(options, TextSupport::new, defensiveCopy);
-	}
-}
-```
-
-With mutable `Raw` types, be careful to:
-
-- Make a defensive copy in the constructor, to prevent mutations after the constructor returns. You can use a `Rule` to implement this.
-- Don't leak a reference to your `raw` object outside the class.
-- Obviously, don't mutate the `raw` object directly in your class's methods.
-
 ## Validation and Normalisation
 
 Purity strongly encourages *normalising* and *validating* data in your value class constructors. Doing so pushes data validation/normalisation out to the edges of your app, at their points of input. That means, wherever you see a `ModelNumber` in your code, you *know* it is definitely valid data. In the core logic of your app, you don't ever have to deal with the possibility of invalid data.
