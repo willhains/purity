@@ -82,6 +82,8 @@ public final @Value class HostName extends SingleString<HostName>
 
 Validating raw data in the constructors of `@Value` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
 
+See [the `Single` docs][single] for more information.
+
 ## Value-Based Collections
 
 Purity also provides pure value alternatives to Java's collections.
