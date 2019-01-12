@@ -20,7 +20,7 @@ public abstract @Value class SingleDouble<This extends SingleDouble<This>> imple
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	public final double raw;
+	protected final double raw;
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -41,6 +41,8 @@ public abstract @Value class SingleDouble<This extends SingleDouble<This>> imple
 	{
 		this(rules.apply(rawValue), constructor);
 	}
+	
+	public final double raw() { return raw; }
 	
 	@Override public final int hashCode() { return Double.hashCode(raw); }
 	@Override public String toString() { return Double.toString(raw); }

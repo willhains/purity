@@ -21,7 +21,7 @@ public abstract @Value class SingleInt<This extends SingleInt<This>> implements 
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	public final int raw;
+	protected final int raw;
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -42,6 +42,8 @@ public abstract @Value class SingleInt<This extends SingleInt<This>> implements 
 	{
 		this(rules.apply(rawValue), constructor);
 	}
+	
+	public final int raw() { return raw; }
 	
 	@Override public final int hashCode() { return Integer.hashCode(raw); }
 	@Override public String toString() { return Integer.toString(raw); }

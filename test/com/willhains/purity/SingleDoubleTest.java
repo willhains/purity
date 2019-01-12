@@ -20,14 +20,14 @@ public class SingleDoubleTest
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
-		assertThat(new Height(17.3).raw, equalTo(17.3));
+		assertThat(new Height(17.3).raw(), equalTo(17.3));
 	}
 	
 	@Test
 	public void shouldRepresentRawAsNumber()
 	{
 		final Height x = new Height(12.3d);
-		assertThat(x.asNumber(), is(x.raw));
+		assertThat(x.asNumber(), is(x.raw()));
 	}
 	
 	@Test
@@ -205,7 +205,7 @@ public class SingleDoubleTest
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		assertThat(new K(3.0).raw, is(3.0));
+		assertThat(new K(3.0).raw(), is(3.0));
 	}
 	
 	static final class L extends SingleDouble<L> { L(double a) { super(a, L::new, floor(2.0)); } }
@@ -213,7 +213,7 @@ public class SingleDoubleTest
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		assertThat(new L(1.0).raw, is(2.0));
+		assertThat(new L(1.0).raw(), is(2.0));
 	}
 	
 	static final class M extends SingleDouble<M> { M(double a) { super(a, M::new, ceiling(5.0)); } }
@@ -221,7 +221,7 @@ public class SingleDoubleTest
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		assertThat(new M(6.0).raw, is(5.0));
+		assertThat(new M(6.0).raw(), is(5.0));
 	}
 	
 	@Test
@@ -261,7 +261,7 @@ public class SingleDoubleTest
 	{
 		final Height x = new Height(10.0);
 		final Height y = x.map(f -> f + 0.1);
-		assertThat(y.raw, equalTo(10.1));
+		assertThat(y.raw(), equalTo(10.1));
 	}
 	
 	@Test
@@ -277,7 +277,7 @@ public class SingleDoubleTest
 	{
 		final Height x = new Height(10.0);
 		final Height y = x.flatMap(f -> new Height(f + 0.1));
-		assertThat(y.raw, equalTo(10.1));
+		assertThat(y.raw(), equalTo(10.1));
 	}
 	
 	static final class N extends SingleDouble<N>
@@ -297,7 +297,7 @@ public class SingleDoubleTest
 		final Height x = new Height(10.0);
 		final Height y = new Height(5.0);
 		assertTrue(x.compareTo(y) > 0);
-		assertTrue(x.compareToNumber(y.raw) > 0);
+		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
 	
 	@Test
@@ -306,7 +306,7 @@ public class SingleDoubleTest
 		final Height x = new Height(5.0);
 		final Height y = new Height(10.0);
 		assertTrue(x.compareTo(y) < 0);
-		assertTrue(x.compareToNumber(y.raw) < 0);
+		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
 	
 	@Test
@@ -316,7 +316,7 @@ public class SingleDoubleTest
 		final Height y = new Height(10.0);
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
-		assertTrue(x.compareToNumber(y.raw) == 0);
+		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
 	
 	@Test
@@ -351,27 +351,27 @@ public class SingleDoubleTest
 		assertTrue(x.isNegative());
 	}
 	
-	@Test public void shouldAdd() { assertThat(new Height(12.3).plus(0.7).raw, is(13.0)); }
-	@Test public void shouldSubtract() { assertThat(new Height(12.3).minus(0.3).raw, is(12.0)); }
-	@Test public void shouldMultiply() { assertThat(new Height(12.3).multiplyBy(10).raw, is(123.0)); }
-	@Test public void shouldDivide() { assertThat(new Height(12.8).divideBy(2).raw, is(6.4)); }
+	@Test public void shouldAdd() { assertThat(new Height(12.3).plus(0.7).raw(), is(13.0)); }
+	@Test public void shouldSubtract() { assertThat(new Height(12.3).minus(0.3).raw(), is(12.0)); }
+	@Test public void shouldMultiply() { assertThat(new Height(12.3).multiplyBy(10).raw(), is(123.0)); }
+	@Test public void shouldDivide() { assertThat(new Height(12.8).divideBy(2).raw(), is(6.4)); }
 	
 	@Test
 	public void shouldRoundHalfUp()
 	{
-		assertThat(new Height(14.5).round().raw, is(15.0));
-		assertThat(new Height(14.4).round().raw, is(14.0));
+		assertThat(new Height(14.5).round().raw(), is(15.0));
+		assertThat(new Height(14.4).round().raw(), is(14.0));
 	}
 	
 	@Test
 	public void shouldRoundDown()
 	{
-		assertThat(new Height(14.9).roundDown().raw, is(14.0));
+		assertThat(new Height(14.9).roundDown().raw(), is(14.0));
 	}
 	
 	@Test
 	public void shouldRoundUp()
 	{
-		assertThat(new Height(14.1).roundUp().raw, is(15.0));
+		assertThat(new Height(14.1).roundUp().raw(), is(15.0));
 	}
 }

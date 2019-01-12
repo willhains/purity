@@ -21,7 +21,7 @@ public abstract @Value class SingleLong<This extends SingleLong<This>> implement
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	public final long raw;
+	protected final long raw;
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -42,6 +42,8 @@ public abstract @Value class SingleLong<This extends SingleLong<This>> implement
 	{
 		this(rules.apply(rawValue), constructor);
 	}
+	
+	public final long raw() { return raw; }
 	
 	@Override public final int hashCode() { return Long.hashCode(raw); }
 	@Override public String toString() { return Long.toString(raw); }

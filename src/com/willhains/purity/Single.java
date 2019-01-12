@@ -9,11 +9,11 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A value type wrapping an underlying immutable type.
+ * A value type wrapping an underlying data type.
  * This supertype and its abstract subtypes make it easy to implement pure {@link Value} types.
  *
  * @author willhains
- * @param <Raw> The underlying type. Must be strictly immutable.
+ * @param <Raw> The underlying type.
  * @param <This> Self-reference to the subclass type itself.
  */
 public abstract @Value class Single<Raw, This extends Single<Raw, This>>
@@ -21,14 +21,11 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	// The single-argument constructor of the subclass
 	private final Function<? super Raw, ? extends This> _constructor;
 	
-	/**
-	 * The raw underlying value. This property should be used only internally, or when passing the underlying value to
-	 * external APIs. As much as possible, use the wrapped value type.
-	 */
+	/** The raw underlying value. Do not mutate! */
 	protected final Raw raw;
 	
 	/**
-	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param rawValue The raw value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
@@ -46,6 +43,17 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	{
 		this(rules.apply(rawValue), constructor);
 	}
+	
+	/**
+	 * Override this method if {@link Raw} is mutable.
+	 *
+	 * If the underlying {@link Raw} type is immutable, return the {@link #raw} value as-is (default behaviour).
+	 * Otherwise, return a defensive copy.
+	 * 
+	 * The returned {@link Raw} value, if mutable, could be mutated, so the overriding method should be careful to
+	 * make a deep, defensive copy to return to the caller.
+	 */
+	public Raw raw() { return raw; }
 	
 	@Override
 	public final int hashCode()
@@ -131,7 +139,7 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
 	 *         {@code false} otherwise.
 	 */
-	public final boolean is(final Predicate<? super Raw> condition) { return condition.test(raw); }
+	public final boolean is(final Predicate<? super Raw> condition) { return condition.test(raw()); }
 	
 	/** Reverse of {@link #is(Predicate)}. */
 	public final boolean isNot(final Predicate<? super Raw> condition) { return !is(condition); }
@@ -156,9 +164,9 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	 */
 	public final This map(final Function<? super Raw, ? extends Raw> mapper)
 	{
-		final Raw mapped = mapper.apply(raw);
+		final Raw mapped = mapper.apply(raw());
 		@SuppressWarnings("unchecked") final This self = (This)this;
-		if(mapped.equals(raw)) return self;
+		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}
 	
@@ -168,5 +176,5 @@ public abstract @Value class Single<Raw, This extends Single<Raw, This>>
 	 * @param mapper The mapping function to apply to the raw underlying value.
 	 * @return The value returned by {@code mapper}.
 	 */
-	public final This flatMap(final Function<? super Raw, ? extends This> mapper) { return mapper.apply(raw); }
+	public final This flatMap(final Function<? super Raw, ? extends This> mapper) { return mapper.apply(raw()); }
 }
