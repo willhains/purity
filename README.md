@@ -92,6 +92,8 @@ public final @Value class HostName extends SingleString<HostName>
 
 Validating raw data in the constructors of `@Value` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
 
+See [the `Single` docs][single] for more information.
+
 ## Development Status
 
 Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
