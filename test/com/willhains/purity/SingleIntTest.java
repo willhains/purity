@@ -20,7 +20,7 @@ public class SingleIntTest
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
-		assertThat(new Count(173).raw, equalTo(173));
+		assertThat(new Count(173).raw(), equalTo(173));
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class SingleIntTest
 	public void shouldRepresentRawAsNumber()
 	{
 		final Count x = new Count(12);
-		assertThat(x.asNumber(), is(x.raw));
+		assertThat(x.asNumber(), is(x.raw()));
 	}
 	
 	@Test
@@ -171,7 +171,7 @@ public class SingleIntTest
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		assertThat(new G(3).raw, is(3));
+		assertThat(new G(3).raw(), is(3));
 	}
 	
 	static final class H extends SingleInt<H> { H(int a) { super(a, H::new, floor(2)); } }
@@ -179,7 +179,7 @@ public class SingleIntTest
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		assertThat(new H(1).raw, is(2));
+		assertThat(new H(1).raw(), is(2));
 	}
 	
 	static final class I extends SingleInt<I> { I(int a) { super(a, I::new, ceiling(5)); } }
@@ -187,7 +187,7 @@ public class SingleIntTest
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		assertThat(new I(6).raw, is(5));
+		assertThat(new I(6).raw(), is(5));
 	}
 	
 	@Test
@@ -227,7 +227,7 @@ public class SingleIntTest
 	{
 		final Count x = new Count(100);
 		final Count y = x.map(f -> f + 1);
-		assertThat(y.raw, equalTo(101));
+		assertThat(y.raw(), equalTo(101));
 	}
 	
 	@Test
@@ -243,7 +243,7 @@ public class SingleIntTest
 	{
 		final Count x = new Count(100);
 		final Count y = x.flatMap(f -> new Count(f + 1));
-		assertThat(y.raw, equalTo(101));
+		assertThat(y.raw(), equalTo(101));
 	}
 	
 	static final class J extends SingleInt<J>
@@ -263,7 +263,7 @@ public class SingleIntTest
 		final Count x = new Count(100);
 		final Count y = new Count(50);
 		assertTrue(x.compareTo(y) > 0);
-		assertTrue(x.compareToNumber(y.raw) > 0);
+		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
 	
 	@Test
@@ -272,7 +272,7 @@ public class SingleIntTest
 		final Count x = new Count(50);
 		final Count y = new Count(100);
 		assertTrue(x.compareTo(y) < 0);
-		assertTrue(x.compareToNumber(y.raw) < 0);
+		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
 	
 	@Test
@@ -282,7 +282,7 @@ public class SingleIntTest
 		final Count y = new Count(100);
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
-		assertTrue(x.compareToNumber(y.raw) == 0);
+		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
 	
 	@Test
@@ -317,8 +317,8 @@ public class SingleIntTest
 		assertTrue(x.isNegative());
 	}
 	
-	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw, is(12)); }
-	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw, is(2)); }
-	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw, is(15)); }
-	@Test public void shouldDivide() { assertThat(new Count(5).divideBy(2).raw, is(2)); }
+	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw(), is(12)); }
+	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw(), is(2)); }
+	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw(), is(15)); }
+	@Test public void shouldDivide() { assertThat(new Count(5).divideBy(2).raw(), is(2)); }
 }

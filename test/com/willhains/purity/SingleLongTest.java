@@ -20,7 +20,7 @@ public class SingleLongTest
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
-		assertThat(new Count(173L).raw, equalTo(173L));
+		assertThat(new Count(173L).raw(), equalTo(173L));
 	}
 	
 	@Test
@@ -44,7 +44,7 @@ public class SingleLongTest
 	public void shouldRepresentRawAsNumber()
 	{
 		final Count x = new Count(12);
-		assertThat(x.asNumber(), is(x.raw));
+		assertThat(x.asNumber(), is(x.raw()));
 	}
 	
 	@Test
@@ -171,7 +171,7 @@ public class SingleLongTest
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		assertThat(new G(3L).raw, is(3L));
+		assertThat(new G(3L).raw(), is(3L));
 	}
 	
 	static final class H extends SingleLong<H> { H(long a) { super(a, H::new, floor(2L)); } }
@@ -179,7 +179,7 @@ public class SingleLongTest
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		assertThat(new H(1L).raw, is(2L));
+		assertThat(new H(1L).raw(), is(2L));
 	}
 	
 	static final class I extends SingleLong<I> { I(long a) { super(a, I::new, ceiling(5L)); } }
@@ -187,7 +187,7 @@ public class SingleLongTest
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		assertThat(new I(6L).raw, is(5L));
+		assertThat(new I(6L).raw(), is(5L));
 	}
 	
 	@Test
@@ -227,7 +227,7 @@ public class SingleLongTest
 	{
 		final Count x = new Count(100L);
 		final Count y = x.map(f -> f + 1L);
-		assertThat(y.raw, equalTo(101L));
+		assertThat(y.raw(), equalTo(101L));
 	}
 	
 	@Test
@@ -243,7 +243,7 @@ public class SingleLongTest
 	{
 		final Count x = new Count(100L);
 		final Count y = x.flatMap(f -> new Count(f + 1L));
-		assertThat(y.raw, equalTo(101L));
+		assertThat(y.raw(), equalTo(101L));
 	}
 	
 	static final class J extends SingleLong<J>
@@ -263,7 +263,7 @@ public class SingleLongTest
 		final Count x = new Count(100L);
 		final Count y = new Count(50L);
 		assertTrue(x.compareTo(y) > 0);
-		assertTrue(x.compareToNumber(y.raw) > 0);
+		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
 	
 	@Test
@@ -272,7 +272,7 @@ public class SingleLongTest
 		final Count x = new Count(50L);
 		final Count y = new Count(100L);
 		assertTrue(x.compareTo(y) < 0);
-		assertTrue(x.compareToNumber(y.raw) < 0);
+		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
 	
 	@Test
@@ -282,7 +282,7 @@ public class SingleLongTest
 		final Count y = new Count(100L);
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
-		assertTrue(x.compareToNumber(y.raw) == 0);
+		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
 	
 	@Test
@@ -317,8 +317,8 @@ public class SingleLongTest
 		assertTrue(x.isNegative());
 	}
 	
-	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw, is(12L)); }
-	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw, is(2L)); }
-	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw, is(15L)); }
-	@Test public void shouldDivide() { assertThat(new Count(5).divideBy(2).raw, is(2L)); }
+	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw(), is(12L)); }
+	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw(), is(2L)); }
+	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw(), is(15L)); }
+	@Test public void shouldDivide() { assertThat(new Count(5).divideBy(2).raw(), is(2L)); }
 }
