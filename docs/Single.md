@@ -107,7 +107,7 @@ public final @Value class ModelNumber extends SingleString<ModelNumber>
 {
 	private static final Rule rules = Rule.rules(
 		min(7), max(13),
-		validPattern("[AO]\d\d-\d+"));
+		validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }
 }
 ```
@@ -288,7 +288,7 @@ The `Single` base classes expose the raw value as a protected property `raw`. Us
 ```java
 public final @Value class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule rules = Rule.rules(min(7), max(13), validPattern("[AO]\d\d-\d+"));
+	private static final Rule rules = Rule.rules(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }
 
 	public ProductCode getProductCode() { return new ProductCode(raw.substring(0, 3)); }
