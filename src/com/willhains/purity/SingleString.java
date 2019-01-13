@@ -87,6 +87,9 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
 	}
 	
+	/** Intern the raw string. Use this for values that are likely to repeat many times. */
+	public static final Rule<String> intern = String::intern;
+	
 	@Override public final int length() { return raw.length(); }
 	@Override public final char charAt(final int index) { return raw.charAt(index); }
 	
