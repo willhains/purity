@@ -234,6 +234,13 @@ Sets the minimum character count of the raw value. If the raw value is not at le
 
 Sets the maximum character count of the raw value. If the raw value is more than `length` characters long, the rule throws an `IllegalArgumentException`.
 
+#### `intern`
+
+- Rule type: normalisation
+- Availability: `SingleString`
+
+Interns the raw string value, reducing memory usage for oft-repeated string values.
+
 ### Add Your Own Custom Rules
 
 When you need more than the built-in rules above, you can easily create your own rules. A rule is just a function that takes a raw value and either returns a new raw value in its place (a “normalisation rule”), or throws an exception (a “validation rule”).
