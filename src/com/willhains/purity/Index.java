@@ -186,25 +186,18 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		return new Index<>(new Mutating<>(_state, transformer));
 	}
 	
-	public Index<Key, Element> append(final Key key, final Element element)
+	public Index<Key, Element> set(final Key key, final Element element)
 	{
 		return _mutate(map -> map.put(key, element));
 	}
 	
-	public Index<Key, Element> append(final Pair<Key, Element> pair)
+	public Index<Key, Element> set(final Pair<Key, Element> pair)
 	{
 		return _mutate(map -> map.put(pair.left, pair.right));
 	}
 	
-	public Index<Key, Element> append(final Index<Key, Element> elements)
-	{
-		return append(elements._prepareForRead());
-	}
-	
-	public Index<Key, Element> append(final Map<Key, Element> elements)
-	{
-		return _mutate(map -> map.putAll(elements));
-	}
+	public Index<Key, Element> setAll(final Index<Key, Element> elements) { return setAll(elements._prepareForRead()); }
+	public Index<Key, Element> setAll(final Map<Key, Element> elements) { return _mutate(map -> map.putAll(elements)); }
 	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
 	public Index<Key, Element> delete(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
