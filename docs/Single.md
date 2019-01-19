@@ -125,8 +125,7 @@ Purity provides several built-in constants and static factory methods to help yo
 
 #### `Rule.rules(...)`
 
-Use this method to chain together multiple rules into a composite rule, to be passed to the super constructor. It is 
-strongly recommended to declare your composite rule as a `static final` constant.
+Use this method to chain together multiple rules into a composite rule, to be passed to the super constructor. It is strongly recommended to declare your composite rule as a `static final` constant.
 
 The rules are executed in the same order they are provided to the `rules(...)` function.
 
@@ -268,8 +267,7 @@ Throws an `IllegalArgumentException` with the specified `errorMessage` if `condi
 - Rule type: validation
 - Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
 
-Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if 
-`condition` evaluates to true.
+Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if `condition` evaluates to true.
 
 #### `validOnlyIf(condition,errorMessage)`
 
@@ -283,10 +281,149 @@ Throws an `IllegalArgumentException` with the specified `errorMessage` if `condi
 - Rule type: validation
 - Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
 
-Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if 
-`condition` evaluates to false.
+Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if `condition` evaluates to false.
 
-## Add Custom Operations
+## Operations
+
+Extend app-domain value classes with app-domain methods.
+
+### Built-in Operations
+
+Purity provides several built-in operations for common tasks with value types. Many of these methods return the same value type (`This`), re-wrapping the result of an operation on the raw value in the same value type. Note that if rules are applied in the constructor, they will be applied to the new raw value, so your values are always valid.
+
+#### `raw()`
+
+- Availability: `Single`, `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Returns the raw value. Ideally, this should only be necessary when you need to pass the raw type to an API outside your control. Inside your own code, it's better to always use your custom wrapper value type.
+
+> Note: `raw()` is not `final`, and should be overridden by your class if the raw type is not strictly immutable. See ["Wrap a Mutable Type to Make it Immutable"](#wrap-a-mutable-type-to-make-it-immutable) for details.
+
+#### `equals(other)`, `hashCode()`, and `toString()`
+
+- Availability: `Single`, `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+More-or-less passes through to the raw value.
+
+#### `Single.equals(object1,object2)`, `Single.hashCode(object)`, and `Single.toString(object)`
+
+Static functions to strictly implement the JDK `Object` good-citizen contract methods.
+
+#### `is(condition)` and `isNot(condition)`
+
+- Availability: `Single`, `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Tests the raw value against the specified `condition` predicate, and returns a `boolean` result.
+
+#### `filter(condition)`
+
+- Availability: `Single`, `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Tests the raw value against the specified `condition` predicate, and returns an `Optional` of itself, or empty if the condition is not satisfied.
+
+#### `map(mapper)` and `flatMap(mapper)`
+
+- Availability: `Single`, `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Applies the `mapper` function to the raw value, and wraps the result in the same value type.
+
+#### `asNumber()`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`
+
+Returns a JDK `Number`-compatible representation of the raw value.
+
+#### `compareToNumber(number)`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`
+
+Numerically compares the raw value to `number`, returning an `int` result similar to `compareTo(that)`.
+
+#### `isGreaterThan(number)`, `isGreaterThanOrEqualTo(number)`, `isLessThan(number)`, and `isLessThanOrEqualTo(number)`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`
+
+Numerically compares the raw value to `number`, returning a `boolean` result.
+
+#### `compareTo(that)`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Implementation of the JDK `Comparable` interface.
+
+#### `min(that)` and `max(that)`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`, `SingleString`
+
+Compare the raw values of two value objects, and return the smaller/larger of the two.
+
+#### `isZero()`, `isNonZero()`, `isPositive()`, and `isNegative()`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`
+
+Numerically compares the raw value to zero.
+
+#### `plus(number)`, `minus(number)`, `multiplyBy(number)`, and `divideBy(number)`
+
+- Availability: `SingleInt`, `SingleLong`, `SingleDouble`, `SingleDecimal`
+
+Perform arithmetic operations on the raw value, and wrap the result in the same value type. These operations are overloaded to accept either `Number`-compatible types or `String`s as the operands.
+
+#### `round()`, `roundUp()`, and `roundDown()`
+
+- Availability: `SingleDouble`, `SingleDecimal`
+
+Round the raw value to the nearest whole number, and wrap the result in the same value type.
+
+#### `roundToPrecision(decimals)`
+
+- Availability: `SingleDecimal`
+
+Round the raw value to the specified number of `decimals`.
+
+#### `SingleNumber.$(x)`
+
+A static function to convert anything into `BigDecimal`, via its string representation. Designed to be used with `static import SingleNumber`.
+
+The name of this function is a reminder to programmers to never use floating-point types for money.
+
+#### `length()`, `charAt(position)`, and `subSequence(start,end)`
+
+- Availability: `SingleString`
+
+Implementations of the JDK `CharSequence` interface.
+
+#### `left(length)` and `right(length)`
+
+- Availability: `SingleString`
+
+Reduce the raw string value to a specified `length`, starting from the beginning/end.
+
+#### `trim()`
+
+- Availability: `SingleString`
+
+Remove whitespace from the beginning/end of the raw string value.
+
+#### `isEmpty()` and `isNotEmpty()`
+
+- Availability: `SingleString`
+
+Check whether the raw string value is zero-length.
+
+#### `replaceRegex(regex,replacement)` and `replaceLiteral(literal,replacement)`
+
+- Availability: `SingleString`
+
+Replace all instances of the specified pattern or literal in the raw string value with a `replacement` string.
+
+#### `split(regex,tokenConstructor)`
+
+- Availability: `SingleString`
+
+Split the raw string value by a delimiter pattern, and construct a `Plural` of the specified token type.
+
+### Add Custom Operations
 
 Turn your values into *smart values* by adding custom methods on your value class related to the data it represents. Methods on value classes are easy to test, which means they tend to have fewer bugs. That’s why Purity encourages moving as much of your app’s logic as possible to methods of value classes. As long as they don't mutate, do input/output, or mess with concurrency, go nuts!
 
@@ -302,13 +439,3 @@ public final @Value class ModelNumber extends SingleString<ModelNumber>
 	public ProductVariant getProductVariant() { return new ProductVariant(raw.substring(4)); }
 }
 ```
-
-## Built-in Operations
-
-TODO...
-
-TODO: SingleComparable and SingleNumber
-
-## `Object` and `Comparable`
-
-TODO: equals, hashCode, toString, compareTo

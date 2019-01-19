@@ -91,7 +91,7 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	public static final Rule<String> intern = String::intern;
 	
 	@Override public final int length() { return raw.length(); }
-	@Override public final char charAt(final int index) { return raw.charAt(index); }
+	@Override public final char charAt(final int position) { return raw.charAt(position); }
 	
 	/** @return a new value of the same type from a substring. */
 	@Override
