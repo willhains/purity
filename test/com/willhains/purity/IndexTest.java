@@ -350,4 +350,36 @@ public class IndexTest
 		final Collection<Integer> elements = x.elements();
 		elements.remove(1);
 	}
+	
+	@Test
+	public void shouldNotSetIfAlreadyPresent()
+	{
+		final Index<String, Integer> x = Index.of("a",1).set("b",2).set("c",3);
+		final Index<String, Integer> y = x.setIfAbsent("a", () -> 4);
+		assertThat(y.get("a").get(), is(1));
+	}
+	
+	@Test
+	public void shouldSetIfNotPresent()
+	{
+		final Index<String, Integer> x = Index.of("a",1).set("b",2).set("c",3);
+		final Index<String, Integer> y = x.setIfAbsent("d", () -> 4);
+		assertThat(y.get("d").get(), is(4));
+	}
+	
+	@Test
+	public void shouldNotReplaceIfNotPresent()
+	{
+		final Index<String, Integer> x = Index.of("a",1).set("b",2).set("c",3);
+		final Index<String, Integer> y = x.replaceIfPresent("d", $ -> 4);
+		assertFalse(y.get("d").isPresent());
+	}
+	
+	@Test
+	public void shouldReplaceIfPresent()
+	{
+		final Index<String, Integer> x = Index.of("a",1).set("b",2).set("c",3);
+		final Index<String, Integer> y = x.replaceIfPresent("a", $ -> 4);
+		assertThat(y.get("a").get(), is(4));
+	}
 }

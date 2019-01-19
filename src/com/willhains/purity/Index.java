@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An immutable indexed collection of elements, that can be treated as a {@link Value}, so long as the {@link Key}s and
@@ -198,6 +199,18 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	public Index<Key, Element> setAll(final Index<Key, Element> elements) { return setAll(elements._prepareForRead()); }
 	public Index<Key, Element> setAll(final Map<Key, Element> elements) { return _mutate(map -> map.putAll(elements)); }
+	
+	public Index<Key, Element> setIfAbsent(Key key, Supplier<? extends Element> elementSupplier)
+	{
+		requireNonNull(elementSupplier);
+		return _mutate(map -> map.computeIfAbsent(key, $ -> elementSupplier.get()));
+	}
+	
+	public Index<Key, Element> replaceIfPresent(Key key, Function<? super Element, ? extends Element> elementReplacer)
+	{
+		requireNonNull(elementReplacer);
+		return _mutate(map -> map.computeIfPresent(key, ($, oldValue) -> elementReplacer.apply(oldValue)));
+	}
 	
 	public Index<Key, Element> delete(final Key key) { return _mutate(map -> map.remove(key)); }
 	public Index<Key, Element> delete(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
