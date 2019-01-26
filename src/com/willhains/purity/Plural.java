@@ -62,11 +62,20 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public static <@Value Element> Plural<Element> copy(final Iterable<Element> elements)
 	{
 		if(elements instanceof Plural) return (Plural<Element>)elements;
+		if(elements instanceof Set) return copy((Set)elements);
 		if(elements instanceof Collection) return copy((Collection<Element>)elements);
+		
 		final ArrayList<Element> list = new ArrayList<>();
 		elements.forEach(list::add);
 		if(list.isEmpty()) return empty();
 		return new Plural<>(new Reading<>(list));
+	}
+	
+	/** Copy {@code elements} into a new {@link Plural} value. */
+	public static <@Value Element> Plural<Element> copy(final Set<Element> elements)
+	{
+		if(elements.isEmpty()) return empty();
+		return new Plural<>(new Reading<>(new ArrayList<>(elements)), true);
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */

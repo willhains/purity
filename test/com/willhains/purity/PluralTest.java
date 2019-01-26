@@ -165,6 +165,25 @@ public class PluralTest
 	}
 	
 	@Test
+	public void shouldCopyNonEmptySet()
+	{
+		final Set<String> set = new HashSet<>();
+		set.add("a");
+		set.add("b");
+		set.add("c");
+		final Plural<String> x = Plural.copy(set);
+		assertThat(x.distinct(), is(sameInstance(x)));
+	}
+	
+	@Test
+	public void shouldCopyEmptySet()
+	{
+		final Set<String> set = new HashSet<>();
+		final Plural<String> x = Plural.copy(set);
+		assertThat(x, is(sameInstance(Plural.empty())));
+	}
+	
+	@Test
 	public void shouldNeverEqualNull()
 	{
 		final Plural<String> x = Plural.of("a");
