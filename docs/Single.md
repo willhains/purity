@@ -49,12 +49,19 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 Wrapping naked values in your own custom value classes has many benefits:
 
 - **Naming.** You can give the class a name that describes the kind of information it contains. You can name methods, and method arguments. Well-named classes, methods, and arguments reduce the need for documentation and Javadoc comments, because you can make it obvious.
+
 - **Custom API.** You can expose only methods that make sense in the context of your app. For example, `.toLowerCase()` wouldn't make sense on a string-based value class `PhoneNumber`, so we wouldn't include it; but `.getAreaCode()` would make sense, so we can add it.
+
 - **Type Safety.** Most apps have an abundance of `String`s and `int`s all over the place. The compiler doesn't know anything about what data they represent, so you can easily mistake a customer name for a phone number, or whatever. Giving each kind of value its own class allows the compiler to do that checking for you.
+
 - **Code Clarity.** It's much easier to read code that deals with its data in terms of `ModelNumber`/`ProductCode`/`HostName`/`PhoneNumber` than code that uses `String`/`String`/`String`/`String`.
+
 - **Validation and Normalisation.** You can check and massage the raw data at construction time, to make sure it is always valid.
+
 - **Operations.** You can add custom operations to your data, that make sense in the context of your app. In fact, Purity strongly encourages moving *all* of your app's logic to value classes.
+
 - **Testing.** Since value types are free of dependencies and side effects ([no I/O; no concurrency; no mutation](value-semantics.md)), they are extremely pleasant to test. Because they are trivial to create, you never need to stub them. Because they are immutable, you never need to mock them.
+
 - **Code Reuse.** Since value types have no dependencies, they are generally very portable. You can freely share them widely across your app, and with other codebases, and expect them to work predictably.
 
 ## Creating a Value Class
@@ -106,7 +113,7 @@ Adding validation/normalisation rules is easy. Just declare a `Rule` constant, a
 public final @Value class ModelNumber extends SingleString<ModelNumber>
 {
 	private static final Rule rules = Rule.rules(
-		min(7), max(13),
+		minLength(7), maxLength(13),
 		validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }
 }
