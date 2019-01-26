@@ -351,6 +351,20 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		});
 	}
 	
+	/**
+	 * @param elementAtIndex the index to replace. When greater than the max index, this method does nothing.
+	 * @return a new {@link Plural}, with the element at the specified index replaced with the specified new value.
+	 */
+	public Plural<Element> replace(final int elementAtIndex, final Element withNewValue)
+	{
+		if(elementAtIndex < 0) throw new IndexOutOfBoundsException("elementAtIndex(" + elementAtIndex + ") < 0");
+		return _mutate(list ->
+		{
+			if(elementAtIndex >= list.size()) return;
+			list.set(elementAtIndex, withNewValue);
+		});
+	}
+	
 	/** @return a new {@link Plural}, with the element at the specified index removed. */
 	public Plural<Element> delete(final int atIndex)
 	{

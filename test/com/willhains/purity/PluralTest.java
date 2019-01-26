@@ -716,4 +716,27 @@ public class PluralTest
 		final Plural<String> z = y.delete(Arrays.asList("a", "g", "h", "z"));
 		assertThat(z, is(Plural.of("b", "d", "e")));
 	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void shouldTrapNegativeIndexOnReplace()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		x.replace(-1, "d");
+	}
+	
+	@Test
+	public void shouldIgnoreTooHighIndexOnReplace()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.replace(3, "d");
+		assertEquals(x, y);
+	}
+	
+	@Test
+	public void shouldReplaceElementAtIndex()
+	{
+		final Plural<String> x = Plural.of("a", "b", "c");
+		final Plural<String> y = x.replace(2, "d");
+		assertThat(y, is(Plural.of("a", "b", "d")));
+	}
 }
