@@ -23,6 +23,11 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 {
 	private static final Plural<?> _EMPTY = new Plural<>(new Reading<>(Collections.emptyList()));
 	
+	// Core List factories
+	private static <E> List<E> newList() { return new ArrayList<>(); }
+	private static <E> List<E> newList(final Collection<E> withElements) { return new ArrayList<>(withElements); }
+	private static <E> List<E> newList(final int withCapacity) { return new ArrayList<>(withCapacity); }
+	
 	/** @return an empty {@link Plural}. */
 	public static <@Value Element> Plural<Element> empty()
 	{
@@ -65,7 +70,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		if(elements instanceof Set) return copy((Set)elements);
 		if(elements instanceof Collection) return copy((Collection<Element>)elements);
 		
-		final ArrayList<Element> list = new ArrayList<>();
+		final List<Element> list = newList();
 		elements.forEach(list::add);
 		if(list.isEmpty()) return empty();
 		return new Plural<>(new Reading<>(list));
@@ -75,14 +80,14 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	public static <@Value Element> Plural<Element> copy(final Set<Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
-		return new Plural<>(new Reading<>(new ArrayList<>(elements)), true);
+		return new Plural<>(new Reading<>(newList(elements)), true);
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
 	public static <@Value Element> Plural<Element> copy(final Collection<Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
-		return new Plural<>(new Reading<>(new ArrayList<>(elements)));
+		return new Plural<>(new Reading<>(newList(elements)));
 	}
 	
 	/** @return a {@link Collector} that wraps the contents in a {@link Plural}. */
@@ -144,7 +149,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		Reading(final List<Element> elements) { _elements = elements; }
 		@Override public int generation() { return 0; }
 		@Override public Reading<Element> prepareForRead() { return this; }
-		@Override public List<Element> prepareForWrite() { return new ArrayList<>(_elements); }
+		@Override public List<Element> prepareForWrite() { return newList(_elements); }
 	}
 	
 	// Apply all mutations, collapsing them to the resulting collection, then return that collection
@@ -374,7 +379,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	{
 		return _transform(list ->
 		{
-			final List<Converted> converted = new ArrayList<>();
+			final List<Converted> converted = newList();
 			list.forEach(element -> converted.addAll(mapper.apply(element)._prepareForRead()));
 			return converted;
 		});
@@ -389,7 +394,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 		{
 			final List<Right> right = rightElements._prepareForRead();
 			final int zipSize = Math.min(left.size(), right.size());
-			final List<Pair<Element, Right>> zipped = new ArrayList<>(zipSize);
+			final List<Pair<Element, Right>> zipped = newList(zipSize);
 			for(int i = 0; i < zipSize; i++) zipped.add(Pair.of(left.get(i), right.get(i)));
 			return zipped;
 		});
