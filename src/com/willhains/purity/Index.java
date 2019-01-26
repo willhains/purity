@@ -40,7 +40,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	 */
 	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Iterable<Pair<Key, Element>> pairs)
 	{
-		final Map<Key, Element> map = new HashMap<>();
+		final Map<Key, Element> map = new LinkedHashMap<>();
 		pairs.forEach(pair -> map.put(pair.left, pair.right));
 		if(map.isEmpty()) return empty();
 		return new Index<>(new Reading<>(map));
@@ -50,7 +50,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Map<Key, Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
-		return new Index<>(new Reading<>(new HashMap<>(elements)));
+		return new Index<>(new Reading<>(new LinkedHashMap<>(elements)));
 	}
 	
 	// An Index may be in one of two states: Reading, or Mutating. An Index in Mutating state may change to the
@@ -104,7 +104,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		Reading(final Map<Key, Element> elements) { _elements = elements; }
 		@Override public int generation() { return 0; }
 		@Override public Reading<Key, Element> prepareForRead() { return this; }
-		@Override public Map<Key, Element> prepareForWrite() { return new HashMap<>(_elements); }
+		@Override public Map<Key, Element> prepareForWrite() { return new LinkedHashMap<>(_elements); }
 	}
 	
 	// Apply all mutations, collapsing them to the resulting collection, then return that collection
@@ -227,7 +227,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return _transform(before ->
 		{
-			final Map<ConvertedKey, ConvertedElement> after = new HashMap<>(before.size());
+			final Map<ConvertedKey, ConvertedElement> after = new LinkedHashMap<>(before.size());
 			before.forEach((key, element) ->
 			{
 				final Pair<ConvertedKey, ConvertedElement> newPair = mapper.apply(key, element);
@@ -242,7 +242,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return _transform(before ->
 		{
-			final Map<Converted, Element> after = new HashMap<>(before.size());
+			final Map<Converted, Element> after = new LinkedHashMap<>(before.size());
 			before.forEach((key, element) -> after.put(mapper.apply(key), element));
 			return after;
 		});
@@ -253,7 +253,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return _transform(before ->
 		{
-			final Map<Key, Converted> after = new HashMap<>(before.size());
+			final Map<Key, Converted> after = new LinkedHashMap<>(before.size());
 			before.forEach((key, element) -> after.put(key, mapper.apply(element)));
 			return after;
 		});
@@ -270,7 +270,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	{
 		return _transform(before ->
 		{
-			final Map<Element, Key> after = new HashMap<>(before.size());
+			final Map<Element, Key> after = new LinkedHashMap<>(before.size());
 			before.forEach((key2, element) -> after.compute(element, ($, key1) ->
 				key1 == null ? key2 : combiner.apply(key1, key2)));
 			return after;
