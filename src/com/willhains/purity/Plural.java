@@ -67,7 +67,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	public static <@Pure Element> Plural<Element> copy(final Iterable<Element> elements)
 	{
 		if(elements instanceof Plural) return (Plural<Element>)elements;
-		if(elements instanceof Set) return copy((Set)elements);
+		if(elements instanceof Set) return copy((Set<Element>)elements);
 		if(elements instanceof Collection) return copy((Collection<Element>)elements);
 		
 		final List<Element> list = newList();
@@ -112,7 +112,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final Plural<?> that = (Plural<?>)other;
+		final Plural<?> that = (Plural<?>)other;
 		return Single.equals(this._prepareForRead(), that._prepareForRead());
 	}
 	
@@ -173,14 +173,14 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	public Element get(int elementAtIndex) { return _prepareForRead().get(elementAtIndex); }
 	public int size() { return _prepareForRead().size(); }
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
-	public boolean allMatch(final Predicate<Element> condition) { return stream().allMatch(condition); }
-	public boolean anyMatch(final Predicate<Element> condition) { return stream().anyMatch(condition); }
-	public boolean noneMatch(final Predicate<Element> condition) { return stream().noneMatch(condition); }
+	public boolean allMatch(final Predicate<? super Element> condition) { return stream().allMatch(condition); }
+	public boolean anyMatch(final Predicate<? super Element> condition) { return stream().anyMatch(condition); }
+	public boolean noneMatch(final Predicate<? super Element> condition) { return stream().noneMatch(condition); }
 	public Optional<Element> maxBy(final Comparator<Element> comparator) { return stream().max(comparator); }
 	public Optional<Element> minBy(final Comparator<Element> comparator) { return stream().min(comparator); }
 	
 	/** @return the index of the first element that satisfies the predicate; empty if none do. */
-	public OptionalInt indexOf(final Predicate<Element> where)
+	public OptionalInt indexOf(final Predicate<? super Element> where)
 	{
 		final List<Element> list = _prepareForRead();
 		for(int i = 0; i < list.size(); i++)
@@ -192,7 +192,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return the index of the last element that satisfies the predicate; empty if none do. */
-	public OptionalInt lastIndexOf(final Predicate<Element> where)
+	public OptionalInt lastIndexOf(final Predicate<? super Element> where)
 	{
 		final List<Element> list = _prepareForRead();
 		for(int i = list.size() - 1; i >= 0; i--)
@@ -222,7 +222,9 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	public String join(final CharSequence delim) { return stream().map(Object::toString).collect(joining(delim)); }
 	
 	/** Apply {@code reducer} repeatedly to summarise all the elements as a single value. */
-	public <Result> Result reduce(final Result initialValue, final BiFunction<Result, Element, Result> reducer)
+	public <Result> Result reduce(
+		final Result initialValue,
+		final BiFunction<? super Result, ? super Element, ? extends Result> reducer)
 	{
 		Result result = initialValue;
 		for(final Element element: this) { result = reducer.apply(result, element); }
@@ -243,7 +245,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	 */
 	public boolean contains(final Element element) { return _index().contains(element); }
 	public boolean containsAll(final Element... elements) { return _index().containsAll(Arrays.asList(elements)); }
-	public boolean containsAll(final Collection<Element> elements) { return _index().containsAll(elements); }
+	public boolean containsAll(final Collection<? extends Element> elements) { return _index().containsAll(elements); }
 	
 	/// Mutations ///
 	
@@ -280,17 +282,40 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	public Plural<Element> append(final Element element) { return _mutate(list -> list.add(element)); }
-	public Plural<Element> append(final Plural<Element> p) { return _mutate(list -> list.addAll(p._prepareForRead())); }
-	public Plural<Element> append(final Collection<Element> c) { return _mutate(list -> list.addAll(c)); }
+	
+	public Plural<Element> append(final Plural<? extends Element> p)
+	{
+		return _mutate(list -> list.addAll(p._prepareForRead()));
+	}
+	
+	public Plural<Element> append(final Collection<? extends Element> c)
+	{
+		return _mutate(list -> list.addAll(c));
+	}
+	
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
-	public Plural<Element> deleteAll(final Collection<Element> c) { return _mutate(list -> list.removeAll(c)); }
-	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
-	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
+	
+	public Plural<Element> deleteAll(final Collection<? extends Element> c)
+	{
+		return _mutate(list -> list.removeAll(c));
+	}
+	
+	public Plural<Element> deleteIf(final Predicate<? super Element> where)
+	{
+		return _mutate(list -> list.removeIf(where));
+	}
+	
+	public Plural<Element> filter(final Predicate<? super Element> where) { return deleteIf(where.negate()); }
+	
 	public Plural<Element> reverse() { return _mutate(Collections::reverse); }
 	
-	public Plural<Element> deleteAll(final Plural<Element> p)
+	public Plural<Element> deleteAll(final Plural<? extends Element> p)
 	{
-		return _mutate(list -> list.removeAll(p._index == null ? p._prepareForRead() : p._index()));
+		return _mutate(list ->
+		{
+			if(p._index != null) list.removeAll(p._index);
+			else list.removeAll(p._prepareForRead());
+		});
 	}
 	
 	/** @return a {@link Plural} containing only the set of unique elements (by {@link Object#equals}). */
@@ -373,7 +398,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
-	public <@Pure Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
+	public <@Pure Converted> Plural<Converted> map(final @Pure Function<? super Element, ? extends Converted> mapper)
 	{
 		return _transform(list ->
 		{
@@ -389,7 +414,8 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
-	public <@Pure Converted> Plural<Converted> flatMap(final Function<Element, Plural<Converted>> mapper)
+	public <@Pure Converted> Plural<Converted> flatMap(
+		final @Pure Function<? super Element, Plural<? extends Converted>> mapper)
 	{
 		return _transform(list ->
 		{
@@ -415,10 +441,11 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, sorted by the specified comparator order. */
-	public Plural<Element> sortedBy(final Comparator<Element> order) { return _mutate(list -> sort(list, order)); }
+	public Plural<Element> sortedBy(final @Pure Comparator<Element> order) { return _mutate(list -> list.sort(order)); }
 	
 	/** @return a new {@link Plural}, sorted by the {@link Comparable} element's order. */
-	public <Property extends Comparable<Property>> Plural<Element> sortedBy(final Function<Element, Property> property)
+	public <Property extends Comparable<Property>> Plural<Element> sortedBy(
+		final @Pure Function<? super Element, ? extends Property> property)
 	{
 		return sortedBy(comparing(property));
 	}
