@@ -273,7 +273,7 @@ public class IndexTest
 	public void shouldDeleteMultipleKeys()
 	{
 		final Index<String, Integer> x = Index.of("a", 1).set("b", 2).set("c", 3);
-		final Index<String, Integer> y = x.delete(Plural.of("b", "c", "d"));
+		final Index<String, Integer> y = x.deleteAll(Plural.of("b", "c", "d"));
 		assertThat(y.get("a").get(), is(1));
 		assertFalse(y.get("b").isPresent());
 		assertFalse(y.get("c").isPresent());

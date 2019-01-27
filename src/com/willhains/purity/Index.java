@@ -225,7 +225,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	}
 	
 	public Index<Key, Value> delete(final Key key) { return _mutate(map -> map.remove(key)); }
-	public Index<Key, Value> delete(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
+	public Index<Key, Value> deleteAll(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
 	
 	/** Delete entries where the key and value satisfy the {@code where} condition. */
 	public Index<Key, Value> deleteIf(final BiPredicate<Key, Value> where)
