@@ -159,8 +159,8 @@ public class IndexTest
 		final Index<String, Integer> x = Index.of("a", 1).set("b", 2);
 		assertTrue(x.containsKey("a"));
 		assertTrue(x.containsKey("b"));
-		assertTrue(x.containsElement(1));
-		assertTrue(x.containsElement(2));
+		assertTrue(x.containsValue(1));
+		assertTrue(x.containsValue(2));
 		assertThat(x.get("a").get(), is(1));
 		assertThat(x.get("b").get(), is(2));
 	}
@@ -170,7 +170,7 @@ public class IndexTest
 	{
 		final Index<String, Integer> x = Index.of("a", 1).set("b", 2);
 		assertFalse(x.containsKey("c"));
-		assertFalse(x.containsElement(3));
+		assertFalse(x.containsValue(3));
 		assertFalse(x.get("c").isPresent());
 	}
 	
@@ -315,7 +315,7 @@ public class IndexTest
 	public void shouldConvertElements()
 	{
 		final Index<String, Integer> x = Index.of("a", 1).set("b", 2).set("c", 3);
-		final Index<String, Integer> y = x.mapElements(element -> -element);
+		final Index<String, Integer> y = x.mapValues(element -> -element);
 		assertThat(y, is(Index. of("a", -1).set("b", -2).set("c", -3)));
 	}
 	
@@ -347,7 +347,7 @@ public class IndexTest
 	public void shouldNotBeMutableViaElementsView()
 	{
 		final Index<String, Integer> x = Index.of("a", 1).set("b", 2).set("c", 3);
-		final Collection<Integer> elements = x.elements();
+		final Collection<Integer> elements = x.values();
 		elements.remove(1);
 	}
 	
