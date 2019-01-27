@@ -96,7 +96,7 @@ See [the `Single` docs][single] for more information.
 
 ## Development Status
 
-Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are unlikely to change, but may do so without notice.
+Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are <s>un</s>likely to change<s>, but may do so</s> without notice.
 
 ## Contribution
 
