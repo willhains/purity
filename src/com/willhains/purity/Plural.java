@@ -283,12 +283,12 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	public Plural<Element> append(final Plural<Element> p) { return _mutate(list -> list.addAll(p._prepareForRead())); }
 	public Plural<Element> append(final Collection<Element> c) { return _mutate(list -> list.addAll(c)); }
 	public Plural<Element> delete(final Element element) { return _mutate(list -> list.remove(element)); }
-	public Plural<Element> delete(final Collection<Element> c) { return _mutate(list -> list.removeAll(c)); }
+	public Plural<Element> deleteAll(final Collection<Element> c) { return _mutate(list -> list.removeAll(c)); }
 	public Plural<Element> deleteIf(final Predicate<Element> where) { return _mutate(list -> list.removeIf(where)); }
 	public Plural<Element> filter(final Predicate<Element> where) { return deleteIf(where.negate()); }
 	public Plural<Element> reverse() { return _mutate(Collections::reverse); }
 	
-	public Plural<Element> delete(final Plural<Element> p)
+	public Plural<Element> deleteAll(final Plural<Element> p)
 	{
 		return _mutate(list -> list.removeAll(p._index == null ? p._prepareForRead() : p._index()));
 	}

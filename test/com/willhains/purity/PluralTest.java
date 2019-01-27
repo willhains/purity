@@ -711,9 +711,9 @@ public class PluralTest
 	public void shouldDeleteAnyThatMatch()
 	{
 		final Plural<String> x = Plural.of("a", "b", "c", "d", "e", "f", "g", "h", "i");
-		final Plural<String> y = x.delete(Plural.of("c", "f", "i", "s"));
+		final Plural<String> y = x.deleteAll(Plural.of("c", "f", "i", "s"));
 		assertThat(y, is(Plural.of("a", "b", "d", "e", "g", "h")));
-		final Plural<String> z = y.delete(Arrays.asList("a", "g", "h", "z"));
+		final Plural<String> z = y.deleteAll(Arrays.asList("a", "g", "h", "z"));
 		assertThat(z, is(Plural.of("b", "d", "e")));
 	}
 	
