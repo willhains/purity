@@ -12,7 +12,7 @@ import static com.willhains.purity.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `int` version of {@link Single}. */
-public abstract @Value class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>
+public abstract @Pure class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>
 {
 	// The single-argument constructor of the subclass
 	private final IntFunction<? extends This> _constructor;

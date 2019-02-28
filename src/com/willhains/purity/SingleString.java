@@ -12,7 +12,7 @@ import static com.willhains.purity.Rule.validUnless;
  * @author willhains
  * @param <This> Self-reference to the subclass type itself.
  */
-public abstract @Value class SingleString<This extends SingleString<This>>
+public abstract @Pure class SingleString<This extends SingleString<This>>
 	extends Single<String, This>
 	implements SingleComparable<This>, CharSequence
 {
@@ -138,7 +138,7 @@ public abstract @Value class SingleString<This extends SingleString<This>>
 	}
 	
 	/** Split the raw string into tokens by delimiter {@code regex}. */
-	public final <@Value Token> Plural<Token> split(
+	public final <@Pure Token> Plural<Token> split(
 		final String regex,
 	    final Function<String, Token> tokenConstructor)
 	{

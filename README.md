@@ -27,19 +27,19 @@ You are here because...
 
 There are four categories of types in a well-written, value-oriented application. Purity introduces four annotations to help document and identify them.
 
-1. `@Value` = a pure, immutable [value type][values]
+1. `@Pure` = a pure, immutable [value type][values]
 2. `@Mutable` = holds data that may change
 3. `@IO` = connects to an external input and/or output
 4. `@Barrier` = provides concurrency protection
 
-Generally, a class should not belong to more than one of these categories. Specifically, a `@Value` class must not belong to any other categories, as that would violate the [definition of "value"][values].
+Generally, a class should not belong to more than one of these categories. Specifically, a `@Pure` class must not belong to any other categories, as that would violate the [definition of "value"][values].
 
 At a high level, refactoring a codebase to Purity is done in four steps:
 
 1. **Wrap** *everything* that isn't yours in a class of your own. Give each a name that makes sense in the context of your application. Add only the methods you need, and give the methods names and arguments that make sense for your app.
 2. **Classify** every type according to the four categories above, adding the Purity annotations to document their purpose.
-3. **Move** *all conditional branches* to `@Value` types, and write tests for them. Non-`@Value` types should be as dumb and simple as possible, since they are inherently difficult to test, and are therefore the source of most bugs.
-4. **Rearrange** the ownership graphs of non-`@Value` types to minimise or eliminate singletons. Since singletons are globally-accessible, they must be thread-safe `@Barrier`s, and you want as few of those as possible.
+3. **Move** *all conditional branches* to `@Pure` types, and write tests for them. Non-`@Pure` types should be as dumb and simple as possible, since they are inherently difficult to test, and are therefore the source of most bugs.
+4. **Rearrange** the ownership graphs of non-`@Pure` types to minimise or eliminate singletons. Since singletons are globally-accessible, they must be thread-safe `@Barrier`s, and you want as few of those as possible.
 
 ## Value Wrapping
 
@@ -50,7 +50,7 @@ Purity provides [a set of `Single*` base types][single] to wrap single values. U
 For example, `String`s are *everywhere*, but they are not much more typesafe than byte arrays. All `String`s are potentially invalid, untrustworthy, raw data. Wrap them to make them pure, safe, clear, and dependable.
 
 ```java
-public final @Value class HostName extends SingleString<HostName>
+public final @Pure class HostName extends SingleString<HostName>
 {
 	public HostName(String hostName) { super(hostName, HostName::new); }
 }
@@ -68,7 +68,7 @@ Purity's value-wrapping base types are:
 Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply in the constructor, to ensure *every* instance of your value type is *always* valid.
 
 ```java
-public final @Value class HostName extends SingleString<HostName>
+public final @Pure class HostName extends SingleString<HostName>
 {
 	private static final Rule rules = Rule.rules(
 		trimWhitespace,
@@ -80,7 +80,7 @@ public final @Value class HostName extends SingleString<HostName>
 }
 ```
 
-Validating raw data in the constructors of `@Value` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
+Validating raw data in the constructors of `@Pure` types pushes errors to the sources of input, which is the best place to handle such errors. For example, you can display an error to the user upon manual input. When all value types contain *only* valid data, your app's core logic is cleaner.
 
 See [the `Single` docs][single] for more information.
 

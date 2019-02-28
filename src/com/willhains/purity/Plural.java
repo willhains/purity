@@ -13,13 +13,13 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 
 /**
- * An immutable ordered collection of elements, that can be treated as a {@link Value}, so long as the {@link Element}s
- * are {@link Value}s.
+ * An immutable ordered collection of elements, that can be treated as a {@link Pure}, so long as the {@link Element}s
+ * are {@link Pure}s.
  *
  * @author willhains
  * @param <Element> the type of each element contained within.
  */
-public final @Value class Plural<@Value Element> implements Iterable<Element>
+public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 {
 	private static final Plural<?> _EMPTY = new Plural<>(new Reading<>(Collections.emptyList()));
 	
@@ -29,14 +29,14 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	private static <E> List<E> newList(final int withCapacity) { return new ArrayList<>(withCapacity); }
 	
 	/** @return an empty {@link Plural}. */
-	public static <@Value Element> Plural<Element> empty()
+	public static <@Pure Element> Plural<Element> empty()
 	{
 		@SuppressWarnings("unchecked") final Plural<Element> empty = (Plural<Element>)_EMPTY;
 		return empty;
 	}
 	
 	/** @return {@link #empty()} if {@code possiblyNullElement} is {@code null}. */
-	public static <@Value Element> Plural<Element> ofNullable(final Element possiblyNullElement)
+	public static <@Pure Element> Plural<Element> ofNullable(final Element possiblyNullElement)
 	{
 		return possiblyNullElement == null ? empty() : Plural.of(possiblyNullElement);
 	}
@@ -48,11 +48,11 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	 * @param <E> the type of the element.
 	 * @return a {@link Plural} containing the specified single element.
 	 */
-	public static <@Value E> Plural<E> of(E element) { return new Plural<>(new Reading<>(singletonList(element))); }
+	public static <@Pure E> Plural<E> of(E element) { return new Plural<>(new Reading<>(singletonList(element))); }
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
 	@SafeVarargs
-	public static <@Value Element> Plural<Element> of(Element... elements)
+	public static <@Pure Element> Plural<Element> of(Element... elements)
 	{
 		final Element[] array = elements.clone();
 		switch(array.length)
@@ -64,7 +64,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
-	public static <@Value Element> Plural<Element> copy(final Iterable<Element> elements)
+	public static <@Pure Element> Plural<Element> copy(final Iterable<Element> elements)
 	{
 		if(elements instanceof Plural) return (Plural<Element>)elements;
 		if(elements instanceof Set) return copy((Set)elements);
@@ -77,21 +77,21 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
-	public static <@Value Element> Plural<Element> copy(final Set<Element> elements)
+	public static <@Pure Element> Plural<Element> copy(final Set<Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
 		return new Plural<>(new Reading<>(newList(elements)), true);
 	}
 	
 	/** Copy {@code elements} into a new {@link Plural} value. */
-	public static <@Value Element> Plural<Element> copy(final Collection<Element> elements)
+	public static <@Pure Element> Plural<Element> copy(final Collection<Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
 		return new Plural<>(new Reading<>(newList(elements)));
 	}
 	
 	/** @return a {@link Collector} that wraps the contents in a {@link Plural}. */
-	public static <@Value Element> Collector<Element, ?, Plural<Element>> toPlural()
+	public static <@Pure Element> Collector<Element, ?, Plural<Element>> toPlural()
 	{
 		return collectingAndThen(toList(), list -> new Plural<>(new Reading<>(list)));
 	}
@@ -119,7 +119,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	@Override public int hashCode() { return Single.hashCode(_prepareForRead()); }
 	@Override public String toString() { return Single.toString(_prepareForRead()); }
 	
-	private @Value interface MutationState<@Value Element>
+	private @Pure interface MutationState<@Pure Element>
 	{
 		/**
 		 * The number of mutation wrappers applied. Automatically collapse when this gets up to a certain threshold, to
@@ -143,7 +143,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	// The state where all mutations have been applied to the underlying collection, and it can now be read
-	private static final @Value class Reading<@Value Element> implements MutationState<Element>
+	private static final @Pure class Reading<@Pure Element> implements MutationState<Element>
 	{
 		private final List<Element> _elements;
 		Reading(final List<Element> elements) { _elements = elements; }
@@ -247,7 +247,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	
 	/// Mutations ///
 	
-	private static final class Mutating<@Value Element, @Value Converted> implements MutationState<Converted>
+	private static final class Mutating<@Pure Element, @Pure Converted> implements MutationState<Converted>
 	{
 		private static final int _MAX_GENERATION = 4096;
 		private final MutationState<Element> _inner;
@@ -373,7 +373,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
-	public <@Value Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
+	public <@Pure Converted> Plural<Converted> map(final Function<Element, Converted> mapper)
 	{
 		return _transform(list ->
 		{
@@ -389,7 +389,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
-	public <@Value Converted> Plural<Converted> flatMap(final Function<Element, Plural<Converted>> mapper)
+	public <@Pure Converted> Plural<Converted> flatMap(final Function<Element, Plural<Converted>> mapper)
 	{
 		return _transform(list ->
 		{
@@ -402,7 +402,7 @@ public final @Value class Plural<@Value Element> implements Iterable<Element>
 	/**
 	 * Zip together two {@link Plural}s into one, where the elements are {@link Pair}s of corresponding index positions.
 	 */
-	public <@Value Right> Plural<Pair<Element, Right>> zip(final Plural<Right> rightElements)
+	public <@Pure Right> Plural<Pair<Element, Right>> zip(final Plural<Right> rightElements)
 	{
 		return _transform(left ->
 		{

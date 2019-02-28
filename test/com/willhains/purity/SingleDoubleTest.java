@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class SingleDoubleTest
 {
-	public static final @Value class Height extends SingleDouble<Height>
+	public static final @Pure class Height extends SingleDouble<Height>
 	{
 		public Height(final double rawValue) { super(rawValue, Height::new); }
 	}
@@ -339,7 +339,7 @@ public class SingleDoubleTest
 		assertFalse(x.isNegative());
 	}
 	
-	static final @Value class Factor extends SingleDouble<Factor> { Factor(double factor) { super(factor, Factor::new); } }
+	static final @Pure class Factor extends SingleDouble<Factor> { Factor(double factor) { super(factor, Factor::new); } }
 	
 	@Test
 	public void shouldIdentifyNegative()

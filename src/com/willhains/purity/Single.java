@@ -10,13 +10,13 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A value type wrapping an underlying data type.
- * This supertype and its abstract subtypes make it easy to implement pure {@link Value} types.
+ * This supertype and its abstract subtypes make it easy to implement {@link Pure} value types.
  *
  * @author willhains
  * @param <Raw> The underlying type.
  * @param <This> Self-reference to the subclass type itself.
  */
-public abstract @Value class Single<Raw, This extends Single<Raw, This>>
+public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 {
 	// The single-argument constructor of the subclass
 	private final Function<? super Raw, ? extends This> _constructor;

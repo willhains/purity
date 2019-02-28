@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toMap;
  * @param <Left> the first value type.
  * @param <Right> the second value type.
  */
-public final @Value class Pair<@Value Left, @Value Right>
+public final @Pure class Pair<@Pure Left, @Pure Right>
 {
 	public final Left left;
 	public final Right right;
@@ -27,7 +27,7 @@ public final @Value class Pair<@Value Left, @Value Right>
 	}
 	
 	/** @return a new {@link Pair} containing two values. */
-	public static <@Value Left, @Value Right> Pair<Left, Right> of(final Left left, final Right right)
+	public static <@Pure Left, @Pure Right> Pair<Left, Right> of(final Left left, final Right right)
 	{
 		return new Pair<>(left, right);
 	}
@@ -66,7 +66,7 @@ public final @Value class Pair<@Value Left, @Value Right>
 	/**
 	 * Transform the {@link #left} value with the given mapper function.
 	 */
-	public <@Value Converted> Pair<Converted, Right> mapLeft(final Function<? super Left, ? extends Converted> mapper)
+	public <@Pure Converted> Pair<Converted, Right> mapLeft(final Function<? super Left, ? extends Converted> mapper)
 	{
 		return new Pair<>(requireNonNull(mapper).apply(left), right);
 	}
@@ -74,7 +74,7 @@ public final @Value class Pair<@Value Left, @Value Right>
 	/**
 	 * Transform the {@link #right} value with the given mapper function.
 	 */
-	public <@Value Converted> Pair<Left, Converted> mapRight(final Function<? super Right, ? extends Converted> mapper)
+	public <@Pure Converted> Pair<Left, Converted> mapRight(final Function<? super Right, ? extends Converted> mapper)
 	{
 		return new Pair<>(left, requireNonNull(mapper).apply(right));
 	}

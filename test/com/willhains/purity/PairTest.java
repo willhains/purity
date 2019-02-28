@@ -11,8 +11,8 @@ import static org.junit.Assert.*;
 
 public class PairTest
 {
-	static final @Value class Height extends SingleDouble<Height> { Height(double raw) { super(raw, Height::new); } }
-	static final @Value class Weight extends SingleDouble<Weight> { Weight(double raw) { super(raw, Weight::new); } }
+	static final @Pure class Height extends SingleDouble<Height> { Height(double raw) { super(raw, Height::new); } }
+	static final @Pure class Weight extends SingleDouble<Weight> { Weight(double raw) { super(raw, Weight::new); } }
 	
 	private final Height _height = new Height(173.5);
 	private final Weight _weight = new Weight(79.4);

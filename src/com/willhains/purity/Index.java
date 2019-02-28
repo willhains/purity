@@ -9,14 +9,14 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An immutable indexed collection of elements, that can be treated as a {@link Value}, so long as the {@link Key}s and
- * {@link Element}s are {@link Value}s.
+ * An immutable indexed collection of elements, that can be treated as a {@link Pure}, so long as the {@link Key}s and
+ * {@link Element}s are {@link Pure}s.
  *
  * @author willhains
  * @param <Key> the type of key used to index the elements.
  * @param <Element> the type of each element contained within.
  */
-public final @Value class Index<@Value Key, @Value Element> implements Iterable<Pair<Key, Element>>
+public final @Pure class Index<@Pure Key, @Pure Element> implements Iterable<Pair<Key, Element>>
 {
 	private static final Index<?, ?> _EMPTY = new Index<>(new Reading<>(Collections.emptyMap()));
 	
@@ -26,14 +26,14 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	private static <K, E> Map<K, E> newMap(final int withCapacity) { return new LinkedHashMap<>(withCapacity); }
 	
 	/** @return an empty {@link Index}. */
-	public static <@Value Key, @Value Element> Index<Key, Element> empty()
+	public static <@Pure Key, @Pure Element> Index<Key, Element> empty()
 	{
 		@SuppressWarnings("unchecked") final Index<Key, Element> empty = (Index<Key, Element>)_EMPTY;
 		return empty;
 	}
 	
 	/** @return an {@link Index} with a single element. */
-	public static <@Value Key, @Value Element> Index<Key, Element> of(final Key key, final Element element)
+	public static <@Pure Key, @Pure Element> Index<Key, Element> of(final Key key, final Element element)
 	{
 		final Map<Key, Element> map = singletonMap(key, element);
 		return new Index<>(new Reading<>(map));
@@ -44,7 +44,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	 *
 	 * @see Pair#toIndex()
 	 */
-	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Iterable<Pair<Key, Element>> pairs)
+	public static <@Pure Key, @Pure Element> Index<Key, Element> copy(final Iterable<Pair<Key, Element>> pairs)
 	{
 		final Map<Key, Element> map = newMap();
 		pairs.forEach(pair -> map.put(pair.left, pair.right));
@@ -53,7 +53,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	/** Copy a {@link Map} as am {@link Index}. */
-	public static <@Value Key, @Value Element> Index<Key, Element> copy(final Map<Key, Element> elements)
+	public static <@Pure Key, @Pure Element> Index<Key, Element> copy(final Map<Key, Element> elements)
 	{
 		if(elements.isEmpty()) return empty();
 		return new Index<>(new Reading<>(newMap(elements)));
@@ -80,7 +80,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	@Override public int hashCode() { return Single.hashCode(_prepareForRead()); }
 	@Override public String toString() { return Single.toString(_prepareForRead()); }
 	
-	private @Value interface MutationState<@Value Key, @Value Element>
+	private @Pure interface MutationState<@Pure Key, @Pure Element>
 	{
 		/**
 		 * The number of mutation wrappers applied. Automatically collapse when this gets up to a certain threshold, to
@@ -104,7 +104,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	// The state where all mutations have been applied to the underlying collection, and it can now be read
-	private static final @Value class Reading<@Value Key, @Value Element> implements MutationState<Key, Element>
+	private static final @Pure class Reading<@Pure Key, @Pure Element> implements MutationState<Key, Element>
 	{
 		private final Map<Key, Element> _elements;
 		Reading(final Map<Key, Element> elements) { _elements = elements; }
@@ -153,7 +153,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	
 	/// Mutations ///
 	
-	private static final class Mutating<@Value Key, @Value Element, @Value ConvertedKey, @Value ConvertedElement>
+	private static final class Mutating<@Pure Key, @Pure Element, @Pure ConvertedKey, @Pure ConvertedElement>
 		implements MutationState<ConvertedKey, ConvertedElement>
 	{
 		private static final int _MAX_GENERATION = 4096;
@@ -186,7 +186,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 		}));
 	}
 	
-	private <@Value ConvertedKey, @Value ConvertedElement> Index<ConvertedKey, ConvertedElement> _transform(
+	private <@Pure ConvertedKey, @Pure ConvertedElement> Index<ConvertedKey, ConvertedElement> _transform(
 		final Function<Map<Key, Element>, Map<ConvertedKey, ConvertedElement>> transformer)
 	{
 		return new Index<>(new Mutating<>(_state, transformer));
@@ -233,7 +233,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	 * Convert the keys and elements to new values using the mapper functions.
 	 * When two resulting keys are the same, the latter survives.
 	 */
-	public <@Value ConvertedKey, @Value ConvertedElement> Index<ConvertedKey, ConvertedElement> map(
+	public <@Pure ConvertedKey, @Pure ConvertedElement> Index<ConvertedKey, ConvertedElement> map(
 		final BiFunction<Key, Element, Pair<ConvertedKey, ConvertedElement>> mapper)
 	{
 		return _transform(before ->
@@ -249,7 +249,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	/** Convert the keys to new values using the mapper function. When two are the same, the latter will survive. */
-	public <@Value Converted> Index<Converted, Element> mapKeys(final Function<Key, Converted> mapper)
+	public <@Pure Converted> Index<Converted, Element> mapKeys(final Function<Key, Converted> mapper)
 	{
 		return _transform(before ->
 		{
@@ -260,7 +260,7 @@ public final @Value class Index<@Value Key, @Value Element> implements Iterable<
 	}
 	
 	/** Convert the elements to new values using the mapper function. */
-	public <@Value Converted> Index<Key, Converted> mapElements(final Function<Element, Converted> mapper)
+	public <@Pure Converted> Index<Key, Converted> mapElements(final Function<Element, Converted> mapper)
 	{
 		return _transform(before ->
 		{

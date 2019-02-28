@@ -11,7 +11,7 @@ import static com.willhains.purity.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `double` version of {@link Single}. */
-public abstract @Value class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>
+public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>
 {
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;

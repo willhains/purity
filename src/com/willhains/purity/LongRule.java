@@ -5,10 +5,10 @@ import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} or other {@link Value} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} or other {@link Pure} object.
  */
 @FunctionalInterface
-public @Value interface LongRule
+public @Pure interface LongRule
 {
 	/** Applies this rule to the given argument. */
 	long apply(long i);
