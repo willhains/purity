@@ -14,7 +14,7 @@ import static java.math.RoundingMode.*;
  * @author willhains
  * @param <This> Self-reference to the subclass type itself.
  */
-public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
+public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	extends Single<BigDecimal, This>
 	implements SingleNumber<This>
 {

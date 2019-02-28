@@ -5,32 +5,32 @@ Wrap naked data in your own value types.
 ## Declaration
 
 ```java
-public abstract @Value class Single<Raw, This extends Single<Raw, This>>
+public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 ```
 
 ```java
-public abstract @Value class SingleInt<This extends SingleInt<This>>
+public abstract @Pure class SingleInt<This extends SingleInt<This>>
     implements SingleNumber<This>
 ```
 
 ```java
-public abstract @Value class SingleLong<This extends SingleLong<This>>
+public abstract @Pure class SingleLong<This extends SingleLong<This>>
     implements SingleNumber<This>
 ```
 
 ```java
-public abstract @Value class SingleDouble<This extends SingleDouble<This>>
+public abstract @Pure class SingleDouble<This extends SingleDouble<This>>
     implements SingleNumber<This>
 ```
 
 ```java
-public abstract @Value class SingleDecimal<This extends SingleDecimal<This>>
+public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
     extends Single<BigDecimal, This>
     implements SingleNumber<This>
 ```
 
 ```java
-public abstract @Value class SingleString<This extends SingleString<This>>
+public abstract @Pure class SingleString<This extends SingleString<This>>
     extends Single<String, This>
     implements SingleComparable<This>, CharSequence
 ```
@@ -69,14 +69,14 @@ Wrapping naked values in your own custom value classes has many benefits:
 The simplest use of `Single*` base classes is:
 
 ```java
-public final @Value class FamilyName extends SingleString<FamilyName>
+public final @Pure class FamilyName extends SingleString<FamilyName>
 {
 	public FamilyName(String name) { super(name, FamilyName::new); }
 }
 ```
 
 1. Declare your class `final`.
-2. Add the `@Value` annotation.
+2. Add the `@Pure` annotation.
 3. Give it a good name.
 4. Extend the appropriate `Single*` base class.
 5. Repeat your class name in the generic parameter.
@@ -88,7 +88,7 @@ public final @Value class FamilyName extends SingleString<FamilyName>
 If you are using a mutable type in an immutable way, you can use `Single` to wrap it and enforce that immutability.
 
 ```java
-public final @Value class TextSupport extends Single<EnumSet<TextOption>>
+public final @Pure class TextSupport extends Single<EnumSet<TextOption>>
 {
 	private static final Rule<EnumSet<TextOption>> defensiveCopy = EnumSet::copyOf;
 	public TextSupport(EnumSet<TextOption> options) { super(options, TextSupport::new, defensiveCopy); }
@@ -110,7 +110,7 @@ Purity strongly encourages *normalising* and *validating* data in your value cla
 Adding validation/normalisation rules is easy. Just declare a `Rule` constant, and pass that to the `super` constructor.
 
 ```java
-public final @Value class ModelNumber extends SingleString<ModelNumber>
+public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
 	private static final Rule rules = Rule.rules(
 		minLength(7), maxLength(13),
@@ -437,7 +437,7 @@ Turn your values into *smart values* by adding custom methods on your value clas
 The `Single` base classes expose the raw value as a protected property `raw`. Use it to implement methods on your class.
 
 ```java
-public final @Value class ModelNumber extends SingleString<ModelNumber>
+public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
 	private static final Rule rules = Rule.rules(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }

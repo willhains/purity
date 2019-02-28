@@ -5,10 +5,10 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Value} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
  */
 @FunctionalInterface
-public @Value interface IntRule
+public @Pure interface IntRule
 {
 	/** Applies this rule to the given argument. */
 	int apply(int i);

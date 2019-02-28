@@ -6,7 +6,7 @@ package com.willhains.purity;
  * @author willhains
  * @param <This> Self-reference to the subclass type itself.
  */
-public @Value interface SingleComparable<This extends SingleComparable<This>> extends Comparable<This>
+public @Pure interface SingleComparable<This extends SingleComparable<This>> extends Comparable<This>
 {
 	/** @return the larger of {@code this} and {@code that}. */
 	default This max(final This that)

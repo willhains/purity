@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class SingleDecimalTest
 {
-	static final @Value class Price extends SingleDecimal<Price>
+	static final @Pure class Price extends SingleDecimal<Price>
 	{
 		Price(final BigDecimal p) { super(p, Price::new); }
 		Price(final double p) { super(p, Price::new); }
@@ -98,7 +98,7 @@ public class SingleDecimalTest
 		assertFalse(x.isNegative());
 	}
 	
-	static final @Value class Factor extends SingleDecimal<Factor>
+	static final @Pure class Factor extends SingleDecimal<Factor>
 	{
 		Factor(BigDecimal factor) { super(factor, Factor::new); }
 	}

@@ -12,7 +12,7 @@ import static com.willhains.purity.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `long` version of {@link Single}. */
-public abstract @Value class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>
+public abstract @Pure class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>
 {
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;

@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
  * @author willhains
  * @param <This>
  */
-public @Value interface SingleNumber<This extends SingleNumber<This>> extends SingleComparable<This>
+public @Pure interface SingleNumber<This extends SingleNumber<This>> extends SingleComparable<This>
 {
 	Number asNumber();
 	default String format(final DecimalFormat format) { return format.format(asNumber()); }

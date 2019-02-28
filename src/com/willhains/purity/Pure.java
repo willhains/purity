@@ -7,7 +7,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Indicates that a type has value semantics.
+ * Indicates that a type has pure value semantics.
  *
  * Formally:
  * <ol>
@@ -23,4 +23,4 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  */
 @Retention(SOURCE)
 @Target({TYPE, TYPE_PARAMETER, PARAMETER, TYPE_USE})
-public @interface Value {}
+public @interface Pure {}

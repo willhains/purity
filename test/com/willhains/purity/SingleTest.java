@@ -137,15 +137,15 @@ public class SingleTest
 		assertThat(x.toString(), equalTo(x.raw.toString()));
 	}
 	
-	static final @Value class A1 extends Single<String[], A1> { A1(final String[] a) { super(a, A1::new); } }
-	static final @Value class A2 extends Single<int[], A2> { A2(final int[] a) { super(a, A2::new); } }
-	static final @Value class A3 extends Single<byte[], A3> { A3(final byte[] a) { super(a, A3::new); } }
-	static final @Value class A4 extends Single<boolean[], A4> { A4(final boolean[] a) { super(a, A4::new); } }
-	static final @Value class A5 extends Single<long[], A5> { A5(final long[] a) { super(a, A5::new); } }
-	static final @Value class A6 extends Single<double[], A6> { A6(final double[] a) { super(a, A6::new); } }
-	static final @Value class A7 extends Single<float[], A7> { A7(final float[] a) { super(a, A7::new); } }
-	static final @Value class A8 extends Single<char[], A8> { A8(final char[] a) { super(a, A8::new); } }
-	static final @Value class A9 extends Single<short[], A9> { A9(final short[] a) { super(a, A9::new); } }
+	static final @Pure class A1 extends Single<String[], A1> { A1(final String[] a) { super(a, A1::new); } }
+	static final @Pure class A2 extends Single<int[], A2> { A2(final int[] a) { super(a, A2::new); } }
+	static final @Pure class A3 extends Single<byte[], A3> { A3(final byte[] a) { super(a, A3::new); } }
+	static final @Pure class A4 extends Single<boolean[], A4> { A4(final boolean[] a) { super(a, A4::new); } }
+	static final @Pure class A5 extends Single<long[], A5> { A5(final long[] a) { super(a, A5::new); } }
+	static final @Pure class A6 extends Single<double[], A6> { A6(final double[] a) { super(a, A6::new); } }
+	static final @Pure class A7 extends Single<float[], A7> { A7(final float[] a) { super(a, A7::new); } }
+	static final @Pure class A8 extends Single<char[], A8> { A8(final char[] a) { super(a, A8::new); } }
+	static final @Pure class A9 extends Single<short[], A9> { A9(final short[] a) { super(a, A9::new); } }
 	
 	@Test
 	public void shouldBeEqualIfArrayContentsAreEqual()

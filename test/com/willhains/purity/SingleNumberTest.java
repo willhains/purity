@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class SingleNumberTest
 {
-	static final @Value class Height implements SingleNumber<Height>
+	static final @Pure class Height implements SingleNumber<Height>
 	{
 		final float raw;
 		Height(final float rawValue) { raw = rawValue; }

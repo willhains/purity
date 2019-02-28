@@ -4,12 +4,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link Single} or other {@link Value} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link Single} or other {@link Pure} object.
  *
  * @param <Raw> the raw type to be validated/normalised.
  */
 @FunctionalInterface
-public @Value interface Rule<Raw> extends Function<Raw, Raw>
+public @Pure interface Rule<Raw> extends Function<Raw, Raw>
 {
 	/** Combine multiple rules into a single rule. */
 	@SafeVarargs

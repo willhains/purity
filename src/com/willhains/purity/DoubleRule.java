@@ -5,10 +5,10 @@ import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} or other {@link Value} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} or other {@link Pure} object.
  */
 @FunctionalInterface
-public @Value interface DoubleRule
+public @Pure interface DoubleRule
 {
 	/** Applies this rule to the given argument. */
 	double apply(double i);

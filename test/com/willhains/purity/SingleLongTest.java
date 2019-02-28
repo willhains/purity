@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class SingleLongTest
 {
-	public static final @Value class Count extends SingleLong<Count>
+	public static final @Pure class Count extends SingleLong<Count>
 	{
 		public Count(final long rawValue) { super(rawValue, Count::new); }
 	}
@@ -305,7 +305,7 @@ public class SingleLongTest
 		assertFalse(x.isNegative());
 	}
 	
-	static final @Value class Id extends SingleLong<Id> { Id(long id) { super(id, Id::new); } }
+	static final @Pure class Id extends SingleLong<Id> { Id(long id) { super(id, Id::new); } }
 	
 	@Test
 	public void shouldIdentifyNegative()
