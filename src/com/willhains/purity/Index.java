@@ -125,7 +125,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	public Map<Key, Value> asMap() { return unmodifiableMap(_prepareForRead()); }
 	
 	/** @see Map#forEach */
-	public void forEach(final BiConsumer<? super Key, ? super Value> action) { _prepareForRead().forEach(action); }
+	public void forEach(final @Retained BiConsumer<? super Key, ? super Value> action) { _prepareForRead().forEach(action); }
 	
 	/** @return an {@link Iterator} over key-value {@link Pair}s. */
 	public Iterator<Pair<Key, Value>> iterator() { return stream().iterator(); }
@@ -146,7 +146,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	public boolean isEmpty() { return _prepareForRead().isEmpty(); }
 	public boolean containsKey(final Key key) { return _prepareForRead().containsKey(key); }
 	public boolean containsValue(final Value value) { return _prepareForRead().containsValue(value); }
-	public void ifPresent(final Key key, final Consumer<? super Value> then) { get(key).ifPresent(then); }
+	public void ifPresent(final Key key, final @Retained Consumer<? super Value> then) { get(key).ifPresent(then); }
 	
 	public Set<Key> keys() { return Collections.unmodifiableSet(_prepareForRead().keySet()); }
 	public Collection<Value> values() { return Collections.unmodifiableCollection(_prepareForRead().values()); }
@@ -177,7 +177,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 		}
 	}
 	
-	private Index<Key, Value> _mutate(final Consumer<Map<Key, Value>> mutator)
+	private Index<Key, Value> _mutate(final @Retained Consumer<Map<Key, Value>> mutator)
 	{
 		return new Index<>(new Mutating<>(_state, map ->
 		{
@@ -187,7 +187,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	}
 	
 	private <@Pure ConvertedKey, @Pure ConvertedValue> Index<ConvertedKey, ConvertedValue> _transform(
-		final Function<Map<Key, Value>, Map<ConvertedKey, ConvertedValue>> transformer)
+		final @Retained Function<Map<Key, Value>, Map<ConvertedKey, ConvertedValue>> transformer)
 	{
 		return new Index<>(new Mutating<>(_state, transformer));
 	}
@@ -212,13 +212,13 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 		return _mutate(map -> map.putAll(entries));
 	}
 	
-	public Index<Key, Value> setIfAbsent(Key key, @Pure Supplier<? extends Value> valueSupplier)
+	public Index<Key, Value> setIfAbsent(Key key, @Retained Supplier<? extends Value> valueSupplier)
 	{
 		requireNonNull(valueSupplier);
 		return _mutate(map -> map.computeIfAbsent(key, $ -> valueSupplier.get()));
 	}
 	
-	public Index<Key, Value> replaceIfPresent(Key key, @Pure Function<? super Value, ? extends Value> valueReplacer)
+	public Index<Key, Value> replaceIfPresent(Key key, @Retained Function<? super Value, ? extends Value> valueReplacer)
 	{
 		requireNonNull(valueReplacer);
 		return _mutate(map -> map.computeIfPresent(key, ($, oldValue) -> valueReplacer.apply(oldValue)));
@@ -228,13 +228,13 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	public Index<Key, Value> deleteAll(final Plural<Key> keys) { return deleteIf((key, $) -> keys.contains(key)); }
 	
 	/** Delete entries where the key and value satisfy the {@code where} condition. */
-	public Index<Key, Value> deleteIf(final @Pure BiPredicate<? super Key, ? super Value> where)
+	public Index<Key, Value> deleteIf(final @Retained BiPredicate<? super Key, ? super Value> where)
 	{
 		return _mutate(map -> map.entrySet().removeIf(entry -> where.test(entry.getKey(), entry.getValue())));
 	}
 	
 	/** Delete entries where the key and value do not satisfy the {@code where} condition. */
-	public Index<Key, Value> filter(final @Pure BiPredicate<? super Key, ? super Value> where)
+	public Index<Key, Value> filter(final @Retained BiPredicate<? super Key, ? super Value> where)
 	{
 		return deleteIf(where.negate());
 	}
@@ -244,7 +244,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	 * When two resulting keys are the same, the latter survives.
 	 */
 	public <@Pure ConvertedKey, @Pure ConvertedValue> Index<ConvertedKey, ConvertedValue> map(
-		final @Pure BiFunction<? super Key, ? super Value, Pair<ConvertedKey, ConvertedValue>> mapper)
+		final @Retained BiFunction<? super Key, ? super Value, Pair<ConvertedKey, ConvertedValue>> mapper)
 	{
 		return _transform(before ->
 		{
@@ -259,7 +259,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	}
 	
 	/** Convert the keys to new values using the mapper function. When two are the same, the latter will survive. */
-	public <@Pure Converted> Index<Converted, Value> mapKeys(final @Pure Function<? super Key, Converted> mapper)
+	public <@Pure Converted> Index<Converted, Value> mapKeys(final @Retained Function<? super Key, Converted> mapper)
 	{
 		return _transform(before ->
 		{
@@ -270,7 +270,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	}
 	
 	/** Convert the values to new values using the mapper function. */
-	public <@Pure Converted> Index<Key, Converted> mapValues(final @Pure Function<? super Value, Converted> mapper)
+	public <@Pure Converted> Index<Key, Converted> mapValues(final @Retained Function<? super Value, Converted> mapper)
 	{
 		return _transform(before ->
 		{
@@ -287,7 +287,7 @@ public final @Pure class Index<@Pure Key, @Pure Value> implements Iterable<Pair<
 	}
 	
 	/** Reverse the index so that values are keys, and vice-versa, with {@code combiner} to handle duplicates. */
-	public Index<Value, Key> flip(final @Pure BiFunction<? super Key, ? super Key, ? extends Key> combiner)
+	public Index<Value, Key> flip(final @Retained BiFunction<? super Key, ? super Key, ? extends Key> combiner)
 	{
 		return _transform(before ->
 		{

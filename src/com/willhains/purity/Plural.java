@@ -267,7 +267,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 		@Override public List<Converted> prepareForWrite() { return _mutator.apply(_inner.prepareForWrite()); }
 	}
 	
-	private Plural<Element> _mutate(final Consumer<List<Element>> mutator)
+	private Plural<Element> _mutate(final @Retained Consumer<List<Element>> mutator)
 	{
 		return new Plural<>(new Mutating<>(_state, list ->
 		{
@@ -276,7 +276,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 		}));
 	}
 	
-	private <Converted> Plural<Converted> _transform(final Function<List<Element>, List<Converted>> transformer)
+	private <Converted> Plural<Converted> _transform(final @Retained Function<List<Element>, List<Converted>> transformer)
 	{
 		return new Plural<>(new Mutating<>(_state, transformer));
 	}
@@ -398,7 +398,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
-	public <@Pure Converted> Plural<Converted> map(final @Pure Function<? super Element, ? extends Converted> mapper)
+	public <@Pure Converted> Plural<Converted> map(final @Retained Function<? super Element, ? extends Converted> mapper)
 	{
 		return _transform(list ->
 		{
@@ -415,7 +415,7 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	
 	/** @return a new {@link Plural}, with the elements transformed by a mapper function. */
 	public <@Pure Converted> Plural<Converted> flatMap(
-		final @Pure Function<? super Element, Plural<? extends Converted>> mapper)
+		final @Retained Function<? super Element, Plural<? extends Converted>> mapper)
 	{
 		return _transform(list ->
 		{
@@ -441,11 +441,11 @@ public final @Pure class Plural<@Pure Element> implements Iterable<Element>
 	}
 	
 	/** @return a new {@link Plural}, sorted by the specified comparator order. */
-	public Plural<Element> sortedBy(final @Pure Comparator<Element> order) { return _mutate(list -> list.sort(order)); }
+	public Plural<Element> sortedBy(final @Retained Comparator<Element> order) { return _mutate(list -> list.sort(order)); }
 	
 	/** @return a new {@link Plural}, sorted by the {@link Comparable} element's order. */
 	public <Property extends Comparable<Property>> Plural<Element> sortedBy(
-		final @Pure Function<? super Element, ? extends Property> property)
+		final @Retained Function<? super Element, ? extends Property> property)
 	{
 		return sortedBy(comparing(property));
 	}
