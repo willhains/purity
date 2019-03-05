@@ -44,6 +44,13 @@ There are four categories of types in a well-written, value-oriented application
 
 Generally, a class should not belong to more than one of these categories. Specifically, a `@Pure` class must not belong to any other categories, as that would violate the [definition of "value"][values].
 
+Purity introduces three more annotations for arguments and return values, to help keep track of non-`@Pure` object 
+ownership.
+
+5. `@Retained` = the object is stored inside the callee object, or in another object it calls.
+6. `@Returned` = the object is stored only inside the return value.
+7. `@Released` = the object is not stored by the callee object, nor by any other objects it calls.
+
 At a high level, refactoring a codebase to Purity is done in four steps:
 
 1. **Wrap** *everything* that isn't yours in a class of your own. Give each a name that makes sense in the context of your application. Add only the methods you need, and give the methods names and arguments that make sense for your app.
