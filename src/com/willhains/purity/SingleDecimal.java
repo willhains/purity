@@ -2,6 +2,7 @@ package com.willhains.purity;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.willhains.purity.Rule.validOnlyIf;
 import static com.willhains.purity.Rule.validUnless;
@@ -16,7 +17,7 @@ import static java.math.RoundingMode.*;
  */
 public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	extends Single<BigDecimal, This>
-	implements SingleNumber<This>
+	implements SingleNumber<This>, Supplier<BigDecimal>
 {
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -64,6 +65,10 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	{
 		this(new BigDecimal(rawValue), constructor, rules);
 	}
+	
+	public final BigDecimal raw() { return raw; }
+	
+	@Override public BigDecimal get() { return raw; }
 	
 	@Override public String toString() { return raw.toPlainString(); }
 	

@@ -1,17 +1,14 @@
 package com.willhains.purity;
 
 import java.util.Optional;
-import java.util.function.DoubleFunction;
-import java.util.function.DoublePredicate;
-import java.util.function.DoubleUnaryOperator;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.willhains.purity.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `double` version of {@link Single}. */
-public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>
+public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;
@@ -43,6 +40,8 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	}
 	
 	public final double raw() { return raw; }
+	
+	@Override public double getAsDouble() { return raw; }
 	
 	@Override public final int hashCode() { return Double.hashCode(raw); }
 	@Override public String toString() { return Double.toString(raw); }
