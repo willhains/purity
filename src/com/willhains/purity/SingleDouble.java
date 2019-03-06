@@ -110,6 +110,16 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.doubleValue()); }
 	@Override public final This divideBy(final Number number) { return map($ -> $ / number.doubleValue()); }
 	
+	public final This plus(final double number) { return map($ -> $ + number); }
+	public final This minus(final double number) { return map($ -> $ - number); }
+	public final This multiplyBy(final double number) { return map($ -> $ * number); }
+	public final This divideBy(final double number) { return map($ -> $ / number); }
+	
+	public final This plus(final DoubleSupplier number) { return map($ -> $ + number.getAsDouble()); }
+	public final This minus(final DoubleSupplier number) { return map($ -> $ - number.getAsDouble()); }
+	public final This multiplyBy(final DoubleSupplier number) { return map($ -> $ * number.getAsDouble()); }
+	public final This divideBy(final DoubleSupplier number) { return map($ -> $ / number.getAsDouble()); }
+	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }
 	public final This roundDown() { return map(Math::floor); }

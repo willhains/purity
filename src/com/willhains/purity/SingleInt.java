@@ -106,6 +106,16 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.intValue()); }
 	@Override public final This divideBy(final Number number) { return map($ -> $ / number.intValue()); }
 	
+	public final This plus(final int number) { return map($ -> $ + number); }
+	public final This minus(final int number) { return map($ -> $ - number); }
+	public final This multiplyBy(final int number) { return map($ -> $ * number); }
+	public final This divideBy(final int number) { return map($ -> $ / number); }
+	
+	public final This plus(final IntSupplier number) { return map($ -> $ + number.getAsInt()); }
+	public final This minus(final IntSupplier number) { return map($ -> $ - number.getAsInt()); }
+	public final This multiplyBy(final IntSupplier number) { return map($ -> $ * number.getAsInt()); }
+	public final This divideBy(final IntSupplier number) { return map($ -> $ / number.getAsInt()); }
+	
 	/**
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.

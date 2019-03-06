@@ -106,6 +106,16 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.longValue()); }
 	@Override public final This divideBy(final Number number) { return map($ -> $ / number.longValue()); }
 	
+	public final This plus(final long number) { return map($ -> $ + number); }
+	public final This minus(final long number) { return map($ -> $ - number); }
+	public final This multiplyBy(final long number) { return map($ -> $ * number); }
+	public final This divideBy(final long number) { return map($ -> $ / number); }
+	
+	public final This plus(final LongSupplier number) { return map($ -> $ + number.getAsLong()); }
+	public final This minus(final LongSupplier number) { return map($ -> $ - number.getAsLong()); }
+	public final This multiplyBy(final LongSupplier number) { return map($ -> $ * number.getAsLong()); }
+	public final This divideBy(final LongSupplier number) { return map($ -> $ / number.getAsLong()); }
+	
 	/**
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
