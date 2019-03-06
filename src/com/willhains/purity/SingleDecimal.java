@@ -116,6 +116,16 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
 	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number))); }
 	
+	public final This plus(final BigDecimal number) { return map(d -> d.add(number)); }
+	public final This minus(final BigDecimal number) { return map(d -> d.subtract(number)); }
+	public final This multiplyBy(final BigDecimal number) { return map(d -> d.multiply(number)); }
+	public final This divideBy(final BigDecimal number) { return map(d -> d.divide(number)); }
+	
+	public final This plus(final Supplier<BigDecimal> number) { return map(d -> d.add(number.get())); }
+	public final This minus(final Supplier<BigDecimal> number) { return map(d -> d.subtract(number.get())); }
+	public final This multiplyBy(final Supplier<BigDecimal> number) { return map(d -> d.multiply(number.get())); }
+	public final This divideBy(final Supplier<BigDecimal> number) { return map(d -> d.divide(number.get())); }
+	
 	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
 	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }
 	public final This roundDown() { return map(d -> d.setScale(0, FLOOR)); }
