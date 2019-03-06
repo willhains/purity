@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static com.willhains.purity.Rule.validOnlyIf;
@@ -14,7 +15,7 @@ import static com.willhains.purity.Rule.validUnless;
  */
 public abstract @Pure class SingleString<This extends SingleString<This>>
 	extends Single<String, This>
-	implements SingleComparable<This>, CharSequence
+	implements SingleComparable<This>, CharSequence, Supplier<String>
 {
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -37,6 +38,10 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	{
 		super(rawValue, constructor, rules);
 	}
+	
+	@Override public final String raw() { return raw; }
+	
+	@Override public String get() { return raw; }
 	
 	@Override public String toString() { return raw; }
 	@Override public int compareTo(This that) { return this.raw.compareTo(that.raw); }

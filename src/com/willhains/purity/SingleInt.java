@@ -1,10 +1,7 @@
 package com.willhains.purity;
 
 import java.util.Optional;
-import java.util.function.IntFunction;
-import java.util.function.IntPredicate;
-import java.util.function.IntUnaryOperator;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.willhains.purity.IntRule.validOnlyIf;
@@ -12,7 +9,7 @@ import static com.willhains.purity.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `int` version of {@link Single}. */
-public abstract @Pure class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>
+public abstract @Pure class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>, IntSupplier
 {
 	// The single-argument constructor of the subclass
 	private final IntFunction<? extends This> _constructor;
@@ -44,6 +41,8 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	}
 	
 	public final int raw() { return raw; }
+	
+	@Override public int getAsInt() { return raw; }
 	
 	@Override public final int hashCode() { return Integer.hashCode(raw); }
 	@Override public String toString() { return Integer.toString(raw); }

@@ -1,10 +1,7 @@
 package com.willhains.purity;
 
 import java.util.Optional;
-import java.util.function.LongFunction;
-import java.util.function.LongPredicate;
-import java.util.function.LongUnaryOperator;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.willhains.purity.LongRule.validOnlyIf;
@@ -12,7 +9,7 @@ import static com.willhains.purity.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /** A primitive `long` version of {@link Single}. */
-public abstract @Pure class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>
+public abstract @Pure class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>, LongSupplier
 {
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;
@@ -44,6 +41,8 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	}
 	
 	public final long raw() { return raw; }
+	
+	@Override public long getAsLong() { return raw; }
 	
 	@Override public final int hashCode() { return Long.hashCode(raw); }
 	@Override public String toString() { return Long.toString(raw); }
