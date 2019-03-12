@@ -101,20 +101,20 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	@Override public boolean isPositive() { return raw > 0; }
 	@Override public boolean isNegative() { return raw < 0; }
 	
-	@Override public final This plus(final Number number) { return map($ -> $ + number.intValue()); }
-	@Override public final This minus(final Number number) { return map($ -> $ - number.intValue()); }
-	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.intValue()); }
-	@Override public final This divideBy(final Number number) { return map($ -> $ / number.intValue()); }
+	@Override public final This plus(final Number number) { return plus(number.intValue()); }
+	@Override public final This minus(final Number number) { return minus(number.intValue()); }
+	@Override public final This multiplyBy(final Number number) { return multiplyBy(number.intValue()); }
+	@Override public final This divideBy(final Number number) { return divideBy(number.intValue()); }
 	
 	public final This plus(final int number) { return map($ -> $ + number); }
 	public final This minus(final int number) { return map($ -> $ - number); }
 	public final This multiplyBy(final int number) { return map($ -> $ * number); }
 	public final This divideBy(final int number) { return map($ -> $ / number); }
 	
-	public final This plus(final IntSupplier number) { return map($ -> $ + number.getAsInt()); }
-	public final This minus(final IntSupplier number) { return map($ -> $ - number.getAsInt()); }
-	public final This multiplyBy(final IntSupplier number) { return map($ -> $ * number.getAsInt()); }
-	public final This divideBy(final IntSupplier number) { return map($ -> $ / number.getAsInt()); }
+	public final This plus(final IntSupplier number) { return plus(number.getAsInt()); }
+	public final This minus(final IntSupplier number) { return minus(number.getAsInt()); }
+	public final This multiplyBy(final IntSupplier number) { return multiplyBy(number.getAsInt()); }
+	public final This divideBy(final IntSupplier number) { return divideBy(number.getAsInt()); }
 	
 	/**
 	 * Test the raw value with {@code condition}.

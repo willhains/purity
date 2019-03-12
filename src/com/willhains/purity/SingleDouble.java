@@ -105,20 +105,20 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	@Override public boolean isPositive() { return raw > 0d; }
 	@Override public boolean isNegative() { return raw < 0d; }
 	
-	@Override public final This plus(final Number number) { return map($ -> $ + number.doubleValue()); }
-	@Override public final This minus(final Number number) { return map($ -> $ - number.doubleValue()); }
-	@Override public final This multiplyBy(final Number number) { return map($ -> $ * number.doubleValue()); }
-	@Override public final This divideBy(final Number number) { return map($ -> $ / number.doubleValue()); }
+	@Override public final This plus(final Number number) { return plus(number.doubleValue()); }
+	@Override public final This minus(final Number number) { return minus(number.doubleValue()); }
+	@Override public final This multiplyBy(final Number number) { return multiplyBy(number.doubleValue()); }
+	@Override public final This divideBy(final Number number) { return divideBy(number.doubleValue()); }
 	
 	public final This plus(final double number) { return map($ -> $ + number); }
 	public final This minus(final double number) { return map($ -> $ - number); }
 	public final This multiplyBy(final double number) { return map($ -> $ * number); }
 	public final This divideBy(final double number) { return map($ -> $ / number); }
 	
-	public final This plus(final DoubleSupplier number) { return map($ -> $ + number.getAsDouble()); }
-	public final This minus(final DoubleSupplier number) { return map($ -> $ - number.getAsDouble()); }
-	public final This multiplyBy(final DoubleSupplier number) { return map($ -> $ * number.getAsDouble()); }
-	public final This divideBy(final DoubleSupplier number) { return map($ -> $ / number.getAsDouble()); }
+	public final This plus(final DoubleSupplier number) { return plus(number.getAsDouble()); }
+	public final This minus(final DoubleSupplier number) { return minus(number.getAsDouble()); }
+	public final This multiplyBy(final DoubleSupplier number) { return multiplyBy(number.getAsDouble()); }
+	public final This divideBy(final DoubleSupplier number) { return divideBy(number.getAsDouble()); }
 	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }
