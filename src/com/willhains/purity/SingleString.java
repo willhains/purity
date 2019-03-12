@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import java.util.function.Function;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -97,12 +98,18 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	
 	@Override public final int length() { return raw.length(); }
 	@Override public final char charAt(final int position) { return raw.charAt(position); }
+	public final char charAt(final IntSupplier position) { return charAt(position.getAsInt()); }
 	
 	/** @return a new value of the same type from a substring. */
 	@Override
 	public final This subSequence(final int start, final int end)
 	{
 		return map(s -> s.substring(start, end));
+	}
+	
+	public final This subSequence(final IntSupplier start, final IntSupplier end)
+	{
+		return subSequence(start.getAsInt(), end.getAsInt());
 	}
 	
 	/** @return a new value of the same type, wrapping only the first (up to) {@code length} characters. */
@@ -113,6 +120,8 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		return subSequence(0, lengthOfSubstring);
 	}
 	
+	public final This left(final IntSupplier length) { return left(length.getAsInt()); }
+	
 	/** @return a new value of the same type, wrapping only the last (up to) {@code length} characters. */
 	public final This right(final int length)
 	{
@@ -120,6 +129,8 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		final int lengthOfSubstring = Math.min(lengthOfString, length);
 		return subSequence(lengthOfString - lengthOfSubstring, lengthOfString);
 	}
+	
+	public final This right(final IntSupplier length) { return right(length.getAsInt()); }
 	
 	/** @return a new value of the same type from the trimmed string. */
 	public final This trim() { return map(String::trim); }
@@ -136,9 +147,19 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		return map(s -> s.replaceAll(regex, replacement));
 	}
 	
+	public final This replaceRegex(final Supplier<String> regex, final Supplier<String> replacement)
+	{
+		return replaceRegex(regex.get(), replacement.get());
+	}
+	
 	/** @return a new value of the same type with all instances of the specified literal string replaced. */
 	public final This replaceLiteral(final String literal, final String replacement)
 	{
 		return map(s -> s.replace(literal, replacement));
+	}
+	
+	public final This replaceLiteral(final Supplier<String> literal, final Supplier<String> replacement)
+	{
+		return replaceLiteral(literal.get(), replacement.get());
 	}
 }

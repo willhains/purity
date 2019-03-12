@@ -2,6 +2,7 @@ package com.willhains.purity;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.function.Supplier;
 
 /**
  * A {@link Single} wrapping a numeric value.
@@ -35,6 +36,11 @@ public @Pure interface SingleNumber<This extends SingleNumber<This>> extends Sin
 	This minus(Number number);
 	This multiplyBy(Number number);
 	This divideBy(Number number);
+	
+	default This plus(final Supplier<? extends Number> number) { return plus(number.get()); }
+	default This minus(final Supplier<? extends Number> number) { return minus(number.get()); }
+	default This multiplyBy(final Supplier<? extends Number> number) { return multiplyBy(number.get()); }
+	default This divideBy(final Supplier<? extends Number> number) { return divideBy(number.get()); }
 	
 	/**
 	 * Convert a value into a {@link BigDecimal} via its {@link Object#toString()} value.
