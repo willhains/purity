@@ -116,6 +116,11 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	public final This multiplyBy(final LongSupplier number) { return multiplyBy(number.getAsLong()); }
 	public final This divideBy(final LongSupplier number) { return divideBy(number.getAsLong()); }
 	
+	public final boolean isGreaterThan(final LongSupplier number) { return raw > number.getAsLong(); }
+	public final boolean isGreaterThanOrEqualTo(final LongSupplier number) { return raw >= number.getAsLong(); }
+	public final boolean isLessThan(final LongSupplier number) { return raw < number.getAsLong(); }
+	public final boolean isLessThanOrEqualTo(final LongSupplier number) { return raw <= number.getAsLong(); }
+	
 	/**
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.

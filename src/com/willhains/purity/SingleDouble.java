@@ -120,6 +120,11 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	public final This multiplyBy(final DoubleSupplier number) { return multiplyBy(number.getAsDouble()); }
 	public final This divideBy(final DoubleSupplier number) { return divideBy(number.getAsDouble()); }
 	
+	public final boolean isGreaterThan(final DoubleSupplier number) { return raw > number.getAsDouble(); }
+	public final boolean isGreaterThanOrEqualTo(final DoubleSupplier number) { return raw >= number.getAsDouble(); }
+	public final boolean isLessThan(final DoubleSupplier number) { return raw < number.getAsDouble(); }
+	public final boolean isLessThanOrEqualTo(final DoubleSupplier number) { return raw <= number.getAsDouble(); }
+	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }
 	public final This roundDown() { return map(Math::floor); }

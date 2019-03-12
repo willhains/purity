@@ -116,6 +116,11 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	public final This multiplyBy(final IntSupplier number) { return multiplyBy(number.getAsInt()); }
 	public final This divideBy(final IntSupplier number) { return divideBy(number.getAsInt()); }
 	
+	public final boolean isGreaterThan(final IntSupplier number) { return raw > number.getAsInt(); }
+	public final boolean isGreaterThanOrEqualTo(final IntSupplier number) { return raw >= number.getAsInt(); }
+	public final boolean isLessThan(final IntSupplier number) { return raw < number.getAsInt(); }
+	public final boolean isLessThanOrEqualTo(final IntSupplier number) { return raw <= number.getAsInt(); }
+	
 	/**
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
