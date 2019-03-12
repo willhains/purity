@@ -26,6 +26,11 @@ public @Pure interface SingleNumber<This extends SingleNumber<This>> extends Sin
 	default boolean isLessThan(final Number number) { return compareToNumber(number) < 0; }
 	default boolean isLessThanOrEqualTo(final Number number) { return compareToNumber(number) <= 0; }
 	
+	default boolean isGreaterThan(final Supplier<? extends Number> number) { return isGreaterThan(number.get()); }
+	default boolean isGreaterThanOrEqualTo(final Supplier<? extends Number> number) { return isGreaterThanOrEqualTo(number.get()); }
+	default boolean isLessThan(final Supplier<? extends Number> number) { return isLessThan(number.get()); }
+	default boolean isLessThanOrEqualTo(final Supplier<? extends Number> number) { return isLessThanOrEqualTo(number.get()); }
+	
 	This plus(Number number);
 	This minus(Number number);
 	This multiplyBy(Number number);
