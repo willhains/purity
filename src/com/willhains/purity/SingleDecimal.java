@@ -73,25 +73,25 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public String toString() { return raw.toPlainString(); }
 	
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	public static Rule<BigDecimal> min(final BigDecimal minValue)
+	public static Rule<BigDecimal> min(final @Returned BigDecimal minValue)
 	{
 		return validUnless(raw -> raw.compareTo(minValue) < 0, raw -> raw + " < " + minValue);
 	}
 	
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	public static Rule<BigDecimal> max(final BigDecimal maxValue)
+	public static Rule<BigDecimal> max(final @Returned BigDecimal maxValue)
 	{
 		return validUnless(raw -> raw.compareTo(maxValue) > 0, raw -> raw + " > " + maxValue);
 	}
 	
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	public static Rule<BigDecimal> greaterThan(final BigDecimal lowerBound)
+	public static Rule<BigDecimal> greaterThan(final @Returned BigDecimal lowerBound)
 	{
 		return validOnlyIf(raw -> raw.compareTo(lowerBound) > 0, raw -> raw + " <= " + lowerBound);
 	}
 	
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	public static Rule<BigDecimal> lessThan(final BigDecimal upperBound)
+	public static Rule<BigDecimal> lessThan(final @Returned BigDecimal upperBound)
 	{
 		return validOnlyIf(raw -> raw.compareTo(upperBound) < 0, raw -> raw + " >= " + upperBound);
 	}
