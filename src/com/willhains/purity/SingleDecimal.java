@@ -114,7 +114,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public final This plus(final Number number) { return map(d -> d.add($(number))); }
 	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
 	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
-	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number))); }
+	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number), HALF_UP)); }
 	
 	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
 	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }
