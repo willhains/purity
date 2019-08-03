@@ -52,7 +52,14 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return this.raw == that.raw;
+	}
+	
+	public final boolean equals(final This that)
+	{
+		if(that == this) return true;
+		if(that == null) return false;
 		return this.raw == that.raw;
 	}
 	

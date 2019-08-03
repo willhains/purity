@@ -83,7 +83,14 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return equals(this.raw, that.raw);
+	}
+	
+	public final boolean equals(final This that)
+	{
+		if(that == this) return true;
+		if(that == null) return false;
 		return equals(this.raw, that.raw);
 	}
 	
