@@ -27,6 +27,7 @@ out/
 
 # Build output
 *.class
+/docs/javadoc/
 
 # Libraries
 *.jar
