@@ -8,25 +8,24 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 
 /**
- * Indicates that a method argument or return value is not retained (stored in a field) by the method, or by any methods
- * to which it is passed from inside the method.
+ * Indicates that a method argument or return value is not retained (stored in a field) by the method, or by any objects
+ * it calls.
  *
  * Formally, the annotated argument / return value:
  * <ol>
- *     <li>Is not stored in a field of the method's class.</li>
- *     <li>Is not stored directly in a field of another class.</li>
- *     <li>Is not passed to a constructor or method as a {@link Retained} argument.</li>
- *     <li>If passed to a constructor or method as a {@link Released} argument, the return value is released.</li>
+ * <li>Is not stored in a field of the method's class.</li>
+ * <li>Is not stored directly in a field of another class.</li>
+ * <li>Is not passed to a constructor or method as a {@link Retained} argument.</li>
+ * <li>If passed to a constructor or method as a {@link Returned} argument, the return value is released.</li>
  * </ol>
  *
  * Method arguments and return values of {@link Pure} classes are {@link Released} by default, since pure values are
  * immutable and therefore unable to retain them.
  *
  * @see Retained
- * @see Released
+ * @see Returned
+ * @author willhains
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({METHOD, PARAMETER})
-public @interface Released
-{
-}
+public @interface Released {}

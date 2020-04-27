@@ -8,8 +8,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 
 /**
- * Indicates that a method argument or return value is retained by the method, or by one or more methods to which it is
- * passed from inside the method.
+ * Indicates that a method argument or return value may be retained by the method, or by one or more methods it calls.
  *
  * Formally, the annotated argument / return value is not {@link Released} or {@link Returned}.
  *
@@ -17,10 +16,9 @@ import static java.lang.annotation.ElementType.PARAMETER;
  * explicitly annotated otherwise.
  *
  * @see Released
- * @see Retained
+ * @see Returned
+ * @author willhains
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({METHOD, PARAMETER})
-public @interface Retained
-{
-}
+public @interface Retained {}
