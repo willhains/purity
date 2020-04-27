@@ -1,7 +1,7 @@
 # JDK
 language: java
 jdk:
-- oraclejdk11
+- oraclejdk8
 
 # Release builds
 before_deploy:
