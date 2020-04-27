@@ -97,6 +97,11 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		return Long.compare(this.raw, number.longValue());
 	}
 	
+	public final int compareToNumber(final long number)
+	{
+		return Long.compare(this.raw, number);
+	}
+	
 	@Override public boolean isZero() { return raw == 0L; }
 	@Override public boolean isPositive() { return raw > 0L; }
 	@Override public boolean isNegative() { return raw < 0L; }

@@ -101,6 +101,11 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		return Double.compare(this.raw, number.doubleValue());
 	}
 	
+	public final int compareToNumber(final double number)
+	{
+		return Double.compare(this.raw, number);
+	}
+	
 	@Override public boolean isZero() { return raw == 0d; }
 	@Override public boolean isPositive() { return raw > 0d; }
 	@Override public boolean isNegative() { return raw < 0d; }

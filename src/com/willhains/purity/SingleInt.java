@@ -97,6 +97,11 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		return Integer.compare(this.raw, number.intValue());
 	}
 	
+	public final int compareToNumber(final int number)
+	{
+		return Integer.compare(this.raw, number);
+	}
+	
 	@Override public boolean isZero() { return raw == 0; }
 	@Override public boolean isPositive() { return raw > 0; }
 	@Override public boolean isNegative() { return raw < 0; }
