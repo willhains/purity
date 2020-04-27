@@ -1,6 +1,19 @@
-# Purity [![Build Status][travis-status]][travis]
-[travis-status]: https://travis-ci.org/willhains/purity.svg?branch=master
-[travis]: https://travis-ci.org/willhains/purity
+[![GitHub Release][release-badge]][release] 
+[![Build Status][build-badge]][build]
+[![codecov][coverage-badge]][coverage]
+[![Follow @willhains][twitter-badge]][twitter] 
+
+[release-badge]:  https://img.shields.io/github/release/willhains/purity.svg
+[build-badge]:    https://travis-ci.org/willhains/purity.svg?branch=master
+[coverage-badge]: https://codecov.io/gh/willhains/purity/branch/master/graph/badge.svg
+[twitter-badge]:  https://img.shields.io/twitter/follow/willhains.svg?style=social
+
+[release]:  https://github.com/willhains/purity/releases
+[build]:    https://travis-ci.org/willhains/purity
+[coverage]: https://codecov.io/gh/willhains/purity
+[twitter]:  https://twitter.com/intent/follow?screen_name=willhains
+
+# Purity
 
 Build robust, *value-based* applications in Java.
 
