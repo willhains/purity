@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 /**
  * A {@link Single} wrapping a numeric value.
  *
+ * @param <This> Self-reference to the subclass type itself.
  * @author willhains
- * @param <This>
  */
 public @Pure interface SingleNumber<This extends SingleNumber<This>> extends SingleComparable<This>
 {

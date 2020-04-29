@@ -7,6 +7,7 @@ import java.util.function.Predicate;
  * Normalise and/or validate raw data before it is wrapped in a {@link Single} or other {@link Pure} object.
  *
  * @param <Raw> the raw type to be validated/normalised.
+ * @author willhains
  */
 @FunctionalInterface
 public @Pure interface Rule<Raw> extends Function<Raw, Raw>

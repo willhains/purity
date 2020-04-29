@@ -12,8 +12,8 @@ import static java.math.RoundingMode.*;
 /**
  * A value type wrapping a {@link BigDecimal}.
  *
- * @author willhains
  * @param <This> Self-reference to the subclass type itself.
+ * @author willhains
  */
 public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	extends Single<BigDecimal, This>

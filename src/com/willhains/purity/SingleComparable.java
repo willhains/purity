@@ -3,8 +3,8 @@ package com.willhains.purity;
 /**
  * A {@link Single} value with a {@link Comparable} underlying value.
  * 
- * @author willhains
  * @param <This> Self-reference to the subclass type itself.
+ * @author willhains
  */
 public @Pure interface SingleComparable<This extends SingleComparable<This>> extends Comparable<This>
 {

@@ -7,7 +7,12 @@ import java.util.stream.Stream;
 import static com.willhains.purity.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
-/** A primitive `double` version of {@link Single}. */
+/**
+ * A primitive `double` version of {@link Single}.
+ *
+ * @param <This> Self-reference to the subclass type itself.
+ * @author willhains
+ */
 public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {
 	// The single-argument constructor of the subclass
@@ -145,7 +150,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
 	 * <pre>
-	 * optional.filter(x -&gt; x.is($ -> $ > 0))
+	 * optional.filter(x -&gt; x.is($ -> $ &gt; 0))
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.

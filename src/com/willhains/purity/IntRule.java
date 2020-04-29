@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
+ *
+ * @author willhains
  */
 @FunctionalInterface
 public @Pure interface IntRule

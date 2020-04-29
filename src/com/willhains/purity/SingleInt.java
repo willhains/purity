@@ -8,7 +8,12 @@ import static com.willhains.purity.IntRule.validOnlyIf;
 import static com.willhains.purity.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
-/** A primitive `int` version of {@link Single}. */
+/**
+ * A primitive `int` version of {@link Single}.
+ *
+ * @param <This> Self-reference to the subclass type itself.
+ * @author willhains
+ */
 public abstract @Pure class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>, IntSupplier
 {
 	// The single-argument constructor of the subclass
@@ -137,7 +142,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 * Test the raw value with {@code condition}.
 	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
 	 * <pre>
-	 * optional.filter(x -&gt; x.is($ -> $ > 0))
+	 * optional.filter(x -&gt; x.is($ -> $ &gt; 0))
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.

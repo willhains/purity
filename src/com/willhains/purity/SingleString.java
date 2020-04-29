@@ -11,8 +11,8 @@ import static com.willhains.purity.Rule.validUnless;
 /**
  * A value type wrapping a {@link String}.
  *
- * @author willhains
  * @param <This> Self-reference to the subclass type itself.
+ * @author willhains
  */
 public abstract @Pure class SingleString<This extends SingleString<This>>
 	extends Single<String, This>
