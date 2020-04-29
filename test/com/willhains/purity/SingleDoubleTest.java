@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.DoubleRule.rules;
+import static com.willhains.purity.DoubleRule.all;
 import static com.willhains.purity.DoubleRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -147,7 +147,7 @@ public class SingleDoubleTest
 		new D(Double.POSITIVE_INFINITY);
 	}
 	
-	static final class E extends SingleDouble<E> { E(double a) { super(a, E::new, rules(min(2.0), max(5.0))); } }
+	static final class E extends SingleDouble<E> { E(double a) { super(a, E::new, all(min(2.0), max(5.0))); } }
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -174,7 +174,7 @@ public class SingleDoubleTest
 	
 	static final class H extends SingleDouble<H> { H(double a)
 	{
-		super(a, H::new, rules(greaterThan(2.0), lessThan(5.0))); }
+		super(a, H::new, all(greaterThan(2.0), lessThan(5.0))); }
 	}
 	
 	@Test
@@ -200,7 +200,7 @@ public class SingleDoubleTest
 		new J(5.0);
 	}
 	
-	static final class K extends SingleDouble<K> { K(double a) { super(a, K::new, rules(floor(2.0), ceiling(5.0))); } }
+	static final class K extends SingleDouble<K> { K(double a) { super(a, K::new, all(floor(2.0), ceiling(5.0))); } }
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()

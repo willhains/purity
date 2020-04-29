@@ -12,7 +12,7 @@ public class SingleTest
 {
 	public static final class Height extends Single<Float, Height>
 	{
-		private static final Rule<Float> RULES = Rule.rules(
+		private static final Rule<Float> RULES = Rule.all(
 			validUnless(raw -> raw.floatValue() < 0f, raw -> raw + " < 0"),
 			validUnless(raw -> raw.isNaN(), "Not a number"),
 			validUnless(raw -> raw.isInfinite(), "Must be finite"));

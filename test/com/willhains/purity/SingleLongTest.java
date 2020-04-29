@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.LongRule.rules;
+import static com.willhains.purity.LongRule.all;
 import static com.willhains.purity.LongRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,7 +113,7 @@ public class SingleLongTest
 		assertThat(x.toString(), equalTo("100"));
 	}
 	
-	static final class A extends SingleLong<A> { A(long a) { super(a, A::new, rules(min(2L), max(5L))); } }
+	static final class A extends SingleLong<A> { A(long a) { super(a, A::new, all(min(2L), max(5L))); } }
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -140,7 +140,7 @@ public class SingleLongTest
 	
 	static final class D extends SingleLong<D> { D(long a)
 	{
-		super(a, D::new, rules(greaterThan(2L), lessThan(5L))); }
+		super(a, D::new, all(greaterThan(2L), lessThan(5L))); }
 	}
 	
 	@Test
@@ -166,7 +166,7 @@ public class SingleLongTest
 		new F(5L);
 	}
 	
-	static final class G extends SingleLong<G> { G(long a) { super(a, G::new, rules(floor(2L), ceiling(5L))); } }
+	static final class G extends SingleLong<G> { G(long a) { super(a, G::new, all(floor(2L), ceiling(5L))); } }
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()

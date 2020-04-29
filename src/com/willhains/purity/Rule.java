@@ -19,7 +19,7 @@ public @FunctionalInterface interface Rule<Raw>
 	{
 		/* Nullable */ Rule<Raw> rules = getConstant(single, "RULES");
 		if(rules == null) rules = getConstant(single, "_RULES");
-		if(rules == null) rules = rules(); // empty
+		if(rules == null) rules = all(); // empty
 		return rules;
 	}
 	
@@ -46,7 +46,7 @@ public @FunctionalInterface interface Rule<Raw>
 	
 	/** Combine multiple rules into a single rule. */
 	@SafeVarargs
-	static <Raw> Rule<Raw> rules(final Rule<Raw>... combiningRules)
+	static <Raw> Rule<Raw> all(final Rule<Raw>... combiningRules)
 	{
 		return raw ->
 		{

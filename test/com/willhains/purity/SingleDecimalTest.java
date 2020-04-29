@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.willhains.purity.Rule.rules;
+import static com.willhains.purity.Rule.all;
 import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -154,7 +154,7 @@ public class SingleDecimalTest
 	
 	static final class A extends SingleDecimal<A>
 	{
-		private static final Rule RULES = Rule.rules(min($(2)), max($(5)));
+		private static final Rule RULES = Rule.all(min($(2)), max($(5)));
 		A(BigDecimal a) { super(a, A::new); }
 	}
 	
@@ -192,7 +192,7 @@ public class SingleDecimalTest
 	static final class D extends SingleDecimal<D>
 	{
 		private D(BigDecimal a) { super(a, D::new); }
-		D(String a) { super(a, D::new, rules(greaterThan($(2)), lessThan($(5)))); }
+		D(String a) { super(a, D::new, all(greaterThan($(2)), lessThan($(5)))); }
 	}
 	
 	@Test
@@ -229,7 +229,7 @@ public class SingleDecimalTest
 	static final class G extends SingleDecimal<G>
 	{
 		private G(BigDecimal a) { super(a, G::new); }
-		G(double a) { super(a, G::new, rules(floor($(2)), ceiling($(5)))); }
+		G(double a) { super(a, G::new, all(floor($(2)), ceiling($(5)))); }
 	}
 	
 	@Test

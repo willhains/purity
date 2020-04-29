@@ -18,12 +18,12 @@ public @FunctionalInterface interface LongRule
 	{
 		/* Nullable */ LongRule rules = Rule.getConstant(single, "RULES");
 		if(rules == null) rules = Rule.getConstant(single, "_RULES");
-		if(rules == null) rules = rules(); // empty
+		if(rules == null) rules = all(); // empty
 		return rules;
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static LongRule rules(final LongRule... combiningRules)
+	static LongRule all(final LongRule... combiningRules)
 	{
 		return raw ->
 		{

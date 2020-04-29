@@ -89,7 +89,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	}
 	
 	/** Rule to trap non-numbers: NaN, infinity. */
-	public static DoubleRule realNumber = rules(
+	public static DoubleRule realNumber = all(
 		validUnless(Double::isNaN, "Not a number"),
 		validOnlyIf(Double::isFinite, "Must be finite"));
 	

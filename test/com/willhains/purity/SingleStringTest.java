@@ -2,7 +2,7 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
-import static com.willhains.purity.Rule.rules;
+import static com.willhains.purity.Rule.all;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -153,7 +153,7 @@ public class SingleStringTest
 	
 	static final class F extends SingleString<F>
 	{
-		private static final Rule RULES = rules(minLength(2), maxLength(5));
+		private static final Rule RULES = all(minLength(2), maxLength(5));
 		F(String a) { super(a, F::new); }
 	}
 	
@@ -165,7 +165,7 @@ public class SingleStringTest
 	
 	static final class G extends SingleString<G>
 	{
-		private static final Rule RULES = rules(minLength(2), maxLength(5));
+		private static final Rule RULES = all(minLength(2), maxLength(5));
 		G(String a) { super(a, G::new); }
 	}
 	
@@ -177,7 +177,7 @@ public class SingleStringTest
 	
 	static final class H extends SingleString<H>
 	{
-		private static final Rule RULES = rules(minLength(2), maxLength(5));
+		private static final Rule RULES = all(minLength(2), maxLength(5));
 		H(String a) { super(a, H::new); }
 	}
 	
