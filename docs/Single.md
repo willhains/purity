@@ -107,15 +107,15 @@ With mutable `Raw` types, be careful to:
 
 Purity strongly encourages *normalising* and *validating* data in your value class constructors. Doing so pushes data validation/normalisation out to the edges of your app, at their points of input. That means, wherever you see a `ModelNumber` in your code, you *know* it is definitely valid data. In the core logic of your app, you don't ever have to deal with the possibility of invalid data.
 
-Adding validation/normalisation rules is easy. Just declare a `Rule` constant, and pass that to the `super` constructor.
+Adding validation/normalisation rules is easy. Just declare a `RULES` constant. Purity will find it, and automatically apply it to raw values passed to the super constructor.
 
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule rules = Rule.rules(
+	private static final Rule RULES = Rule.rules(
 		minLength(7), maxLength(13),
 		validPattern("[AO]\\d\\d-\\d+"));
-	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }
+	public ModelNumber(final String model) { super(model, ModelNumber::new); }
 }
 ```
 
@@ -439,8 +439,8 @@ The `Single` base classes expose the raw value as a protected property `raw`. Us
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule rules = Rule.rules(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
-	public ModelNumber(final String model) { super(model, ModelNumber::new, rules); }
+	private static final Rule RULES = Rule.rules(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
+	public ModelNumber(final String model) { super(model, ModelNumber::new); }
 
 	public ProductCode getProductCode() { return new ProductCode(raw.substring(0, 3)); }
 	public ProductVariant getProductVariant() { return new ProductVariant(raw.substring(4)); }

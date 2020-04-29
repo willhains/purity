@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -9,9 +11,39 @@ import java.util.function.Predicate;
  * @param <Raw> the raw type to be validated/normalised.
  * @author willhains
  */
-@FunctionalInterface
-public @Pure interface Rule<Raw> extends Function<Raw, Raw>
+public @FunctionalInterface interface Rule<Raw>
 {
+	Raw applyRule(Raw raw) throws IllegalArgumentException;
+	
+	static <Raw, This extends Single<Raw, This>> Rule<Raw> rulesForClass(final Class<This> single)
+	{
+		/* Nullable */ Rule<Raw> rules = getConstant(single, "RULES");
+		if(rules == null) rules = getConstant(single, "_RULES");
+		if(rules == null) rules = rules(); // empty
+		return rules;
+	}
+	
+	static <T> /* Nullable */ T getConstant(final Class<?> fromClass, final String name)
+	{
+		try
+		{
+			final Field constant = fromClass.getDeclaredField(name);
+			final int modifiers = constant.getModifiers();
+			if((modifiers & Modifier.STATIC) == 0) return null;
+			if((modifiers & Modifier.FINAL) == 0) return null;
+			if((modifiers & Modifier.PUBLIC) == 0) constant.setAccessible(true);
+			return (T)constant.get(null);
+		}
+		catch(NoSuchFieldException | IllegalAccessException e)
+		{
+			return null;
+		}
+		catch(ClassCastException e)
+		{
+			throw new UnsupportedOperationException("RULES constant of incorrect type found in " + fromClass);
+		}
+	}
+	
 	/** Combine multiple rules into a single rule. */
 	@SafeVarargs
 	static <Raw> Rule<Raw> rules(final Rule<Raw>... combiningRules)
@@ -19,7 +51,7 @@ public @Pure interface Rule<Raw> extends Function<Raw, Raw>
 		return raw ->
 		{
 			Raw result = raw;
-			for(final Rule<Raw> rule: combiningRules) result = rule.apply(result);
+			for(final Rule<Raw> rule: combiningRules) result = rule.applyRule(result);
 			return result;
 		};
 	}

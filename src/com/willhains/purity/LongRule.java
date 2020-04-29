@@ -9,11 +9,18 @@ import java.util.function.Predicate;
  *
  * @author willhains
  */
-@FunctionalInterface
-public @Pure interface LongRule
+public @FunctionalInterface interface LongRule
 {
 	/** Applies this rule to the given argument. */
-	long apply(long i);
+	long applyRule(long i);
+	
+	static <This extends SingleLong<This>> LongRule rulesForClass(final Class<This> single)
+	{
+		/* Nullable */ LongRule rules = Rule.getConstant(single, "RULES");
+		if(rules == null) rules = Rule.getConstant(single, "_RULES");
+		if(rules == null) rules = rules(); // empty
+		return rules;
+	}
 	
 	/** Combine multiple rules into a single rule. */
 	static LongRule rules(final LongRule... combiningRules)
@@ -21,7 +28,7 @@ public @Pure interface LongRule
 		return raw ->
 		{
 			long result = raw;
-			for(final LongRule rule: combiningRules) result = rule.apply(result);
+			for(final LongRule rule: combiningRules) result = rule.applyRule(result);
 			return result;
 		};
 	}

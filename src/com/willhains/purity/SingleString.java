@@ -27,19 +27,6 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		super(rawValue, constructor);
 	}
 	
-	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param rules Validation and data normalisation rules for the raw underlying value.
-	 */
-	protected SingleString(
-		final String rawValue,
-		final Function<? super String, ? extends This> constructor,
-		final Rule<String> rules)
-	{
-		super(rawValue, constructor, rules);
-	}
-	
 	@Override public final String raw() { return raw; }
 	
 	@Override public String get() { return raw; }

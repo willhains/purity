@@ -38,24 +38,12 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		this(new BigDecimal(rawValue), constructor);
 	}
 	
-	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 */
-	protected SingleDecimal(
-		final BigDecimal rawValue,
-		final Function<? super BigDecimal, ? extends This> constructor,
-		final Rule<BigDecimal> rules)
-	{
-		super(rawValue, constructor, rules);
-	}
-	
 	protected SingleDecimal(
 		final double rawValue,
 		final Function<? super BigDecimal, ? extends This> constructor,
 		final Rule<BigDecimal> rules)
 	{
-		this(new BigDecimal(rawValue), constructor, rules);
+		this(new BigDecimal(rawValue), constructor);
 	}
 	
 	protected SingleDecimal(
@@ -63,7 +51,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		final Function<? super BigDecimal, ? extends This> constructor,
 		final Rule<BigDecimal> rules)
 	{
-		this(new BigDecimal(rawValue), constructor, rules);
+		this(new BigDecimal(rawValue), constructor);
 	}
 	
 	public final BigDecimal raw() { return raw; }

@@ -154,7 +154,8 @@ public class SingleDecimalTest
 	
 	static final class A extends SingleDecimal<A>
 	{
-		A(BigDecimal a) { super(a, A::new, Rule.rules(min($(2)), max($(5)))); }
+		private static final Rule RULES = Rule.rules(min($(2)), max($(5)));
+		A(BigDecimal a) { super(a, A::new); }
 	}
 	
 	@Test
@@ -164,7 +165,11 @@ public class SingleDecimalTest
 		new A($(5));
 	}
 	
-	static final class B extends SingleDecimal<B> { B(BigDecimal a) { super(a, B::new, min($(2))); } }
+	static final class B extends SingleDecimal<B>
+	{
+		private static final Rule RULES = min($(2));
+		B(BigDecimal a) { super(a, B::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
@@ -172,7 +177,11 @@ public class SingleDecimalTest
 		new B($(1));
 	}
 	
-	static final class C extends SingleDecimal<C> { C(BigDecimal a) { super(a, C::new, max($(5))); } }
+	static final class C extends SingleDecimal<C>
+	{
+		private static final Rule RULES = max($(5));
+		C(BigDecimal a) { super(a, C::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
@@ -193,7 +202,11 @@ public class SingleDecimalTest
 		new D("4");
 	}
 	
-	static final class E extends SingleDecimal<E> { E(BigDecimal a) { super(a, E::new, greaterThan($(2))); } }
+	static final class E extends SingleDecimal<E>
+	{
+		private static final Rule RULES = greaterThan($(2));
+		E(BigDecimal a) { super(a, E::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
@@ -201,7 +214,11 @@ public class SingleDecimalTest
 		new E($(2));
 	}
 	
-	static final class F extends SingleDecimal<F> { F(BigDecimal a) { super(a, F::new, lessThan($(5))); } }
+	static final class F extends SingleDecimal<F>
+	{
+		private static final Rule RULES = lessThan($(5));
+		F(BigDecimal a) { super(a, F::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
@@ -221,7 +238,11 @@ public class SingleDecimalTest
 		assertThat(new G(3.0).raw, is($(3)));
 	}
 	
-	static final class H extends SingleDecimal<H> { H(BigDecimal a) { super(a, H::new, floor($(2))); } }
+	static final class H extends SingleDecimal<H>
+	{
+		private static final Rule RULES = floor($(2));
+		H(BigDecimal a) { super(a, H::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
@@ -229,7 +250,11 @@ public class SingleDecimalTest
 		assertThat(new H($(1)).raw, is($(2)));
 	}
 	
-	static final class I extends SingleDecimal<I> { I(BigDecimal a) { super(a, I::new, ceiling($(5))); } }
+	static final class I extends SingleDecimal<I>
+	{
+		private static final Rule RULES = ceiling($(5));
+		I(BigDecimal a) { super(a, I::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()

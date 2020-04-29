@@ -12,11 +12,11 @@ public class SingleTest
 {
 	public static final class Height extends Single<Float, Height>
 	{
-		private static final Rule<Float> rules = Rule.rules(
+		private static final Rule<Float> RULES = Rule.rules(
 			validUnless(raw -> raw.floatValue() < 0f, raw -> raw + " < 0"),
 			validUnless(raw -> raw.isNaN(), "Not a number"),
 			validUnless(raw -> raw.isInfinite(), "Must be finite"));
-		public Height(final Float rawValue) { super(rawValue, Height::new, rules); }
+		public Height(final Float rawValue) { super(rawValue, Height::new); }
 	}
 	
 	@Test(expected=NullPointerException.class)

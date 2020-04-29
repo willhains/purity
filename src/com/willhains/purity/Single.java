@@ -1,6 +1,8 @@
 package com.willhains.purity;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -21,6 +23,12 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	// The single-argument constructor of the subclass
 	private final Function<? super Raw, ? extends This> _constructor;
 	
+	// Cache of rules of Single subclasses
+	// The map instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	private static Map<Class<? extends Single<?, ?>>, Rule<?>> _RULES = new HashMap<>();
+	
 	/** The raw underlying value. Do not mutate! */
 	protected final Raw raw;
 	
@@ -30,18 +38,20 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
 	{
-		raw = requireNonNull(rawValue);
+		this.raw = _rules().applyRule(requireNonNull(rawValue));
 		_constructor = requireNonNull(constructor);
 	}
 	
-	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param rules Validation and data normalisation rules for the raw underlying value.
-	 */
-	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor, final Rule<Raw> rules)
+	private Rule<Raw> _rules()
 	{
-		this(rules.apply(rawValue), constructor);
+		final Class<This> single = (Class<This>)this.getClass();
+		/* Nullable */ Rule<Raw> rules = (Rule<Raw>)_RULES.get(single);
+		if(rules != null) return rules;
+		rules = Rule.rulesForClass(single);
+		final Map<Class<? extends Single<?, ?>>, Rule<?>> rulesCache = new HashMap<>(_RULES);
+		rulesCache.put(single, rules);
+		_RULES = rulesCache;
+		return rules;
 	}
 	
 	/**

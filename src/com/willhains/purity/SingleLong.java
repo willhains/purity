@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
@@ -19,6 +21,12 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;
 	
+	// Cache of rules of SingleLong subclasses
+	// The map instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	private static Map<Class<? extends SingleLong<?>>, LongRule> _RULES = new HashMap<>();
+	
 	/**
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
@@ -31,8 +39,20 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	protected SingleLong(final long rawValue, final LongFunction<? extends This> constructor)
 	{
-		raw = requireNonNull(rawValue);
+		raw = rawValue;
 		_constructor = requireNonNull(constructor);
+	}
+	
+	private LongRule _rules()
+	{
+		final Class<This> single = (Class<This>)this.getClass();
+		/* Nullable */ LongRule rules = _RULES.get(single);
+		if(rules != null) return rules;
+		rules = LongRule.rulesForClass(single);
+		final Map<Class<? extends SingleLong<?>>, LongRule> rulesCache = new HashMap<>(_RULES);
+		rulesCache.put(single, rules);
+		_RULES = rulesCache;
+		return rules;
 	}
 	
 	/**
@@ -42,7 +62,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	protected SingleLong(final long rawValue, final LongFunction<? extends This> constructor, final LongRule rules)
 	{
-		this(rules.apply(rawValue), constructor);
+		this(rules.applyRule(rawValue), constructor);
 	}
 	
 	public final long raw() { return raw; }

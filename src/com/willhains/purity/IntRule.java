@@ -9,11 +9,18 @@ import java.util.function.Predicate;
  *
  * @author willhains
  */
-@FunctionalInterface
-public @Pure interface IntRule
+public @FunctionalInterface interface IntRule
 {
 	/** Applies this rule to the given argument. */
-	int apply(int i);
+	int applyRule(int i);
+	
+	static <This extends SingleInt<This>> IntRule rulesForClass(final Class<This> single)
+	{
+		/* Nullable */ IntRule rules = Rule.getConstant(single, "RULES");
+		if(rules == null) rules = Rule.getConstant(single, "_RULES");
+		if(rules == null) rules = rules(); // empty
+		return rules;
+	}
 	
 	/** Combine multiple rules into a single rule. */
 	static IntRule rules(final IntRule... combiningRules)
@@ -21,7 +28,7 @@ public @Pure interface IntRule
 		return raw ->
 		{
 			int result = raw;
-			for(final IntRule rule: combiningRules) result = rule.apply(result);
+			for(final IntRule rule: combiningRules) result = rule.applyRule(result);
 			return result;
 		};
 	}
