@@ -90,7 +90,7 @@ If you are using a mutable type in an immutable way, you can use `Single` to wra
 ```java
 public final @Pure class TextSupport extends Single<EnumSet<TextOption>>
 {
-	private static final Rule<EnumSet<TextOption>> defensiveCopy = EnumSet::copyOf;
+	private static final Rule<EnumSet<TextOption>> DEFENSIVE_COPY = EnumSet::copyOf;
 	public TextSupport(EnumSet<TextOption> options) { super(options, TextSupport::new); }
 	@Override public EnumSet<TextOption> raw() { return defensiveCopy.apply(raw); }
 }
@@ -107,14 +107,13 @@ With mutable `Raw` types, be careful to:
 
 Purity strongly encourages *normalising* and *validating* data in your value class constructors. Doing so pushes data validation/normalisation out to the edges of your app, at their points of input. That means, wherever you see a `ModelNumber` in your code, you *know* it is definitely valid data. In the core logic of your app, you don't ever have to deal with the possibility of invalid data.
 
-Adding validation/normalisation rules is easy. Just declare a `RULES` constant. Purity will find it, and automatically apply it to raw values passed to the super constructor.
+Adding validation/normalisation rules is easy. Just declare some `Rule` constants in your class. Purity will find them, and automatically apply it to raw values passed to the super constructor.
 
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule RULES = Rule.allOf(
-		minLength(7), maxLength(13),
-		validPattern("[AO]\\d\\d-\\d+"));
+	private static final Rule LENGTH = Rule.all(minLength(7), maxLength(13));
+    private static final Rule PATTERN = validPattern("[AO]\\d\\d-\\d+");
 	public ModelNumber(final String model) { super(model, ModelNumber::new); }
 }
 ```

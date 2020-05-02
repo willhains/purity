@@ -1,16 +1,13 @@
 [![GitHub Release][release-badge]][release] 
 [![Build Status][build-badge]][build]
-[![codecov][coverage-badge]][coverage]
 [![Follow @willhains][twitter-badge]][twitter] 
 
-[release-badge]:  https://img.shields.io/github/release/willhains/purity.svg
+[release-badge]:  https://img.shields.io/github/v/release/willhains/purity?include_prereleases
 [build-badge]:    https://travis-ci.org/willhains/purity.svg?branch=master
-[coverage-badge]: https://codecov.io/gh/willhains/purity/branch/master/graph/badge.svg
-[twitter-badge]:  https://img.shields.io/twitter/follow/willhains.svg?style=social
+[twitter-badge]:  https://img.shields.io/twitter/follow/willhains
 
 [release]:  https://github.com/willhains/purity/releases
 [build]:    https://travis-ci.org/willhains/purity
-[coverage]: https://codecov.io/gh/willhains/purity
 [twitter]:  https://twitter.com/intent/follow?screen_name=willhains
 
 # Purity
@@ -82,16 +79,14 @@ Purity's value-wrapping base types are:
 - `SingleDecimal`, for `BigDecimal`-based values
 - `Single`, for values based on other types
 
-Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just declare a `Rule` constant, and Purity will automatically apply it when creating new instances.
+Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just declare constants of type `Rule`, and Purity will automatically apply them when creating new instances.
 
 ```java
 public final @Pure class HostName extends SingleString<HostName>
 {
-	private static final Rule RULES = Rule.allOf(
-		trimWhitespace,
-		validCharacters(letters + numbers + "-._"),
-		minLength(1),
-		maxLength(255));
+	private static final Rule TRIM = trimWhitespace;
+    private static final Rule FORMAT = validCharacters(letters + numbers + "-._");
+    private static final Rule LENGTH = Rule.allOf(minLength(1), maxLength(255));
 
 	public HostName(String hostName) { super(hostName, HostName::new); }
 }
