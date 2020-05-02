@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.IntRule.validOnlyIf;
+import static com.willhains.purity.IntRule.validIf;
 import static com.willhains.purity.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
@@ -21,12 +21,6 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	// The single-argument constructor of the subclass
 	private final IntFunction<? extends This> _constructor;
 	
-	// Cache of rules of SingleInt subclasses
-	// The map instance itself is never mutated; each update copies and replaces the reference below.
-	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
-	// exactly the same value will be regenerated and added to the cache.
-	private static Map<Class<? extends SingleInt<?>>, IntRule> _RULES = new HashMap<>();
-	
 	/**
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
@@ -34,35 +28,45 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	protected final int raw;
 	
 	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * Equivalent to {@link #SingleInt(int, IntFunction, boolean) SingleInt(rawValue, constructor, true)}.
 	 */
 	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor)
 	{
-		raw = rawValue;
-		_constructor = requireNonNull(constructor);
-	}
-	
-	private IntRule _rules()
-	{
-		final Class<This> single = (Class<This>)this.getClass();
-		/* Nullable */ IntRule rules = _RULES.get(single);
-		if(rules != null) return rules;
-		rules = IntRule.rulesForClass(single);
-		final Map<Class<? extends SingleInt<?>>, IntRule> rulesCache = new HashMap<>(_RULES);
-		rulesCache.put(single, rules);
-		_RULES = rulesCache;
-		return rules;
+		this(rawValue, constructor, true);
 	}
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param rules Validation and data normalisation rules for the raw underlying value.
+	 * @param applyRules Whether to apply rules to the raw value.
 	 */
-	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor, final IntRule rules)
+	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor, boolean applyRules)
 	{
-		this(rules.applyRule(rawValue), constructor);
+		raw = applyRules ? _rules().apply(rawValue) : rawValue;
+		_constructor = requireNonNull(constructor);
+	}
+	
+	// Cache of rules of SingleInt subclasses
+	// The map instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	private static Map<Class<? extends SingleInt<?>>, IntRule> _RULES = new HashMap<>();
+	
+	private IntRule _rules()
+	{
+		// Find a cached rule for This class
+		@SuppressWarnings("unchecked") final Class<This> single = (Class<This>)this.getClass();
+		@SuppressWarnings("unchecked") final IntRule rules = _RULES.get(single);
+		if(rules != null) return rules;
+		
+		// Build a new rule from the IntRule constants declared in This class
+		final IntRule newRule = IntRule.allOf(IntRule.rulesForClass(single));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends SingleInt<?>>, IntRule> rulesCache = new HashMap<>(_RULES);
+		rulesCache.put(single, newRule);
+		_RULES = rulesCache;
+		return newRule;
 	}
 	
 	public final int raw() { return raw; }
@@ -104,13 +108,13 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
 	public static IntRule greaterThan(final int lowerBound)
 	{
-		return validOnlyIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
+		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
 	}
 	
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
 	public static IntRule lessThan(final int upperBound)
 	{
-		return validOnlyIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
+		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
 	}
 	
 	/** Generate rule to normalise the raw integer value to a minimum floor value. */

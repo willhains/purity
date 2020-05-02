@@ -23,45 +23,58 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	// The single-argument constructor of the subclass
 	private final Function<? super Raw, ? extends This> _constructor;
 	
+	/** The raw underlying value. Do not mutate! */
+	protected final Raw raw;
+	
+	/**
+	 * Equivalent to {@link #Single(Object, Function, boolean) Single(rawValue, constructor, true)}.
+	 */
+	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
+	{
+		this(rawValue, constructor, true);
+	}
+	
+	/**
+	 * @param rawValue The raw value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param applyRules Whether to apply rules to the raw value.
+	 */
+	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor, boolean applyRules)
+	{
+		final Raw nonNullRaw = requireNonNull(rawValue);
+		this.raw = applyRules ? _rules().apply(nonNullRaw) : nonNullRaw;
+		_constructor = requireNonNull(constructor);
+	}
+	
 	// Cache of rules of Single subclasses
 	// The map instance itself is never mutated; each update copies and replaces the reference below.
 	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
 	// exactly the same value will be regenerated and added to the cache.
 	private static Map<Class<? extends Single<?, ?>>, Rule<?>> _RULES = new HashMap<>();
 	
-	/** The raw underlying value. Do not mutate! */
-	protected final Raw raw;
-	
-	/**
-	 * @param rawValue The raw value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 */
-	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
-	{
-		this.raw = _rules().applyRule(requireNonNull(rawValue));
-		_constructor = requireNonNull(constructor);
-	}
-	
 	private Rule<Raw> _rules()
 	{
-		final Class<This> single = (Class<This>)this.getClass();
-		/* Nullable */ Rule<Raw> rules = (Rule<Raw>)_RULES.get(single);
+		// Find a cached rule for This class
+		@SuppressWarnings("unchecked") final Class<This> single = (Class<This>)this.getClass();
+		@SuppressWarnings("unchecked") final Rule<Raw> rules = (Rule<Raw>)_RULES.get(single);
 		if(rules != null) return rules;
-		rules = Rule.rulesForClass(single);
+		
+		// Build a new rule from the Rule constants declared in This class
+		final Rule<Raw> newRule = Rule.allOf(Rule.rulesForClass(single));
+		
+		// Copy and replace the cache with the added rule
 		final Map<Class<? extends Single<?, ?>>, Rule<?>> rulesCache = new HashMap<>(_RULES);
-		rulesCache.put(single, rules);
+		rulesCache.put(single, newRule);
 		_RULES = rulesCache;
-		return rules;
+		return newRule;
 	}
 	
 	/**
-	 * Override this method if {@link Raw} is mutable.
+	 * Return the raw underlying value.
 	 *
-	 * If the underlying {@link Raw} type is immutable, return the {@link #raw} value as-is (default behaviour).
-	 * Otherwise, return a defensive copy.
-	 * 
-	 * The returned {@link Raw} value, if mutable, could be mutated, so the overriding method should be careful to
-	 * make a deep, defensive copy to return to the caller.
+	 * @implSpec Override this method if {@link Raw} is mutable. The default implementation assumes {@link #raw} is
+	 *  immutable, and returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the
+	 *  overriding method should be careful to make a deep, defensive copy to return to the caller.
 	 */
 	public Raw raw() { return raw; }
 	

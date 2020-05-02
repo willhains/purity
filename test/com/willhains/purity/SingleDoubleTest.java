@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.DoubleRule.all;
 import static com.willhains.purity.DoubleRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,7 +112,11 @@ public class SingleDoubleTest
 		assertThat(x.toString(), equalTo("10.0"));
 	}
 	
-	static final class A extends SingleDouble<A> { A(double a) { super(a, A::new, realNumber); } }
+	static final class A extends SingleDouble<A>
+	{
+		private static final DoubleRule RULES = realNumber;
+		A(double a) { super(a, A::new); }
+	}
 	
 	@Test
 	public void shouldAcceptRealNumber()
@@ -123,7 +126,11 @@ public class SingleDoubleTest
 		new A(Double.MAX_VALUE);
 	}
 	
-	static final class B extends SingleDouble<B> { B(double a) { super(a, SingleDoubleTest.B::new, realNumber); } }
+	static final class B extends SingleDouble<B>
+	{
+		private static final DoubleRule REAL = realNumber;
+		B(double a) { super(a, B::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapNaN()
@@ -131,7 +138,11 @@ public class SingleDoubleTest
 		new B(Double.NaN);
 	}
 	
-	static final class C extends SingleDouble<C> { C(double a) { super(a, C::new, realNumber); } }
+	static final class C extends SingleDouble<C>
+	{
+		private static final DoubleRule REAL = realNumber;
+		C(double a) { super(a, C::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapNegativeInfinity()
@@ -139,7 +150,11 @@ public class SingleDoubleTest
 		new C(Double.NEGATIVE_INFINITY);
 	}
 	
-	static final class D extends SingleDouble<D> { D(double a) { super(a, D::new, realNumber); } }
+	static final class D extends SingleDouble<D>
+	{
+		private static final DoubleRule REAL = realNumber;
+		D(double a) { super(a, D::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapPositiveInfinity()
@@ -147,7 +162,12 @@ public class SingleDoubleTest
 		new D(Double.POSITIVE_INFINITY);
 	}
 	
-	static final class E extends SingleDouble<E> { E(double a) { super(a, E::new, all(min(2.0), max(5.0))); } }
+	static final class E extends SingleDouble<E>
+	{
+		private static final DoubleRule MIN = min(2.0);
+		private static final DoubleRule MAX = max(5.0);
+		E(double a) { super(a, E::new); }
+	}
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -156,7 +176,11 @@ public class SingleDoubleTest
 		new E(5.0);
 	}
 	
-	static final class F extends SingleDouble<F> { F(double a) { super(a, F::new, min(2.0)); } }
+	static final class F extends SingleDouble<F>
+	{
+		private static final DoubleRule MIN = min(2.0);
+		F(double a) { super(a, F::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
@@ -164,7 +188,11 @@ public class SingleDoubleTest
 		new F(1.0);
 	}
 	
-	static final class G extends SingleDouble<G> { G(double a) { super(a, G::new, max(5.0)); } }
+	static final class G extends SingleDouble<G>
+	{
+		private static final DoubleRule MAX = max(5.0);
+		G(double a) { super(a, G::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
@@ -172,9 +200,11 @@ public class SingleDoubleTest
 		new G(6.0);
 	}
 	
-	static final class H extends SingleDouble<H> { H(double a)
+	static final class H extends SingleDouble<H>
 	{
-		super(a, H::new, all(greaterThan(2.0), lessThan(5.0))); }
+		static final DoubleRule LOWER_BOUND = greaterThan(2.0);
+		static final DoubleRule UPPER_BOUND = lessThan(5.0);
+		H(double a) { super(a, H::new); }
 	}
 	
 	@Test
@@ -184,7 +214,11 @@ public class SingleDoubleTest
 		new H(4.0);
 	}
 	
-	static final class I extends SingleDouble<I> { I(double a) { super(a, I::new, greaterThan(2.0)); } }
+	static final class I extends SingleDouble<I>
+	{
+		private static final DoubleRule LOWER_BOUND = greaterThan(2.0);
+		I(double a) { super(a, I::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
@@ -192,7 +226,11 @@ public class SingleDoubleTest
 		new I(2.0);
 	}
 	
-	static final class J extends SingleDouble<J> { J(double a) { super(a, J::new, lessThan(5.0)); } }
+	static final class J extends SingleDouble<J>
+	{
+		private static final DoubleRule UPPER_BOUND = lessThan(5.0);
+		J(double a) { super(a, J::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
@@ -200,7 +238,12 @@ public class SingleDoubleTest
 		new J(5.0);
 	}
 	
-	static final class K extends SingleDouble<K> { K(double a) { super(a, K::new, all(floor(2.0), ceiling(5.0))); } }
+	static final class K extends SingleDouble<K>
+	{
+		private static final DoubleRule FLOOR = floor(2.0);
+		private static final DoubleRule CEILING = ceiling(5.0);
+		K(double a) { super(a, K::new); }
+	}
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
@@ -208,7 +251,11 @@ public class SingleDoubleTest
 		assertThat(new K(3.0).raw(), is(3.0));
 	}
 	
-	static final class L extends SingleDouble<L> { L(double a) { super(a, L::new, floor(2.0)); } }
+	static final class L extends SingleDouble<L>
+	{
+		private static final DoubleRule FLOOR = floor(2.0);
+		L(double a) { super(a, L::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
@@ -216,7 +263,11 @@ public class SingleDoubleTest
 		assertThat(new L(1.0).raw(), is(2.0));
 	}
 	
-	static final class M extends SingleDouble<M> { M(double a) { super(a, M::new, ceiling(5.0)); } }
+	static final class M extends SingleDouble<M>
+	{
+		private static final DoubleRule CEILING = ceiling(5.0);
+		M(double a) { super(a, M::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
@@ -282,7 +333,8 @@ public class SingleDoubleTest
 	
 	static final class N extends SingleDouble<N>
 	{
-		N(double a) { super(a, N::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
+		static final DoubleRule RULES = validUnless(raw -> raw % 2 > 0, "Must be even");
+		N(double a) { super(a, N::new); }
 	}
 	
 	@Test

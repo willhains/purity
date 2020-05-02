@@ -82,12 +82,12 @@ Purity's value-wrapping base types are:
 - `SingleDecimal`, for `BigDecimal`-based values
 - `Single`, for values based on other types
 
-Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just declare a `RULES` constant, and Purity will automatically apply them when creating new instances.
+Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just declare a `Rule` constant, and Purity will automatically apply it when creating new instances.
 
 ```java
 public final @Pure class HostName extends SingleString<HostName>
 {
-	private static final Rule RULES = Rule.all(
+	private static final Rule RULES = Rule.allOf(
 		trimWhitespace,
 		validCharacters(letters + numbers + "-._"),
 		minLength(1),

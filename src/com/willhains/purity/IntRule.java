@@ -15,23 +15,23 @@ public @FunctionalInterface interface IntRule
 	static final IntRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	int applyRule(int i);
+	int apply(int i);
 	
-	static <This extends SingleInt<This>> IntRule rulesForClass(final Class<This> single)
+	/**
+	 * @return the value of the first constant of type {@link IntRule} declared in the given {@link SingleInt} subclass.
+	 */
+	static <This extends SingleInt<This>> IntRule[] rulesForClass(final Class<This> single)
 	{
-		/* Nullable */ IntRule rules = Rule.getConstant(single, "RULES");
-		if(rules == null) rules = Rule.getConstant(single, "_RULES");
-		if(rules == null) rules = all(); // empty
-		return rules;
+		return Constants.ofClass(single).getConstantsOfType(IntRule.class);
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static IntRule all(final IntRule... combiningRules)
+	static IntRule allOf(final IntRule... combiningRules)
 	{
 		return raw ->
 		{
 			int result = raw;
-			for(final IntRule rule: combiningRules) result = rule.applyRule(result);
+			for(final IntRule rule: combiningRules) result = rule.apply(result);
 			return result;
 		};
 	}
@@ -43,7 +43,7 @@ public @FunctionalInterface interface IntRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static IntRule validOnlyIf(
+	static IntRule validIf(
 		final IntPredicate condition,
 		final IntFunction<String> errorMessageFactory)
 	{
@@ -65,15 +65,15 @@ public @FunctionalInterface interface IntRule
 		final IntPredicate condition,
 		final IntFunction<String> errorMessageFactory)
 	{
-		return validOnlyIf(condition.negate(), errorMessageFactory);
+		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validOnlyIf(IntPredicate,IntFunction)
+	 * @see #validIf(IntPredicate,IntFunction)
 	 */
-	static IntRule validOnlyIf(final IntPredicate condition, final String errorMessage)
+	static IntRule validIf(final IntPredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition, $ -> errorMessage);
+		return validIf(condition, $ -> errorMessage);
 	}
 	
 	/**
@@ -81,6 +81,6 @@ public @FunctionalInterface interface IntRule
 	 */
 	static IntRule validUnless(final IntPredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition.negate(), errorMessage);
+		return validIf(condition.negate(), errorMessage);
 	}
 }

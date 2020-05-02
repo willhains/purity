@@ -15,23 +15,24 @@ public @FunctionalInterface interface LongRule
 	static final LongRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	long applyRule(long i);
+	long apply(long i);
 	
-	static <This extends SingleLong<This>> LongRule rulesForClass(final Class<This> single)
+	/**
+	 * @return the value of the first constant of type {@link LongRule} declared in the given {@link SingleLong}
+	 *  subclass.
+	 */
+	static <This extends SingleLong<This>> LongRule[] rulesForClass(final Class<This> single)
 	{
-		/* Nullable */ LongRule rules = Rule.getConstant(single, "RULES");
-		if(rules == null) rules = Rule.getConstant(single, "_RULES");
-		if(rules == null) rules = all(); // empty
-		return rules;
+		return Constants.ofClass(single).getConstantsOfType(LongRule.class);
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static LongRule all(final LongRule... combiningRules)
+	static LongRule allOf(final LongRule... combiningRules)
 	{
 		return raw ->
 		{
 			long result = raw;
-			for(final LongRule rule: combiningRules) result = rule.applyRule(result);
+			for(final LongRule rule: combiningRules) result = rule.apply(result);
 			return result;
 		};
 	}
@@ -43,7 +44,7 @@ public @FunctionalInterface interface LongRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static LongRule validOnlyIf(
+	static LongRule validIf(
 		final LongPredicate condition,
 		final LongFunction<String> errorMessageFactory)
 	{
@@ -65,15 +66,15 @@ public @FunctionalInterface interface LongRule
 		final LongPredicate condition,
 		final LongFunction<String> errorMessageFactory)
 	{
-		return validOnlyIf(condition.negate(), errorMessageFactory);
+		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validOnlyIf(LongPredicate,LongFunction)
+	 * @see #validIf(LongPredicate,LongFunction)
 	 */
-	static LongRule validOnlyIf(final LongPredicate condition, final String errorMessage)
+	static LongRule validIf(final LongPredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition, $ -> errorMessage);
+		return validIf(condition, $ -> errorMessage);
 	}
 	
 	/**
@@ -81,6 +82,6 @@ public @FunctionalInterface interface LongRule
 	 */
 	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition.negate(), errorMessage);
+		return validIf(condition.negate(), errorMessage);
 	}
 }

@@ -91,7 +91,7 @@ If you are using a mutable type in an immutable way, you can use `Single` to wra
 public final @Pure class TextSupport extends Single<EnumSet<TextOption>>
 {
 	private static final Rule<EnumSet<TextOption>> defensiveCopy = EnumSet::copyOf;
-	public TextSupport(EnumSet<TextOption> options) { super(options, TextSupport::new, defensiveCopy); }
+	public TextSupport(EnumSet<TextOption> options) { super(options, TextSupport::new); }
 	@Override public EnumSet<TextOption> raw() { return defensiveCopy.apply(raw); }
 }
 ```
@@ -112,7 +112,7 @@ Adding validation/normalisation rules is easy. Just declare a `RULES` constant. 
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule RULES = Rule.all(
+	private static final Rule RULES = Rule.allOf(
 		minLength(7), maxLength(13),
 		validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new); }
@@ -130,7 +130,7 @@ public final @Pure class ModelNumber extends SingleString<ModelNumber>
 
 Purity provides several built-in constants and static factory methods to help you build your rules.
 
-#### `Rule.all(...)`
+#### `Rule.allOf(...)`
 
 Use this method to chain together multiple rules into a composite rule, to be passed to the super constructor. It is strongly recommended to declare your composite rule as a `static final` constant.
 
@@ -276,14 +276,14 @@ Throws an `IllegalArgumentException` with the specified `errorMessage` if `condi
 
 Throws an `IllegalArgumentException` and builds an error message with the specified `errorMessageFactory` if `condition` evaluates to true.
 
-#### `validOnlyIf(condition,errorMessage)`
+#### `validIf(condition,errorMessage)`
 
 - Rule type: validation
 - Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
 
 Throws an `IllegalArgumentException` with the specified `errorMessage` if `condition` evaluates to false.
 
-#### `validOnlyIf(condition,errorMessageFactory)`
+#### `validIf(condition,errorMessageFactory)`
 
 - Rule type: validation
 - Availability: `Rule`, `IntRule`, `LongRule`, `DoubleRule`
@@ -439,7 +439,7 @@ The `Single` base classes expose the raw value as a protected property `raw`. Us
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule RULES = Rule.all(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
+	private static final Rule RULES = Rule.allOf(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new); }
 
 	public ProductCode getProductCode() { return new ProductCode(raw.substring(0, 3)); }

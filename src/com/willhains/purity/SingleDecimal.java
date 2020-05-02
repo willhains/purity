@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.willhains.purity.Rule.validOnlyIf;
+import static com.willhains.purity.Rule.validIf;
 import static com.willhains.purity.Rule.validUnless;
 import static com.willhains.purity.SingleNumber.$;
 import static java.math.RoundingMode.*;
@@ -20,38 +20,66 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	implements SingleNumber<This>, Supplier<BigDecimal>
 {
 	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * Equivalent to {@link #SingleDecimal(BigDecimal, Function, boolean) SingleDecimal(rawValue, constructor, true)}.
 	 */
 	protected SingleDecimal(final BigDecimal rawValue, final Function<? super BigDecimal, ? extends This> constructor)
 	{
-		super(rawValue, constructor);
+		this(rawValue, constructor, true);
 	}
 	
+	/**
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param applyRules Whether to apply rules to the raw value.
+	 */
+	protected SingleDecimal(
+		final BigDecimal rawValue,
+		final Function<? super BigDecimal, ? extends This> constructor,
+		boolean applyRules)
+	{
+		super(rawValue, constructor, applyRules);
+	}
+	
+	/**
+	 * Equivalent to {@link #SingleDecimal(double, Function, boolean) SingleDecimal(rawValue, constructor, true)}.
+	 */
 	protected SingleDecimal(final double rawValue, final Function<? super BigDecimal, ? extends This> constructor)
 	{
-		this(new BigDecimal(rawValue), constructor);
+		this(rawValue, constructor, true);
 	}
 	
-	protected SingleDecimal(final String rawValue, final Function<? super BigDecimal, ? extends This> constructor)
-	{
-		this(new BigDecimal(rawValue), constructor);
-	}
-	
+	/**
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param applyRules Whether to apply rules to the raw value.
+	 */
 	protected SingleDecimal(
 		final double rawValue,
 		final Function<? super BigDecimal, ? extends This> constructor,
-		final Rule<BigDecimal> rules)
+		final boolean applyRules)
 	{
-		this(new BigDecimal(rawValue), constructor);
+		this(BigDecimal.valueOf(rawValue), constructor, applyRules);
 	}
 	
+	/**
+	 * Equivalent to {@link #SingleDecimal(String, Function, boolean) SingleDecimal(rawValue, constructor, true)}.
+	 */
+	protected SingleDecimal(final String rawValue, final Function<? super BigDecimal, ? extends This> constructor)
+	{
+		this(rawValue, constructor, true);
+	}
+	
+	/**
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param applyRules Whether to apply rules to the raw value.
+	 */
 	protected SingleDecimal(
 		final String rawValue,
 		final Function<? super BigDecimal, ? extends This> constructor,
-		final Rule<BigDecimal> rules)
+		boolean applyRules)
 	{
-		this(new BigDecimal(rawValue), constructor);
+		this(new BigDecimal(rawValue), constructor, applyRules);
 	}
 	
 	public final BigDecimal raw() { return raw; }
@@ -75,13 +103,13 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
 	public static Rule<BigDecimal> greaterThan(final @Returned BigDecimal lowerBound)
 	{
-		return validOnlyIf(raw -> raw.compareTo(lowerBound) > 0, raw -> raw + " <= " + lowerBound);
+		return validIf(raw -> raw.compareTo(lowerBound) > 0, raw -> raw + " <= " + lowerBound);
 	}
 	
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
 	public static Rule<BigDecimal> lessThan(final @Returned BigDecimal upperBound)
 	{
-		return validOnlyIf(raw -> raw.compareTo(upperBound) < 0, raw -> raw + " >= " + upperBound);
+		return validIf(raw -> raw.compareTo(upperBound) < 0, raw -> raw + " >= " + upperBound);
 	}
 	
 	/** Generate rule to normalise the raw double value to a minimum floor value. */

@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.IntRule.all;
+import static com.willhains.purity.IntRule.allOf;
 import static com.willhains.purity.IntRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,7 +113,12 @@ public class SingleIntTest
 		assertThat(x.toString(), equalTo("100"));
 	}
 	
-	static final class A extends SingleInt<A> { A(int a) { super(a, A::new, all(min(2), max(5))); } }
+	static final class A extends SingleInt<A>
+	{
+		private static final IntRule MIN = min(2);
+		private static final IntRule MAX = max(5);
+		A(int a) { super(a, A::new); }
+	}
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -122,7 +127,11 @@ public class SingleIntTest
 		new A(5);
 	}
 	
-	static final class B extends SingleInt<B> { B(int a) { super(a, B::new, min(2)); } }
+	static final class B extends SingleInt<B>
+	{
+		private static final IntRule MIN = min(2);
+		B(int a) { super(a, B::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
@@ -130,7 +139,11 @@ public class SingleIntTest
 		new B(1);
 	}
 	
-	static final class C extends SingleInt<C> { C(int a) { super(a, C::new, max(5)); } }
+	static final class C extends SingleInt<C>
+	{
+		private static final IntRule MAX = max(5);
+		C(int a) { super(a, C::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
@@ -138,9 +151,10 @@ public class SingleIntTest
 		new C(6);
 	}
 	
-	static final class D extends SingleInt<D> { D(int a)
+	static final class D extends SingleInt<D>
 	{
-		super(a, D::new, all(greaterThan(2), lessThan(5))); }
+		private static final IntRule RULES = allOf(greaterThan(2), lessThan(5));
+		D(int a) { super(a, D::new); }
 	}
 	
 	@Test
@@ -150,7 +164,11 @@ public class SingleIntTest
 		new D(4);
 	}
 	
-	static final class E extends SingleInt<E> { E(int a) { super(a, E::new, greaterThan(2)); } }
+	static final class E extends SingleInt<E>
+	{
+		private static final IntRule UPPER_BOUND = greaterThan(2);
+		E(int a) { super(a, E::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
@@ -158,7 +176,11 @@ public class SingleIntTest
 		new E(2);
 	}
 	
-	static final class F extends SingleInt<F> { F(int a) { super(a, F::new, lessThan(5)); } }
+	static final class F extends SingleInt<F>
+	{
+		private static final IntRule LOWER_BOUND = lessThan(5);
+		F(int a) { super(a, F::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
@@ -166,7 +188,11 @@ public class SingleIntTest
 		new F(5);
 	}
 	
-	static final class G extends SingleInt<G> { G(int a) { super(a, SingleIntTest.G::new, all(floor(2), ceiling(5))); } }
+	static final class G extends SingleInt<G>
+	{
+		private static final IntRule NORMALISE = allOf(floor(2), ceiling(5));
+		G(int a) { super(a, G::new); }
+	}
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
@@ -174,7 +200,11 @@ public class SingleIntTest
 		assertThat(new G(3).raw(), is(3));
 	}
 	
-	static final class H extends SingleInt<H> { H(int a) { super(a, H::new, floor(2)); } }
+	static final class H extends SingleInt<H>
+	{
+		private static final IntRule FLOOR = floor(2);
+		H(int a) { super(a, H::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
@@ -182,7 +212,11 @@ public class SingleIntTest
 		assertThat(new H(1).raw(), is(2));
 	}
 	
-	static final class I extends SingleInt<I> { I(int a) { super(a, I::new, ceiling(5)); } }
+	static final class I extends SingleInt<I>
+	{
+		private static final IntRule CEILING = ceiling(5);
+		I(int a) { super(a, I::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
@@ -248,7 +282,8 @@ public class SingleIntTest
 	
 	static final class J extends SingleInt<J>
 	{
-		J(int a) { super(a, J::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
+		private static final IntRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
+		J(int a) { super(a, J::new); }
 	}
 	
 	@Test

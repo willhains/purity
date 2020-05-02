@@ -15,23 +15,24 @@ public @FunctionalInterface interface DoubleRule
 	static final DoubleRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	double applyRule(double i);
+	double apply(double i);
 	
-	static <This extends SingleDouble<This>> DoubleRule rulesForClass(final Class<This> single)
+	/**
+	 * @return the value of the first constant of type {@link DoubleRule} declared in the given {@link SingleDouble}
+	 *  subclass.
+	 */
+	static <This extends SingleDouble<This>> DoubleRule[] rulesForClass(final Class<This> single)
 	{
-		/* Nullable */ DoubleRule rules = Rule.getConstant(single, "RULES");
-		if(rules == null) rules = Rule.getConstant(single, "_RULES");
-		if(rules == null) rules = all(); // empty
-		return rules;
+		return Constants.ofClass(single).getConstantsOfType(DoubleRule.class);
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static DoubleRule all(final DoubleRule... combiningRules)
+	static DoubleRule allOf(final DoubleRule... combiningRules)
 	{
 		return raw ->
 		{
 			double result = raw;
-			for(final DoubleRule rule: combiningRules) result = rule.applyRule(result);
+			for(final DoubleRule rule: combiningRules) result = rule.apply(result);
 			return result;
 		};
 	}
@@ -43,7 +44,7 @@ public @FunctionalInterface interface DoubleRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static DoubleRule validOnlyIf(
+	static DoubleRule validIf(
 		final DoublePredicate condition,
 		final DoubleFunction<String> errorMessageFactory)
 	{
@@ -65,15 +66,15 @@ public @FunctionalInterface interface DoubleRule
 		final DoublePredicate condition,
 		final DoubleFunction<String> errorMessageFactory)
 	{
-		return validOnlyIf(condition.negate(), errorMessageFactory);
+		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validOnlyIf(DoublePredicate,DoubleFunction)
+	 * @see #validIf(DoublePredicate,DoubleFunction)
 	 */
-	static DoubleRule validOnlyIf(final DoublePredicate condition, final String errorMessage)
+	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition, $ -> errorMessage);
+		return validIf(condition, $ -> errorMessage);
 	}
 	
 	/**
@@ -81,6 +82,6 @@ public @FunctionalInterface interface DoubleRule
 	 */
 	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
 	{
-		return validOnlyIf(condition.negate(), errorMessage);
+		return validIf(condition.negate(), errorMessage);
 	}
 }

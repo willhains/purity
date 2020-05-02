@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.LongRule.validOnlyIf;
+import static com.willhains.purity.LongRule.validIf;
 import static com.willhains.purity.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
@@ -21,12 +21,6 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	// The single-argument constructor of the subclass
 	private final LongFunction<? extends This> _constructor;
 	
-	// Cache of rules of SingleLong subclasses
-	// The map instance itself is never mutated; each update copies and replaces the reference below.
-	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
-	// exactly the same value will be regenerated and added to the cache.
-	private static Map<Class<? extends SingleLong<?>>, LongRule> _RULES = new HashMap<>();
-	
 	/**
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
@@ -34,35 +28,45 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	protected final long raw;
 	
 	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * Equivalent to {@link #SingleLong(long, LongFunction, boolean) SingleLong(rawValue, constructor, true)}.
 	 */
 	protected SingleLong(final long rawValue, final LongFunction<? extends This> constructor)
 	{
-		raw = rawValue;
-		_constructor = requireNonNull(constructor);
-	}
-	
-	private LongRule _rules()
-	{
-		final Class<This> single = (Class<This>)this.getClass();
-		/* Nullable */ LongRule rules = _RULES.get(single);
-		if(rules != null) return rules;
-		rules = LongRule.rulesForClass(single);
-		final Map<Class<? extends SingleLong<?>>, LongRule> rulesCache = new HashMap<>(_RULES);
-		rulesCache.put(single, rules);
-		_RULES = rulesCache;
-		return rules;
+		this(rawValue, constructor, true);
 	}
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param rules Validation and data normalisation rules for the raw underlying value.
+	 * @param applyRules Whether to apply rules to the raw value.
 	 */
-	protected SingleLong(final long rawValue, final LongFunction<? extends This> constructor, final LongRule rules)
+	protected SingleLong(final long rawValue, final LongFunction<? extends This>  constructor, final boolean applyRules)
 	{
-		this(rules.applyRule(rawValue), constructor);
+		raw = applyRules ? _rules().apply(rawValue) : rawValue;
+		_constructor = requireNonNull(constructor);
+	}
+	
+	// Cache of rules of SingleLong subclasses
+	// The map instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	private static Map<Class<? extends SingleLong<?>>, LongRule> _RULES = new HashMap<>();
+	
+	private LongRule _rules()
+	{
+		// Find a cached rule for This class
+		@SuppressWarnings("unchecked") final Class<This> single = (Class<This>)this.getClass();
+		@SuppressWarnings("unchecked") final LongRule rules = _RULES.get(single);
+		if(rules != null) return rules;
+		
+		// Build a new rule from the LongRule constants declared in This class
+		final LongRule newRule = LongRule.allOf(LongRule.rulesForClass(single));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends SingleLong<?>>, LongRule> rulesCache = new HashMap<>(_RULES);
+		rulesCache.put(single, newRule);
+		_RULES = rulesCache;
+		return newRule;
 	}
 	
 	public final long raw() { return raw; }
@@ -104,13 +108,13 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
 	public static LongRule greaterThan(final long lowerBound)
 	{
-		return validOnlyIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
+		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
 	}
 	
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
 	public static LongRule lessThan(final long upperBound)
 	{
-		return validOnlyIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
+		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
 	}
 	
 	/** Generate rule to normalise the raw long value to a minimum floor value. */

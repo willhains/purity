@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.willhains.purity.Rule.all;
 import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -21,7 +20,7 @@ public class SingleDecimalTest
 	@Test
 	public void shouldConstructFromDouble()
 	{
-		final Price x = new Price(new BigDecimal(12.3));
+		final Price x = new Price(BigDecimal.valueOf(12.3));
 		final Price y = new Price(12.3);
 		assertEquals(x, y);
 	}
@@ -154,7 +153,8 @@ public class SingleDecimalTest
 	
 	static final class A extends SingleDecimal<A>
 	{
-		private static final Rule RULES = Rule.all(min($(2)), max($(5)));
+		private static final Rule MIN = min($(2));
+		private static final Rule MAX = max($(5));
 		A(BigDecimal a) { super(a, A::new); }
 	}
 	
@@ -167,7 +167,7 @@ public class SingleDecimalTest
 	
 	static final class B extends SingleDecimal<B>
 	{
-		private static final Rule RULES = min($(2));
+		private static final Rule MIN = min($(2));
 		B(BigDecimal a) { super(a, B::new); }
 	}
 	
@@ -179,7 +179,7 @@ public class SingleDecimalTest
 	
 	static final class C extends SingleDecimal<C>
 	{
-		private static final Rule RULES = max($(5));
+		private static final Rule MAX = max($(5));
 		C(BigDecimal a) { super(a, C::new); }
 	}
 	
@@ -191,8 +191,10 @@ public class SingleDecimalTest
 	
 	static final class D extends SingleDecimal<D>
 	{
+		private static final Rule<BigDecimal> MIN_EXC = greaterThan($(2));
+		private static final Rule<BigDecimal> MAX_EXC = lessThan($(5));
 		private D(BigDecimal a) { super(a, D::new); }
-		D(String a) { super(a, D::new, all(greaterThan($(2)), lessThan($(5)))); }
+		D(String a) { super(a, D::new); }
 	}
 	
 	@Test
@@ -204,7 +206,7 @@ public class SingleDecimalTest
 	
 	static final class E extends SingleDecimal<E>
 	{
-		private static final Rule RULES = greaterThan($(2));
+		private static final Rule MIN_EXC = greaterThan($(2));
 		E(BigDecimal a) { super(a, E::new); }
 	}
 	
@@ -216,7 +218,7 @@ public class SingleDecimalTest
 	
 	static final class F extends SingleDecimal<F>
 	{
-		private static final Rule RULES = lessThan($(5));
+		private static final Rule MAX_EXC = lessThan($(5));
 		F(BigDecimal a) { super(a, F::new); }
 	}
 	
@@ -228,19 +230,21 @@ public class SingleDecimalTest
 	
 	static final class G extends SingleDecimal<G>
 	{
+		private static final Rule<BigDecimal> FLOOR = floor($(2));
+		private static final Rule<BigDecimal> CEILING = ceiling($(5));
 		private G(BigDecimal a) { super(a, G::new); }
-		G(double a) { super(a, G::new, all(floor($(2)), ceiling($(5)))); }
+		G(double a) { super(a, G::new); }
 	}
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		assertThat(new G(3.0).raw, is($(3)));
+		assertThat(new G(3.0).raw, is($(3.0)));
 	}
 	
 	static final class H extends SingleDecimal<H>
 	{
-		private static final Rule RULES = floor($(2));
+		private static final Rule FLOOR = floor($(2));
 		H(BigDecimal a) { super(a, H::new); }
 	}
 	
@@ -252,7 +256,7 @@ public class SingleDecimalTest
 	
 	static final class I extends SingleDecimal<I>
 	{
-		private static final Rule RULES = ceiling($(5));
+		private static final Rule CEILING = ceiling($(5));
 		I(BigDecimal a) { super(a, I::new); }
 	}
 	

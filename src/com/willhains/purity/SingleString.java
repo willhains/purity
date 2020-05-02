@@ -5,7 +5,7 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import static com.willhains.purity.Rule.validOnlyIf;
+import static com.willhains.purity.Rule.validIf;
 import static com.willhains.purity.Rule.validUnless;
 
 /**
@@ -19,14 +19,29 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	implements SingleComparable<This>, CharSequence, Supplier<String>
 {
 	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * Equivalent to {@link #SingleString(String, Function, boolean) SingleString(rawValue, constructor, true)}.
 	 */
 	protected SingleString(final String rawValue, final Function<? super String, ? extends This> constructor)
 	{
 		super(rawValue, constructor);
 	}
 	
+	/**
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
+	 * @param applyRules Whether to apply rules to the raw value.
+	 */
+	protected SingleString(
+		final String rawValue,
+		final Function<? super String, ? extends This> constructor,
+		boolean applyRules)
+	{
+		super(rawValue, constructor, applyRules);
+	}
+	
+	/**
+	 * Equivalent to {@link #SingleString(String, Function, boolean) SingleString(rawValue, constructor, true)}.
+	 */
 	@Override public final String raw() { return raw; }
 	
 	@Override public String get() { return raw; }
@@ -54,7 +69,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		allowedCharacters.chars().forEach(c -> validCharMap[c] = true);
-		return validOnlyIf(raw -> raw.chars().allMatch(c -> validCharMap[c]),
+		return validIf(raw -> raw.chars().allMatch(c -> validCharMap[c]),
 			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
 	}
 	
@@ -62,7 +77,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	public static Rule<String> validPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return Rule.validOnlyIf(raw -> pattern.matcher(raw).matches(),
+		return Rule.validIf(raw -> pattern.matcher(raw).matches(),
 			raw -> "\"" + raw + "\" does not match pattern: " + regExPattern);
 	}
 	

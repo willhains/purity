@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.LongRule.all;
 import static com.willhains.purity.LongRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,7 +112,11 @@ public class SingleLongTest
 		assertThat(x.toString(), equalTo("100"));
 	}
 	
-	static final class A extends SingleLong<A> { A(long a) { super(a, A::new, all(min(2L), max(5L))); } }
+	static final class A extends SingleLong<A>
+	{
+		private static final LongRule RULES = LongRule.allOf(min(2L), max(5L));
+		A(long a) { super(a, A::new); }
+	}
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -122,7 +125,11 @@ public class SingleLongTest
 		new A(5L);
 	}
 	
-	static final class B extends SingleLong<B> { B(long a) { super(a, B::new, min(2L)); } }
+	static final class B extends SingleLong<B>
+	{
+		private static final LongRule RULES = min(2L);
+		B(long a) { super(a, B::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
@@ -130,7 +137,11 @@ public class SingleLongTest
 		new B(1L);
 	}
 	
-	static final class C extends SingleLong<C> { C(long a) { super(a, C::new, max(5L)); } }
+	static final class C extends SingleLong<C>
+	{
+		private static final LongRule RULES = max(5L);
+		C(long a) { super(a, C::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
@@ -138,9 +149,10 @@ public class SingleLongTest
 		new C(6L);
 	}
 	
-	static final class D extends SingleLong<D> { D(long a)
+	static final class D extends SingleLong<D>
 	{
-		super(a, D::new, all(greaterThan(2L), lessThan(5L))); }
+		private static final LongRule RULES = LongRule.allOf(greaterThan(2L), lessThan(5L));
+		D(long a) { super(a, D::new); }
 	}
 	
 	@Test
@@ -150,7 +162,11 @@ public class SingleLongTest
 		new D(4L);
 	}
 	
-	static final class E extends SingleLong<E> { E(long a) { super(a, E::new, greaterThan(2L)); } }
+	static final class E extends SingleLong<E>
+	{
+		private static final LongRule RULES = greaterThan(2L);
+		E(long a) { super(a, E::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
@@ -158,7 +174,11 @@ public class SingleLongTest
 		new E(2L);
 	}
 	
-	static final class F extends SingleLong<F> { F(long a) { super(a, F::new, lessThan(5L)); } }
+	static final class F extends SingleLong<F>
+	{
+		private static final LongRule UPPER_BOUND = lessThan(5L);
+		F(long a) { super(a, F::new); }
+	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
@@ -166,7 +186,11 @@ public class SingleLongTest
 		new F(5L);
 	}
 	
-	static final class G extends SingleLong<G> { G(long a) { super(a, G::new, all(floor(2L), ceiling(5L))); } }
+	static final class G extends SingleLong<G>
+	{
+		private static final LongRule RANGE = LongRule.allOf(floor(2L), ceiling(5L));
+		G(long a) { super(a, G::new); }
+	}
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
@@ -174,7 +198,11 @@ public class SingleLongTest
 		assertThat(new G(3L).raw(), is(3L));
 	}
 	
-	static final class H extends SingleLong<H> { H(long a) { super(a, H::new, floor(2L)); } }
+	static final class H extends SingleLong<H>
+	{
+		private static final LongRule FLOOR = floor(2L);
+		H(long a) { super(a, H::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
@@ -182,7 +210,11 @@ public class SingleLongTest
 		assertThat(new H(1L).raw(), is(2L));
 	}
 	
-	static final class I extends SingleLong<I> { I(long a) { super(a, I::new, ceiling(5L)); } }
+	static final class I extends SingleLong<I>
+	{
+		private static final LongRule CEILING = ceiling(5L);
+		I(long a) { super(a, I::new); }
+	}
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
@@ -248,7 +280,8 @@ public class SingleLongTest
 	
 	static final class J extends SingleLong<J>
 	{
-		J(long a) { super(a, J::new, validUnless(raw -> raw % 2 > 0, "Must be even")); }
+		private static final LongRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
+		J(long a) { super(a, J::new); }
 	}
 	
 	@Test
