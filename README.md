@@ -92,7 +92,7 @@ ownership.
 At a high level, refactoring a codebase to Purity is done in four steps:
 
 1. **Wrap** *everything* that isn't yours in a class of your own. Give each a name that makes sense in the context of your application. Add only the methods you need, and give the methods names and arguments that make sense for your app.
-2. **Classify** every type according to the four categories above, adding the Purity annotations to document their purpose.
+2. **Classify** every type according to the four categories above, adding the Purity annotations to document their purpose. A class can belong to multiple non-`@Pure` categories, but it's better to separate them cleanly if you can.
 3. **Move** *all conditional branches* to `@Pure` types, and write tests for them. Non-`@Pure` types should be as dumb and simple as possible, since they are inherently difficult to test, and are therefore the source of most bugs.
 4. **Rearrange** the ownership graphs of non-`@Pure` types to minimise or eliminate singletons. Since singletons are globally-accessible, they must be thread-safe `@Barrier`s, and you want as few of those as possible.
 
