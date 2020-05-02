@@ -11,6 +11,9 @@ import java.util.function.Predicate;
  */
 public @FunctionalInterface interface IntRule
 {
+	/** An empty rule that does nothing. */
+	static final IntRule NONE = raw -> raw;
+	
 	/** Applies this rule to the given argument. */
 	int applyRule(int i);
 	

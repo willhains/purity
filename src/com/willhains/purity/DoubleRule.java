@@ -11,6 +11,9 @@ import java.util.function.Predicate;
  */
 public @FunctionalInterface interface DoubleRule
 {
+	/** An empty rule that does nothing. */
+	static final DoubleRule NONE = raw -> raw;
+	
 	/** Applies this rule to the given argument. */
 	double applyRule(double i);
 	

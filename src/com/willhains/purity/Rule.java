@@ -13,6 +13,10 @@ import java.util.function.Predicate;
  */
 public @FunctionalInterface interface Rule<Raw>
 {
+	/** @return An empty rule that does nothing. */
+	@SuppressWarnings("unchecked") static <Raw> Rule<Raw> none() { return (Rule<Raw>)NONE; }
+	static final Rule<?> NONE = raw -> raw;
+	
 	Raw applyRule(Raw raw) throws IllegalArgumentException;
 	
 	static <Raw, This extends Single<Raw, This>> Rule<Raw> rulesForClass(final Class<This> single)

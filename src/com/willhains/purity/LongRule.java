@@ -11,6 +11,9 @@ import java.util.function.Predicate;
  */
 public @FunctionalInterface interface LongRule
 {
+	/** An empty rule that does nothing. */
+	static final LongRule NONE = raw -> raw;
+	
 	/** Applies this rule to the given argument. */
 	long applyRule(long i);
 	
