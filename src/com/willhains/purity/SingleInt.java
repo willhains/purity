@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
+import com.willhains.purity.rule.IntRule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +9,8 @@ import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.IntRule.validIf;
-import static com.willhains.purity.IntRule.validUnless;
+import static com.willhains.purity.rule.IntRule.validIf;
+import static com.willhains.purity.rule.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /**

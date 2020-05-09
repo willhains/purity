@@ -1,40 +1,40 @@
-package com.willhains.purity;
+package com.willhains.purity.rule;
 
+import com.willhains.purity.SingleInt;
 import com.willhains.purity.annotations.Pure;
 
-import java.util.function.LongFunction;
-import java.util.function.LongPredicate;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} or other {@link Pure} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
  *
  * @author willhains
  */
-public @FunctionalInterface interface LongRule
+public @FunctionalInterface interface IntRule
 {
 	/** An empty rule that does nothing. */
-	static final LongRule NONE = raw -> raw;
+	static final IntRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	long apply(long i);
+	int apply(int i);
 	
 	/**
-	 * @return the value of the first constant of type {@link LongRule} declared in the given {@link SingleLong}
-	 *  subclass.
+	 * @return the value of the first constant of type {@link IntRule} declared in the given {@link SingleInt} subclass.
 	 */
-	static <This extends SingleLong<This>> LongRule[] rulesForClass(final Class<This> single)
+	static <This extends SingleInt<This>> IntRule[] rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(LongRule.class);
+		return Constants.ofClass(single).getConstantsOfType(IntRule.class);
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static LongRule combine(final LongRule... combiningRules)
+	static IntRule combine(final IntRule... combiningRules)
 	{
 		return raw ->
 		{
-			long result = raw;
-			for(final LongRule rule: combiningRules) result = rule.apply(result);
+			int result = raw;
+			for(final IntRule rule: combiningRules) result = rule.apply(result);
 			return result;
 		};
 	}
@@ -46,9 +46,9 @@ public @FunctionalInterface interface LongRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static LongRule validIf(
-		final LongPredicate condition,
-		final LongFunction<String> errorMessageFactory)
+	static IntRule validIf(
+		final IntPredicate condition,
+		final IntFunction<String> errorMessageFactory)
 	{
 		return raw ->
 		{
@@ -64,25 +64,25 @@ public @FunctionalInterface interface LongRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is satisfied.
 	 */
-	static LongRule validUnless(
-		final LongPredicate condition,
-		final LongFunction<String> errorMessageFactory)
+	static IntRule validUnless(
+		final IntPredicate condition,
+		final IntFunction<String> errorMessageFactory)
 	{
 		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validIf(LongPredicate,LongFunction)
+	 * @see #validIf(IntPredicate,IntFunction)
 	 */
-	static LongRule validIf(final LongPredicate condition, final String errorMessage)
+	static IntRule validIf(final IntPredicate condition, final String errorMessage)
 	{
 		return validIf(condition, $ -> errorMessage);
 	}
 	
 	/**
-	 * @see #validUnless(LongPredicate,LongFunction)
+	 * @see #validUnless(IntPredicate,IntFunction)
 	 */
-	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
+	static IntRule validUnless(final IntPredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
 	}

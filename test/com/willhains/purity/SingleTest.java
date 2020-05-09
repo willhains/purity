@@ -1,11 +1,12 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
+import com.willhains.purity.rule.Rule;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.Rule.validUnless;
+import static com.willhains.purity.rule.Rule.validUnless;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 

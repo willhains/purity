@@ -1,39 +1,41 @@
-package com.willhains.purity;
+package com.willhains.purity.rule;
 
+import com.willhains.purity.SingleDouble;
 import com.willhains.purity.annotations.Pure;
 
-import java.util.function.IntFunction;
-import java.util.function.IntPredicate;
+import java.util.function.DoubleFunction;
+import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} or other {@link Pure} object.
  *
  * @author willhains
  */
-public @FunctionalInterface interface IntRule
+public @FunctionalInterface interface DoubleRule
 {
 	/** An empty rule that does nothing. */
-	static final IntRule NONE = raw -> raw;
+	static final DoubleRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	int apply(int i);
+	double apply(double i);
 	
 	/**
-	 * @return the value of the first constant of type {@link IntRule} declared in the given {@link SingleInt} subclass.
+	 * @return the value of the first constant of type {@link DoubleRule} declared in the given {@link SingleDouble}
+	 *  subclass.
 	 */
-	static <This extends SingleInt<This>> IntRule[] rulesForClass(final Class<This> single)
+	static <This extends SingleDouble<This>> DoubleRule[] rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(IntRule.class);
+		return Constants.ofClass(single).getConstantsOfType(DoubleRule.class);
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static IntRule combine(final IntRule... combiningRules)
+	static DoubleRule combine(final DoubleRule... combiningRules)
 	{
 		return raw ->
 		{
-			int result = raw;
-			for(final IntRule rule: combiningRules) result = rule.apply(result);
+			double result = raw;
+			for(final DoubleRule rule: combiningRules) result = rule.apply(result);
 			return result;
 		};
 	}
@@ -45,9 +47,9 @@ public @FunctionalInterface interface IntRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static IntRule validIf(
-		final IntPredicate condition,
-		final IntFunction<String> errorMessageFactory)
+	static DoubleRule validIf(
+		final DoublePredicate condition,
+		final DoubleFunction<String> errorMessageFactory)
 	{
 		return raw ->
 		{
@@ -63,25 +65,25 @@ public @FunctionalInterface interface IntRule
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is satisfied.
 	 */
-	static IntRule validUnless(
-		final IntPredicate condition,
-		final IntFunction<String> errorMessageFactory)
+	static DoubleRule validUnless(
+		final DoublePredicate condition,
+		final DoubleFunction<String> errorMessageFactory)
 	{
 		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validIf(IntPredicate,IntFunction)
+	 * @see #validIf(DoublePredicate,DoubleFunction)
 	 */
-	static IntRule validIf(final IntPredicate condition, final String errorMessage)
+	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
 	{
 		return validIf(condition, $ -> errorMessage);
 	}
 	
 	/**
-	 * @see #validUnless(IntPredicate,IntFunction)
+	 * @see #validUnless(DoublePredicate,DoubleFunction)
 	 */
-	static IntRule validUnless(final IntPredicate condition, final String errorMessage)
+	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
 	}

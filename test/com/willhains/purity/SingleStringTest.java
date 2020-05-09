@@ -1,5 +1,6 @@
 package com.willhains.purity;
 
+import com.willhains.purity.rule.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;

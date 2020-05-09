@@ -1,14 +1,15 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
+import com.willhains.purity.rule.Rule;
 
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import static com.willhains.purity.Rule.validIf;
-import static com.willhains.purity.Rule.validUnless;
+import static com.willhains.purity.rule.Rule.validIf;
+import static com.willhains.purity.rule.Rule.validUnless;
 
 /**
  * A value type wrapping a {@link String}.

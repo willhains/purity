@@ -2,13 +2,14 @@ package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
 import com.willhains.purity.annotations.Returned;
+import com.willhains.purity.rule.Rule;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.willhains.purity.Rule.validIf;
-import static com.willhains.purity.Rule.validUnless;
+import static com.willhains.purity.rule.Rule.validIf;
+import static com.willhains.purity.rule.Rule.validUnless;
 import static com.willhains.purity.SingleNumber.$;
 import static java.math.RoundingMode.*;
 

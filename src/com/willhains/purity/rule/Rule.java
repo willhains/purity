@@ -1,5 +1,6 @@
-package com.willhains.purity;
+package com.willhains.purity.rule;
 
+import com.willhains.purity.Single;
 import com.willhains.purity.annotations.Pure;
 
 import java.lang.reflect.Array;
