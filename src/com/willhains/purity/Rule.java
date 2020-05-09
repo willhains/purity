@@ -100,30 +100,60 @@ public @FunctionalInterface interface Rule<Raw>
 // Extension of Class<?> to extract constant values
 @FunctionalInterface interface Constants extends Supplier<Class<?>>
 {
-	static Constants ofClass(Class<?> single)
+	static Constants ofClass(final Class<?> type) { return () -> type; }
+	
+	/** @return the values of constants of the given type, or arrays of the type, in the supplied class. */
+	default <T> T[] getConstantsOfType(final Class<T> type)
 	{
-		return () -> single;
+		return Arrays.stream(get().getDeclaredFields())
+			.map(Constant::new)
+			.filter(Constant::isConstant)
+			.filter(constant -> constant.isTypeOrArrayOfType(type))
+			.flatMap(Constant::getValues)
+			.map(type::cast)
+			.toArray(size -> _newArray(type, size));
 	}
 	
-	/** @return the values of constants of the given type, in the supplied class. */
-	default <T> T[] getConstantsOfType(final Class<T> ofType)
+	static <T> T[] _newArray(final Class<T> type, final int size)
 	{
-		final Class<?> fromClass = get();
-		return Arrays.stream(fromClass.getDeclaredFields())
-			.filter(field -> field.getType().equals(ofType))
-			.filter(field -> Modifier.isStatic(field.getModifiers()))
-			.filter(field -> Modifier.isFinal(field.getModifiers()))
-			.peek(field -> field.setAccessible(true))
-			.flatMap(Constants::getConstantValue)
-			.toArray(size -> (T[])Array.newInstance(ofType, size));
+		@SuppressWarnings("unchecked") final T[] array = (T[])Array.newInstance(type, size);
+		return array;
+	}
+}
+
+// Wrapper of Field to extract modifiers and value
+final @Pure class Constant<T> extends Single<Field, Constant<T>>
+{
+	Constant(final Field field) { super(field, Constant::new); }
+	
+	boolean isConstant()
+	{
+		final int modifiers = raw.getModifiers();
+		return Modifier.isStatic(modifiers)
+			&& Modifier.isFinal(modifiers);
 	}
 	
-	static <T> Stream<T> getConstantValue(final Field field)
+	boolean isTypeOrArrayOfType(final Class<?> type)
 	{
+		if(raw.getType().equals(type)) return true;
+		if(!type.isArray()) return false;
+		return type.getComponentType().equals(type);
+	}
+	
+	/** @return a stream of the value (if a non-array) or values (if an array) of the given constant field. */
+	Stream<T> getValues()
+	{
+		raw.setAccessible(true);
 		try
 		{
-			@SuppressWarnings("unchecked") final T value = (T)field.get(null);
-			return Stream.of(value);
+			final Object value = raw.get(null);
+			if(raw.getType().isArray())
+			{
+				@SuppressWarnings("unchecked") final T[] array = (T[])value;
+				return Arrays.stream(array);
+			}
+			@SuppressWarnings("unchecked") final T t = (T)value;
+			return Stream.of(t);
 		}
 		catch(IllegalAccessException e)
 		{
