@@ -29,7 +29,9 @@ public @FunctionalInterface interface Rule<Raw>
 	 */
 	static <Raw, This extends Single<Raw, This>> Rule<Raw>[] rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(Rule.class);
+		@SuppressWarnings("unchecked")
+		final Rule<Raw>[] rules = (Rule<Raw>[])Constants.ofClass(single).getConstantsOfType(Rule.class);
+		return rules;
 	}
 	
 	/** Combine multiple rules into a single rule. */
