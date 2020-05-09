@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;

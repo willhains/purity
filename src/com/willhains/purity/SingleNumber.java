@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.function.Supplier;

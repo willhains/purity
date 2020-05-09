@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;

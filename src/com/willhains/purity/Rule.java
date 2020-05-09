@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

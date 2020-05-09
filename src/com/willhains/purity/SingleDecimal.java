@@ -1,5 +1,8 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+import com.willhains.purity.annotations.Returned;
+
 import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.function.Supplier;

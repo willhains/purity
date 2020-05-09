@@ -1,4 +1,4 @@
-package com.willhains.purity;
+package com.willhains.purity.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

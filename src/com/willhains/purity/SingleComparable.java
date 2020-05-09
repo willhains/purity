@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 /**
  * A {@link Single} value with a {@link Comparable} underlying value.
  * 

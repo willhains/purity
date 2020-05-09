@@ -1,5 +1,7 @@
 package com.willhains.purity;
 
+import com.willhains.purity.annotations.Pure;
+
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
