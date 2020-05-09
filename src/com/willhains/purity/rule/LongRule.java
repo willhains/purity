@@ -21,7 +21,7 @@ public @FunctionalInterface interface LongRule
 	static final LongRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	long apply(long i);
+	long applyTo(long i);
 	
 	/**
 	 * @return the value of the first constant of type {@link LongRule} declared in the given {@link SingleLong} subclass.
@@ -37,7 +37,7 @@ public @FunctionalInterface interface LongRule
 		return raw ->
 		{
 			long result = raw;
-			for(final LongRule rule: combiningRules) result = rule.apply(result);
+			for(final LongRule rule: combiningRules) result = rule.applyTo(result);
 			return result;
 		};
 	}

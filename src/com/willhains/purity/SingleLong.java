@@ -2,7 +2,6 @@ package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
 import com.willhains.purity.rule.LongRule;
-import com.willhains.purity.rule.LongRule;
 
 import java.util.Optional;
 import java.util.function.*;
@@ -44,7 +43,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	protected SingleLong(final long rawValue, final LongFunction<? extends This>  constructor, final boolean applyRules)
 	{
-		raw = applyRules ? _rules().apply(rawValue) : rawValue;
+		raw = applyRules ? _rules().applyTo(rawValue) : rawValue;
 		_constructor = requireNonNull(constructor);
 	}
 	

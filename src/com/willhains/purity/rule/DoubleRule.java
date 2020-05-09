@@ -21,7 +21,7 @@ public @FunctionalInterface interface DoubleRule
 	static final DoubleRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	double apply(double i);
+	double applyTo(double i);
 	
 	/**
 	 * @return the value of the first constant of type {@link DoubleRule} declared in the given {@link SingleDouble}
@@ -38,7 +38,7 @@ public @FunctionalInterface interface DoubleRule
 		return raw ->
 		{
 			double result = raw;
-			for(final DoubleRule rule: combiningRules) result = rule.apply(result);
+			for(final DoubleRule rule: combiningRules) result = rule.applyTo(result);
 			return result;
 		};
 	}

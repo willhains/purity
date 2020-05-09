@@ -43,7 +43,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 */
 	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor, boolean applyRules)
 	{
-		raw = applyRules ? _rules().apply(rawValue) : rawValue;
+		raw = applyRules ? _rules().applyTo(rawValue) : rawValue;
 		_constructor = requireNonNull(constructor);
 	}
 	

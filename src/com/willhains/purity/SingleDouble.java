@@ -42,7 +42,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor, boolean applyRules)
 	{
-		raw = applyRules ? _rules().apply(rawValue) : rawValue;
+		raw = applyRules ? _rules().applyTo(rawValue) : rawValue;
 		_constructor = requireNonNull(constructor);
 	}
 	

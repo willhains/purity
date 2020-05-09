@@ -21,7 +21,7 @@ public @FunctionalInterface interface IntRule
 	static final IntRule NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	int apply(int i);
+	int applyTo(int i);
 	
 	/**
 	 * @return the value of the first constant of type {@link IntRule} declared in the given {@link SingleInt} subclass.
@@ -37,7 +37,7 @@ public @FunctionalInterface interface IntRule
 		return raw ->
 		{
 			int result = raw;
-			for(final IntRule rule: combiningRules) result = rule.apply(result);
+			for(final IntRule rule: combiningRules) result = rule.applyTo(result);
 			return result;
 		};
 	}

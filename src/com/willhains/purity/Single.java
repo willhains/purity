@@ -43,7 +43,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor, boolean applyRules)
 	{
 		final Raw nonNullRaw = requireNonNull(rawValue);
-		this.raw = applyRules ? _rules().apply(nonNullRaw) : nonNullRaw;
+		this.raw = applyRules ? _rules().applyTo(nonNullRaw) : nonNullRaw;
 		_constructor = requireNonNull(constructor);
 	}
 	

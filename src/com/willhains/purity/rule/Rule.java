@@ -22,7 +22,7 @@ public @FunctionalInterface interface Rule<Raw>
 	static final Rule<?> NONE = raw -> raw;
 	
 	/** Applies this rule to the given argument. */
-	Raw apply(Raw raw) throws IllegalArgumentException;
+	Raw applyTo(Raw raw) throws IllegalArgumentException;
 	
 	/**
 	 * @return the combination of constants of type {@link Rule} declared in the given {@link Single} subclass.
@@ -39,7 +39,7 @@ public @FunctionalInterface interface Rule<Raw>
 		return raw ->
 		{
 			Raw result = raw;
-			for(final Rule<Raw> rule: combiningRules) result = rule.apply(result);
+			for(final Rule<Raw> rule: combiningRules) result = rule.applyTo(result);
 			return result;
 		};
 	}
