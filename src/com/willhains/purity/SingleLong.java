@@ -60,7 +60,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		if(rules != null) return rules;
 		
 		// Build a new rule from the LongRule constants declared in This class
-		final LongRule newRule = LongRule.allOf(LongRule.rulesForClass(single));
+		final LongRule newRule = LongRule.combine(LongRule.rulesForClass(single));
 		
 		// Copy and replace the cache with the added rule
 		final Map<Class<? extends SingleLong<?>>, LongRule> rulesCache = new HashMap<>(_RULES);

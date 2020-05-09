@@ -36,7 +36,7 @@ public @FunctionalInterface interface Rule<Raw>
 	
 	/** Combine multiple rules into a single rule. */
 	@SafeVarargs
-	static <Raw> Rule<Raw> allOf(final Rule<Raw>... combiningRules)
+	static <Raw> Rule<Raw> combine(final Rule<Raw>... combiningRules)
 	{
 		return raw ->
 		{

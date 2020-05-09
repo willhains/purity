@@ -13,7 +13,7 @@ public class SingleTest
 	public static final class Height extends Single<Float, Height>
 	{
 		private static final Rule<Float> NON_NEGATIVE = validUnless(raw -> raw.floatValue() < 0f, raw -> raw + " < 0");
-		private static final Rule<Float> REAL = Rule.allOf(
+		private static final Rule<Float> REAL = Rule.combine(
 			validUnless(raw -> raw.isNaN(), "Not a number"),
 			validUnless(raw -> raw.isInfinite(), "Must be finite"));
 		public Height(final Float rawValue) { super(rawValue, Height::new); }

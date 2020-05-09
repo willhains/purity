@@ -61,7 +61,7 @@ public final @Pure class HostName extends SingleString<HostName>
 {
 	private static final Rule TRIM = trimWhitespace;
     private static final Rule FORMAT = validCharacters(letters + numbers + "-._");
-    private static final Rule LENGTH = Rule.allOf(minLength(1), maxLength(255));
+    private static final Rule LENGTH = Rule.combine(minLength(1), maxLength(255));
 
 	public HostName(String hostName) { super(hostName, HostName::new); }
 }

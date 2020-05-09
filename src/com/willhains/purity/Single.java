@@ -60,7 +60,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(rules != null) return rules;
 		
 		// Build a new rule from the Rule constants declared in This class
-		final Rule<Raw> newRule = Rule.allOf(Rule.rulesForClass(single));
+		final Rule<Raw> newRule = Rule.combine(Rule.rulesForClass(single));
 		
 		// Copy and replace the cache with the added rule
 		final Map<Class<? extends Single<?, ?>>, Rule<?>> rulesCache = new HashMap<>(_RULES);

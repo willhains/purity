@@ -114,7 +114,7 @@ public class SingleLongTest
 	
 	static final class A extends SingleLong<A>
 	{
-		private static final LongRule RULES = LongRule.allOf(min(2L), max(5L));
+		private static final LongRule[] RULES = {min(2L), max(5L)};
 		A(long a) { super(a, A::new); }
 	}
 	
@@ -127,7 +127,7 @@ public class SingleLongTest
 	
 	static final class B extends SingleLong<B>
 	{
-		private static final LongRule RULES = min(2L);
+		private static final LongRule MIN = min(2L);
 		B(long a) { super(a, B::new); }
 	}
 	
@@ -139,7 +139,7 @@ public class SingleLongTest
 	
 	static final class C extends SingleLong<C>
 	{
-		private static final LongRule RULES = max(5L);
+		private static final LongRule MAX = max(5L);
 		C(long a) { super(a, C::new); }
 	}
 	
@@ -151,7 +151,7 @@ public class SingleLongTest
 	
 	static final class D extends SingleLong<D>
 	{
-		private static final LongRule RULES = LongRule.allOf(greaterThan(2L), lessThan(5L));
+		private static final LongRule[] RULES = {greaterThan(2L), lessThan(5L)};
 		D(long a) { super(a, D::new); }
 	}
 	
@@ -188,7 +188,7 @@ public class SingleLongTest
 	
 	static final class G extends SingleLong<G>
 	{
-		private static final LongRule RANGE = LongRule.allOf(floor(2L), ceiling(5L));
+		private static final LongRule[] RANGE = {floor(2L), ceiling(5L)};
 		G(long a) { super(a, G::new); }
 	}
 	

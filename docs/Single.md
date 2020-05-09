@@ -129,7 +129,7 @@ public final @Pure class ModelNumber extends SingleString<ModelNumber>
 
 Purity provides several built-in constants and static factory methods to help you build your rules.
 
-#### `Rule.allOf(...)`
+#### `Rule.combine(...)`
 
 Use this method to chain together multiple rules into a composite rule, to be passed to the super constructor. It is strongly recommended to declare your composite rule as a `static final` constant.
 
@@ -438,7 +438,7 @@ The `Single` base classes expose the raw value as a protected property `raw`. Us
 ```java
 public final @Pure class ModelNumber extends SingleString<ModelNumber>
 {
-	private static final Rule RULES = Rule.allOf(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
+	private static final Rule RULES = Rule.combine(min(7), max(13), validPattern("[AO]\\d\\d-\\d+"));
 	public ModelNumber(final String model) { super(model, ModelNumber::new); }
 
 	public ProductCode getProductCode() { return new ProductCode(raw.substring(0, 3)); }

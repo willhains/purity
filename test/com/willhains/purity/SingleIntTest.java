@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.IntRule.allOf;
 import static com.willhains.purity.IntRule.validUnless;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -153,7 +152,7 @@ public class SingleIntTest
 	
 	static final class D extends SingleInt<D>
 	{
-		private static final IntRule RULES = allOf(greaterThan(2), lessThan(5));
+		private static final IntRule[] RULES = {greaterThan(2), lessThan(5)};
 		D(int a) { super(a, D::new); }
 	}
 	
@@ -190,7 +189,7 @@ public class SingleIntTest
 	
 	static final class G extends SingleInt<G>
 	{
-		private static final IntRule NORMALISE = allOf(floor(2), ceiling(5));
+		private static final IntRule[] NORMALISE = {floor(2), ceiling(5)};
 		G(int a) { super(a, G::new); }
 	}
 	

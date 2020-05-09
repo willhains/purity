@@ -60,7 +60,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		if(rules != null) return rules;
 		
 		// Build a new rule from the IntRule constants declared in This class
-		final IntRule newRule = IntRule.allOf(IntRule.rulesForClass(single));
+		final IntRule newRule = IntRule.combine(IntRule.rulesForClass(single));
 		
 		// Copy and replace the cache with the added rule
 		final Map<Class<? extends SingleInt<?>>, IntRule> rulesCache = new HashMap<>(_RULES);

@@ -2,7 +2,6 @@ package com.willhains.purity;
 
 import org.junit.Test;
 
-import static com.willhains.purity.Rule.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -92,7 +91,7 @@ public class SingleStringTest
 	
 	static final class A extends SingleString<A>
 	{
-		private static final Rule TRIM = trimWhitespace;
+		private static final Rule<String> TRIM = trimWhitespace;
 		A(String a) { super(a, A::new); }
 	}
 	
@@ -105,7 +104,7 @@ public class SingleStringTest
 	
 	static final class B extends SingleString<B>
 	{
-		private static final Rule CHARS = validCharacters("abcdefg");
+		private static final Rule<String> CHARS = validCharacters("abcdefg");
 		B(String a) { super(a, B::new); }
 	}
 	
@@ -117,7 +116,7 @@ public class SingleStringTest
 	
 	static final class C extends SingleString<C>
 	{
-		private static final Rule CHARS = validCharacters("abcdefg");
+		private static final Rule<String> CHARS = validCharacters("abcdefg");
 		C(String a) { super(a, C::new); }
 	}
 	
@@ -129,7 +128,7 @@ public class SingleStringTest
 	
 	static final class D extends SingleString<D>
 	{
-		private static final Rule PATTERN = validPattern("[a-z]-[0-9]");
+		private static final Rule<String> PATTERN = validPattern("[a-z]-[0-9]");
 		D(String a) { super(a, D::new); }
 	}
 	
@@ -141,7 +140,7 @@ public class SingleStringTest
 	
 	static final class E extends SingleString<E>
 	{
-		private static final Rule PATTERN = validPattern("[a-z]-[0-9]");
+		private static final Rule<String> PATTERN = validPattern("[a-z]-[0-9]");
 		E(String a) { super(a, E::new); }
 	}
 	
@@ -153,7 +152,7 @@ public class SingleStringTest
 	
 	static final class F extends SingleString<F>
 	{
-		private static final Rule LENGTH = allOf(minLength(2), maxLength(5));
+		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
 		F(String a) { super(a, F::new); }
 	}
 	
@@ -165,7 +164,7 @@ public class SingleStringTest
 	
 	static final class G extends SingleString<G>
 	{
-		private static final Rule LENGTH = allOf(minLength(2), maxLength(5));
+		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
 		G(String a) { super(a, G::new); }
 	}
 	
@@ -177,7 +176,7 @@ public class SingleStringTest
 	
 	static final class H extends SingleString<H>
 	{
-		private static final Rule LENGTH = allOf(minLength(2), maxLength(5));
+		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
 		H(String a) { super(a, H::new); }
 	}
 	

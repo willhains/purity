@@ -164,8 +164,7 @@ public class SingleDoubleTest
 	
 	static final class E extends SingleDouble<E>
 	{
-		private static final DoubleRule MIN = min(2.0);
-		private static final DoubleRule MAX = max(5.0);
+		private static final DoubleRule[] RANGE = {min(2.0), max(5.0)};
 		E(double a) { super(a, E::new); }
 	}
 	
@@ -202,8 +201,7 @@ public class SingleDoubleTest
 	
 	static final class H extends SingleDouble<H>
 	{
-		static final DoubleRule LOWER_BOUND = greaterThan(2.0);
-		static final DoubleRule UPPER_BOUND = lessThan(5.0);
+		static final DoubleRule[] BOUNDS = {greaterThan(2.0), lessThan(5.0)};
 		H(double a) { super(a, H::new); }
 	}
 	
@@ -240,8 +238,7 @@ public class SingleDoubleTest
 	
 	static final class K extends SingleDouble<K>
 	{
-		private static final DoubleRule FLOOR = floor(2.0);
-		private static final DoubleRule CEILING = ceiling(5.0);
+		private static final DoubleRule[] RANGE = {floor(2.0), ceiling(5.0)};
 		K(double a) { super(a, K::new); }
 	}
 	
@@ -333,7 +330,7 @@ public class SingleDoubleTest
 	
 	static final class N extends SingleDouble<N>
 	{
-		static final DoubleRule RULES = validUnless(raw -> raw % 2 > 0, "Must be even");
+		static final DoubleRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
 		N(double a) { super(a, N::new); }
 	}
 	

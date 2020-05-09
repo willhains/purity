@@ -26,7 +26,7 @@ public @FunctionalInterface interface IntRule
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static IntRule allOf(final IntRule... combiningRules)
+	static IntRule combine(final IntRule... combiningRules)
 	{
 		return raw ->
 		{

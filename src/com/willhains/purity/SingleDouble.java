@@ -59,7 +59,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		if(rules != null) return rules;
 		
 		// Build a new rule from the DoubleRule constants declared in This class
-		final DoubleRule newRule = DoubleRule.allOf(DoubleRule.rulesForClass(single));
+		final DoubleRule newRule = DoubleRule.combine(DoubleRule.rulesForClass(single));
 		
 		// Copy and replace the cache with the added rule
 		final Map<Class<? extends SingleDouble<?>>, DoubleRule> rulesCache = new HashMap<>(_RULES);
@@ -94,7 +94,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	}
 	
 	/** Rule to trap non-numbers: NaN, infinity. */
-	public static DoubleRule realNumber = allOf(
+	public static DoubleRule realNumber = combine(
 		validUnless(Double::isNaN, "Not a number"),
 		validIf(Double::isFinite, "Must be finite"));
 	

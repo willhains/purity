@@ -27,7 +27,7 @@ public @FunctionalInterface interface DoubleRule
 	}
 	
 	/** Combine multiple rules into a single rule. */
-	static DoubleRule allOf(final DoubleRule... combiningRules)
+	static DoubleRule combine(final DoubleRule... combiningRules)
 	{
 		return raw ->
 		{
