@@ -3,8 +3,6 @@ package com.willhains.purity;
 import com.willhains.purity.annotations.Pure;
 import com.willhains.purity.rule.IntRule;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
@@ -49,28 +47,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		_constructor = requireNonNull(constructor);
 	}
 	
-	// Cache of rules of SingleInt subclasses
-	// The map instance itself is never mutated; each update copies and replaces the reference below.
-	// The contents come from each subclass's RULES constant, so if an entry is lost due to a race condition,
-	// exactly the same value will be regenerated and added to the cache.
-	private static Map<Class<? extends SingleInt<?>>, IntRule> _RULES = new HashMap<>();
-	
-	private IntRule _rules()
-	{
-		// Find a cached rule for This class
-		@SuppressWarnings("unchecked") final Class<This> single = (Class<This>)this.getClass();
-		@SuppressWarnings("unchecked") final IntRule rules = _RULES.get(single);
-		if(rules != null) return rules;
-		
-		// Build a new rule from the IntRule constants declared in This class
-		final IntRule newRule = IntRule.combine(IntRule.rulesForClass(single));
-		
-		// Copy and replace the cache with the added rule
-		final Map<Class<? extends SingleInt<?>>, IntRule> rulesCache = new HashMap<>(_RULES);
-		rulesCache.put(single, newRule);
-		_RULES = rulesCache;
-		return newRule;
-	}
+	private IntRule _rules() { return IntRule.rulesForClass(this.getClass()); }
 	
 	public final int raw() { return raw; }
 	

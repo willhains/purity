@@ -1,8 +1,11 @@
 package com.willhains.purity.rule;
 
 import com.willhains.purity.SingleDouble;
+import com.willhains.purity.annotations.Mutable;
 import com.willhains.purity.annotations.Pure;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
@@ -24,9 +27,9 @@ public @FunctionalInterface interface DoubleRule
 	 * @return the value of the first constant of type {@link DoubleRule} declared in the given {@link SingleDouble}
 	 *  subclass.
 	 */
-	static <This extends SingleDouble<This>> DoubleRule[] rulesForClass(final Class<This> single)
+	static <This extends SingleDouble<This>> DoubleRule rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(DoubleRule.class);
+		return DoubleRulesCache.current.getRulesFor(single);
 	}
 	
 	/** Combine multiple rules into a single rule. */
@@ -86,5 +89,34 @@ public @FunctionalInterface interface DoubleRule
 	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
+	}
+}
+
+/** Cache of rules of Single subclasses. */
+final @Mutable class DoubleRulesCache
+{
+	// The RulesCache instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's Rule constants, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	static DoubleRulesCache current = new DoubleRulesCache(new HashMap<>());
+	private final Map<Class<? extends SingleDouble<?>>, DoubleRule> _rules;
+	private DoubleRulesCache(final Map<Class<? extends SingleDouble<?>>, DoubleRule> rules) { _rules = rules; }
+	
+	public <This extends SingleDouble<This>> DoubleRule getRulesFor(final Class<This> type)
+	{
+		// Find a cached rule for the class
+		final DoubleRule cachedRule = _rules.get(type);
+		if(cachedRule != null) return cachedRule;
+		
+		// Build a new rule from the Rule constants declared in the class
+		@SuppressWarnings("unchecked")
+		final DoubleRule newRule = DoubleRule.combine(Constants.ofClass(type).getConstantsOfType(DoubleRule.class));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends SingleDouble<?>>, DoubleRule> updatedCache = new HashMap<>(_rules);
+		updatedCache.put(type, newRule);
+		current = new DoubleRulesCache(updatedCache);
+		
+		return newRule;
 	}
 }

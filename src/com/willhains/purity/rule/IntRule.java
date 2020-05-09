@@ -1,8 +1,11 @@
 package com.willhains.purity.rule;
 
 import com.willhains.purity.SingleInt;
+import com.willhains.purity.annotations.Mutable;
 import com.willhains.purity.annotations.Pure;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -23,9 +26,9 @@ public @FunctionalInterface interface IntRule
 	/**
 	 * @return the value of the first constant of type {@link IntRule} declared in the given {@link SingleInt} subclass.
 	 */
-	static <This extends SingleInt<This>> IntRule[] rulesForClass(final Class<This> single)
+	static <This extends SingleInt<This>> IntRule rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(IntRule.class);
+		return IntRulesCache.current.getRulesFor(single);
 	}
 	
 	/** Combine multiple rules into a single rule. */
@@ -85,5 +88,35 @@ public @FunctionalInterface interface IntRule
 	static IntRule validUnless(final IntPredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
+	}
+}
+
+/** Cache of rules of Single subclasses. */
+final @Mutable
+class IntRulesCache
+{
+	// The RulesCache instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's Rule constants, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	static IntRulesCache current = new IntRulesCache(new HashMap<>());
+	private final Map<Class<? extends SingleInt<?>>, IntRule> _rules;
+	private IntRulesCache(final Map<Class<? extends SingleInt<?>>, IntRule> rules) { _rules = rules; }
+	
+	public <This extends SingleInt<This>> IntRule getRulesFor(final Class<This> type)
+	{
+		// Find a cached rule for the class
+		final IntRule cachedRule = _rules.get(type);
+		if(cachedRule != null) return cachedRule;
+		
+		// Build a new rule from the Rule constants declared in the class
+		@SuppressWarnings("unchecked")
+		final IntRule newRule = IntRule.combine(Constants.ofClass(type).getConstantsOfType(IntRule.class));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends SingleInt<?>>, IntRule> updatedCache = new HashMap<>(_rules);
+		updatedCache.put(type, newRule);
+		current = new IntRulesCache(updatedCache);
+		
+		return newRule;
 	}
 }

@@ -1,8 +1,11 @@
 package com.willhains.purity.rule;
 
 import com.willhains.purity.SingleLong;
+import com.willhains.purity.annotations.Mutable;
 import com.willhains.purity.annotations.Pure;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.LongFunction;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
@@ -21,12 +24,11 @@ public @FunctionalInterface interface LongRule
 	long apply(long i);
 	
 	/**
-	 * @return the value of the first constant of type {@link LongRule} declared in the given {@link SingleLong}
-	 *  subclass.
+	 * @return the value of the first constant of type {@link LongRule} declared in the given {@link SingleLong} subclass.
 	 */
-	static <This extends SingleLong<This>> LongRule[] rulesForClass(final Class<This> single)
+	static <This extends SingleLong<This>> LongRule rulesForClass(final Class<This> single)
 	{
-		return Constants.ofClass(single).getConstantsOfType(LongRule.class);
+		return LongRulesCache.current.getRulesFor(single);
 	}
 	
 	/** Combine multiple rules into a single rule. */
@@ -86,5 +88,34 @@ public @FunctionalInterface interface LongRule
 	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
+	}
+}
+
+/** Cache of rules of Single subclasses. */
+final @Mutable class LongRulesCache
+{
+	// The RulesCache instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's Rule constants, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	static LongRulesCache current = new LongRulesCache(new HashMap<>());
+	private final Map<Class<? extends SingleLong<?>>, LongRule> _rules;
+	private LongRulesCache(final Map<Class<? extends SingleLong<?>>, LongRule> rules) { _rules = rules; }
+	
+	public <This extends SingleLong<This>> LongRule getRulesFor(final Class<This> type)
+	{
+		// Find a cached rule for the class
+		final LongRule cachedRule = _rules.get(type);
+		if(cachedRule != null) return cachedRule;
+		
+		// Build a new rule from the Rule constants declared in the class
+		@SuppressWarnings("unchecked")
+		final LongRule newRule = LongRule.combine(Constants.ofClass(type).getConstantsOfType(LongRule.class));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends SingleLong<?>>, LongRule> updatedCache = new HashMap<>(_rules);
+		updatedCache.put(type, newRule);
+		current = new LongRulesCache(updatedCache);
+		
+		return newRule;
 	}
 }

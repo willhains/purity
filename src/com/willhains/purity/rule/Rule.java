@@ -1,16 +1,13 @@
 package com.willhains.purity.rule;
 
 import com.willhains.purity.Single;
+import com.willhains.purity.annotations.Mutable;
 import com.willhains.purity.annotations.Pure;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link Single} or other {@link Pure} object.
@@ -28,13 +25,11 @@ public @FunctionalInterface interface Rule<Raw>
 	Raw apply(Raw raw) throws IllegalArgumentException;
 	
 	/**
-	 * @return the value of the first constant of type {@link Rule} declared in the given {@link Single} subclass.
+	 * @return the combination of constants of type {@link Rule} declared in the given {@link Single} subclass.
 	 */
-	static <Raw, This extends Single<Raw, This>> Rule<Raw>[] rulesForClass(final Class<This> single)
+	static <Raw, This extends Single<Raw, This>> Rule<Raw> rulesForClass(final Class<This> single)
 	{
-		@SuppressWarnings("unchecked")
-		final Rule<Raw>[] rules = (Rule<Raw>[])Constants.ofClass(single).getConstantsOfType(Rule.class);
-		return rules;
+		return RulesCache.current.getRulesFor(single);
 	}
 	
 	/** Combine multiple rules into a single rule. */
@@ -100,3 +95,31 @@ public @FunctionalInterface interface Rule<Raw>
 	}
 }
 
+/** Cache of rules of Single subclasses. */
+final @Mutable class RulesCache
+{
+	// The RulesCache instance itself is never mutated; each update copies and replaces the reference below.
+	// The contents come from each subclass's Rule constants, so if an entry is lost due to a race condition,
+	// exactly the same value will be regenerated and added to the cache.
+	static RulesCache current = new RulesCache(new HashMap<>());
+	private final Map<Class<? extends Single<?, ?>>, Rule<?>> _rules;
+	private RulesCache(final Map<Class<? extends Single<?, ?>>, Rule<?>> rules) { _rules = rules; }
+	
+	public <Raw, This extends Single<Raw, This>> Rule<Raw> getRulesFor(final Class<This> type)
+	{
+		// Find a cached rule for the class
+		@SuppressWarnings("unchecked") final Rule<Raw> cachedRule = (Rule<Raw>)_rules.get(type);
+		if(cachedRule != null) return cachedRule;
+		
+		// Build a new rule from the Rule constants declared in the class
+		@SuppressWarnings("unchecked")
+		final Rule<Raw> newRule = Rule.combine(Constants.ofClass(type).getConstantsOfType(Rule.class));
+		
+		// Copy and replace the cache with the added rule
+		final Map<Class<? extends Single<?, ?>>, Rule<?>> updatedCache = new HashMap<>(_rules);
+		updatedCache.put(type, newRule);
+		current = new RulesCache(updatedCache);
+		
+		return newRule;
+	}
+}
