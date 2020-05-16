@@ -3,6 +3,7 @@ package com.willhains.purity;
 import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
+import static com.willhains.purity.StringRule.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -12,6 +13,13 @@ public class SingleStringTest
 	public static final class Name extends SingleString<Name>
 	{
 		public Name(final String rawValue) { super(rawValue, Name::new); }
+	}
+
+	@Adjust(trimWhitespace = true, internRaw = true)
+	@Validate(min = 1, max = 255, validCharacters = LETTERS + DIGITS + "-._")
+	public static final @Pure class HostName extends SingleString<HostName>
+	{
+		public HostName(String hostName) { super(hostName, HostName::new); }
 	}
 	
 	@Test

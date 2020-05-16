@@ -41,7 +41,7 @@ For example, `String`s are *everywhere*, but they are not much more typesafe tha
 ```java
 public final @Pure class HostName extends SingleString<HostName>
 {
-	public HostName(String hostName) { super(hostName, HostName::new); }
+    public HostName(String hostName) { super(hostName, HostName::new); }
 }
 ```
 
@@ -54,16 +54,14 @@ Purity's value-wrapping base types are:
 - `SingleDecimal`, for `BigDecimal`-based values
 - `Single`, for values based on other types
 
-Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just declare constants of type `Rule`, and Purity will automatically apply them when creating new instances.
+Each base type includes a wide range of useful functions, including normalisation and validation rules you can apply to ensure *every* instance of your value type is *always* valid. Just annotate your class with `@Adjust` and/or `@Validate` to constrain possible values.
 
 ```java
-public final @Pure class HostName extends SingleString<HostName>
+@Adjust(trimWhitespace = true, internRaw = true)
+@Validate(min = 1, max = 255, validCharacters = LETTERS + DIGITS + "-._")
+public static final @Pure class HostName extends SingleString<HostName>
 {
-	private static final Rule TRIM = trimWhitespace;
-    private static final Rule FORMAT = validCharacters(letters + numbers + "-._");
-    private static final Rule LENGTH = Rule.combine(minLength(1), maxLength(255));
-
-	public HostName(String hostName) { super(hostName, HostName::new); }
+    public HostName(String hostName) { super(hostName, HostName::new); }
 }
 ```
 

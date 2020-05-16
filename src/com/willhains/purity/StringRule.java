@@ -62,13 +62,13 @@ import java.util.regex.Pattern;
 	}
 
 	/** Letters (of the English alphabet). */
-	public static final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	/** Digit characters. */
-	public static final String numbers = "0123456789";
+	String DIGITS = "0123456789";
 
 	/** Generate rule to allow only the characters of `allowedCharacters`. */
-	public static StringRule validCharacters(final String allowedCharacters)
+	static StringRule validCharacters(final String allowedCharacters)
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		allowedCharacters.chars().forEach(c -> validCharMap[c] = true);
@@ -77,7 +77,7 @@ import java.util.regex.Pattern;
 	}
 
 	/** Generate rules to allow only raw strings that match `regExPattern`. */
-	public static StringRule validPattern(final String regExPattern)
+	static StringRule validPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
 		return StringRule.validIf(raw -> pattern.matcher(raw).matches(),
@@ -85,14 +85,14 @@ import java.util.regex.Pattern;
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
-	public static StringRule minLength(final int length)
+	static StringRule minLength(final int length)
 	{
 		return validUnless(raw -> raw.length() < length,
 			raw -> "Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
 	}
 
 	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
-	public static StringRule maxLength(final int length)
+	static StringRule maxLength(final int length)
 	{
 		return validUnless(raw -> raw.length() > length,
 			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
