@@ -1,14 +1,11 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.IntRule;
 
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.rule.IntRule.validIf;
-import static com.willhains.purity.rule.IntRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,26 +26,16 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	protected final int raw;
 	
 	/**
-	 * Equivalent to {@link #SingleInt(int, IntFunction, boolean) SingleInt(rawValue, constructor, true)}.
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
 	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor)
 	{
-		this(rawValue, constructor, true);
-	}
-	
-	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param applyRules Whether to apply rules to the raw value.
-	 */
-	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor, boolean applyRules)
-	{
-		raw = applyRules ? _rules().applyTo(rawValue) : rawValue;
+		raw = IntRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
-	
-	private IntRule _rules() { return IntRule.rulesForClass(this.getClass()); }
-	
+
+	/** Return the raw underlying value. */
 	public final int raw() { return raw; }
 	
 	@Override public int getAsInt() { return raw; }
@@ -72,36 +59,6 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		if(that == null) return false;
 		return this.raw == that.raw;
 	}
-	
-	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	public static IntRule min(final int minValue)
-	{
-		return validUnless(raw -> raw < minValue, raw -> raw + " < " + minValue);
-	}
-	
-	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	public static IntRule max(final int maxValue)
-	{
-		return validUnless(raw -> raw > maxValue, raw -> raw + " > " + maxValue);
-	}
-	
-	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	public static IntRule greaterThan(final int lowerBound)
-	{
-		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
-	}
-	
-	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	public static IntRule lessThan(final int upperBound)
-	{
-		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
-	}
-	
-	/** Generate rule to normalise the raw integer value to a minimum floor value. */
-	public static IntRule floor(final int minValue) { return raw -> Math.max(raw, minValue); }
-	
-	/** Generate rule to normalise the raw integer value to a maximum ceiling value. */
-	public static IntRule ceiling(final int maxValue) { return raw -> Math.min(raw, maxValue); }
 	
 	@Override public Integer asNumber() { return raw; }
 	

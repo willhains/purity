@@ -1,0 +1,154 @@
+package com.willhains.purity;
+
+import com.willhains.purity.annotations.*;
+import com.willhains.purity.rule.*;
+
+import java.util.*;
+import java.util.function.*;
+
+/**
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
+ *
+ * @author willhains
+ */
+@FunctionalInterface interface IntRule
+{
+	/** Applies this rule to the raw value. */
+	int applyTo(int i);
+
+	// Lazy cache of rules for subclasses
+	RulesCache<IntRule> CACHE = new RulesCache<>();
+
+	static IntRule rulesForClass(final Class<?> singleClass)
+	{
+		return CACHE.computeIfAbsent(singleClass, IntRule::fromAnnotations);
+	}
+
+	static IntRule fromAnnotations(final Class<?> singleClass)
+	{
+		// Build a new rule from the annotations on the class
+		final List<IntRule> rules = new ArrayList<>();
+
+		// Raw value adjustments
+		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
+		if(adjust != null)
+		{
+			for(double limit: adjust.floor()) rules.add(floor((int)limit));
+			for(double limit: adjust.ceiling()) rules.add(ceiling((int)limit));
+//  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
+		}
+
+		// Raw value validations
+		final Validate validate = singleClass.getAnnotation(Validate.class);
+		if(validate != null)
+		{
+			// When the validation policy is ASSERT and assertions are disabled, don't even fromAnnotations the validation rules
+			if(validate.onFailure() != Validate.OnFailure.ASSERT || singleClass.desiredAssertionStatus())
+			{
+				for(double min: validate.min()) rules.add(min((int)min));
+				for(double max: validate.max()) rules.add(max((int)max));
+				for(double bound: validate.greaterThan()) rules.add(greaterThan((int)bound));
+				for(double bound: validate.lessThan()) rules.add(lessThan((int)bound));
+//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
+//		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
+//		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
+				if(!validate.allowNegative()) rules.add(min(0));
+//		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
+				if(!validate.allowInfinity()) rules.add(validIf(Double::isFinite, "Must be finite"));
+				if(!validate.allowNaN()) rules.add(validUnless(Double::isNaN, "Not a number"));
+			}
+		}
+
+		// Build a new rule from the Rule constants declared in the class
+		return IntRule.combine(rules.toArray(new IntRule[0]));
+	}
+
+	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
+	static IntRule min(final int minValue)
+	{
+		return validIf(raw -> raw >= minValue, raw -> raw + " < " + minValue);
+	}
+
+	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
+	static IntRule max(final int maxValue)
+	{
+		return validIf(raw -> raw <= maxValue, raw -> raw + " > " + maxValue);
+	}
+
+	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
+	static IntRule greaterThan(final int lowerBound)
+	{
+		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
+	}
+
+	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
+	static IntRule lessThan(final int upperBound)
+	{
+		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
+	}
+
+	/** Generate rule to normalise the raw value to a minimum floor value. */
+	static IntRule floor(final int minValue) { return raw -> Math.max(raw, minValue); }
+
+	/** Generate rule to normalise the raw value to a maximum ceiling value. */
+	static IntRule ceiling(final int maxValue) { return raw -> Math.min(raw, maxValue); }
+
+	/** Combine multiple rules into a single rule. */
+	static IntRule combine(final IntRule... combiningRules)
+	{
+		return raw ->
+		{
+			int result = raw;
+			for(final IntRule rule: combiningRules) result = rule.applyTo(result);
+			return result;
+		};
+	}
+	
+	/**
+	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `true`.
+	 *
+	 * @param condition the raw value must satisfy this condition to be valid.
+	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
+	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
+	 */
+	static IntRule validIf(
+		final IntPredicate condition,
+		final IntFunction<String> errorMessageFactory)
+	{
+		return raw ->
+		{
+			if(condition.test(raw)) return raw;
+			throw new IllegalArgumentException(errorMessageFactory.apply(raw));
+		};
+	}
+
+	/**
+	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `false`.
+	 *
+	 * @param condition the raw value must not satisfy this condition to be valid.
+	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
+	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is satisfied.
+	 */
+	static IntRule validUnless(
+		final IntPredicate condition,
+		final IntFunction<String> errorMessageFactory)
+	{
+		return validIf(condition.negate(), errorMessageFactory);
+	}
+	
+	/**
+	 * @see #validIf(IntPredicate,IntFunction)
+	 */
+	static IntRule validIf(final IntPredicate condition, final String errorMessage)
+	{
+		return validIf(condition, $ -> errorMessage);
+	}
+
+	/**
+	 * @see #validUnless(IntPredicate,IntFunction)
+	 */
+	static IntRule validUnless(final IntPredicate condition, final String errorMessage)
+	{
+		return validIf(condition.negate(), errorMessage);
+	}
+}
