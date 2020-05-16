@@ -1,13 +1,11 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.DoubleRule;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.rule.DoubleRule.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -18,6 +16,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {
+	// Lazy cache of rules for subclasses
+	private static final RulesCache<DoubleRule> _RULES = new RulesCache<>();
+
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;
 	
@@ -28,26 +29,15 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	protected final double raw;
 	
 	/**
-	 * Equivalent to {@link #SingleDouble(double, DoubleFunction, boolean) SingleDouble(rawValue, constructor, true)}.
+	 * @param rawValue The raw, immutable value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
 	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor)
 	{
-		this(rawValue, constructor, true);
-	}
-	
-	/**
-	 * @param rawValue The raw, immutable value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param applyRules Whether to apply rules to the raw value.
-	 */
-	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor, boolean applyRules)
-	{
-		raw = applyRules ? _rules().applyTo(rawValue) : rawValue;
+		raw = _RULES.computeIfAbsent(this.getClass(), DoubleRule::fromAnnotations).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
-	
-	private DoubleRule _rules() { return DoubleRule.rulesForClass(this.getClass()); }
-	
+
 	/** Return the raw underlying value. */
 	public final double raw() { return raw; }
 	
@@ -72,42 +62,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		if(that == null) return false;
 		return this.raw == that.raw;
 	}
-	
-	/** Rule to trap non-numbers: NaN, infinity. */
-	public static DoubleRule realNumber = combine(
-		validUnless(Double::isNaN, "Not a number"),
-		validIf(Double::isFinite, "Must be finite"));
-	
-	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	public static DoubleRule min(final double minValue)
-	{
-		return validUnless(raw -> raw < minValue, raw -> raw + " < " + minValue);
-	}
-	
-	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	public static DoubleRule max(final double maxValue)
-	{
-		return validUnless(raw -> raw > maxValue, raw -> raw + " > " + maxValue);
-	}
-	
-	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	public static DoubleRule greaterThan(final double lowerBound)
-	{
-		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
-	}
-	
-	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	public static DoubleRule lessThan(final double upperBound)
-	{
-		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
-	}
-	
-	/** Generate rule to normalise the raw double value to a minimum floor value. */
-	public static DoubleRule floor(final double minValue) { return raw -> Math.max(raw, minValue); }
-	
-	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
-	public static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
-	
+
 	@Override public Double asNumber() { return raw; }
 	
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
