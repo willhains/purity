@@ -1,12 +1,10 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
+import com.willhains.purity.annotations.*;
 import com.willhains.purity.rule.*;
 
 import java.util.*;
 import java.util.function.*;
-
-import static com.willhains.purity.DoubleRule.validIf;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} or other {@link Pure} object.
@@ -15,11 +13,16 @@ import static com.willhains.purity.DoubleRule.validIf;
  */
 @FunctionalInterface interface DoubleRule
 {
-	/** An empty rule that does nothing. */
-	static final DoubleRule NONE = raw -> raw;
-
-	/** Applies this rule to the given argument. */
+	/** Applies this rule to the raw value. */
 	double applyTo(double i);
+
+	// Lazy cache of rules for subclasses
+	RulesCache<DoubleRule> CACHE = new RulesCache<>();
+
+	static DoubleRule rulesForClass(final Class<?> singleClass)
+	{
+		return CACHE.computeIfAbsent(singleClass, DoubleRule::fromAnnotations);
+	}
 
 	static DoubleRule fromAnnotations(final Class<?> singleClass)
 	{
@@ -30,8 +33,8 @@ import static com.willhains.purity.DoubleRule.validIf;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(double floor: adjust.floor()) rules.add(floor(floor));
-			for(double ceiling: adjust.ceiling()) rules.add(ceiling(ceiling));
+			for(double limit: adjust.floor()) rules.add(floor(limit));
+			for(double limit: adjust.ceiling()) rules.add(ceiling(limit));
 //  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
 		}
 
@@ -84,10 +87,10 @@ import static com.willhains.purity.DoubleRule.validIf;
 		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
 	}
 
-	/** Generate rule to normalise the raw double value to a minimum floor value. */
+	/** Generate rule to normalise the raw value to a minimum floor value. */
 	static DoubleRule floor(final double minValue) { return raw -> Math.max(raw, minValue); }
 
-	/** Generate rule to normalise the raw double value to a maximum ceiling value. */
+	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
 
 	/** Combine multiple rules into a single rule. */

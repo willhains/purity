@@ -16,9 +16,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {
-	// Lazy cache of rules for subclasses
-	private static final RulesCache<DoubleRule> _RULES = new RulesCache<>();
-
 	// The single-argument constructor of the subclass
 	private final DoubleFunction<? extends This> _constructor;
 	
@@ -34,7 +31,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor)
 	{
-		raw = _RULES.computeIfAbsent(this.getClass(), DoubleRule::fromAnnotations).applyTo(rawValue);
+		raw = DoubleRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 

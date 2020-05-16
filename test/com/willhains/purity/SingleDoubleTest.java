@@ -1,7 +1,6 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.*;
+import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import java.util.Optional;
