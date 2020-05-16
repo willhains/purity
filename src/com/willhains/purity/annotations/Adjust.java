@@ -1,4 +1,4 @@
-package com.willhains.purity.rule;
+package com.willhains.purity.annotations;
 
 import java.lang.annotation.*;
 import java.math.RoundingMode;

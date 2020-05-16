@@ -1,4 +1,4 @@
-package com.willhains.purity.rule;
+package com.willhains.purity.annotations;
 
 import com.willhains.purity.*;
 
