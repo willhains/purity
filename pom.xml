@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>purity</groupId>
   <artifactId>purity</artifactId>
-  <version>0.13</version>
+  <version>0.14</version>
   <name>Purity</name>
   <description>Build robust, value-oriented applications in Java</description>
   <properties>
