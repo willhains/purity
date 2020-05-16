@@ -54,6 +54,9 @@ public @Pure interface SingleNumber<This extends SingleNumber<This>> extends Sin
 	{
 		return x instanceof BigDecimal ? (BigDecimal)x : new BigDecimal(String.valueOf(x));
 	}
+
+	static BigDecimal $(final double x) { return BigDecimal.valueOf(x).stripTrailingZeros(); }
+	static BigDecimal $(final long x) { return BigDecimal.valueOf(x).stripTrailingZeros(); }
 	
 	default This plus(final String number) { return plus($(number)); }
 	default This minus(final String number) { return minus($(number)); }

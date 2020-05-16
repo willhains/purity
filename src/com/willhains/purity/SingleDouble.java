@@ -65,16 +65,10 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
 	
 	@Override
-	public final int compareToNumber(final Number number)
-	{
-		return Double.compare(this.raw, number.doubleValue());
-	}
+	public final int compareToNumber(final Number number) { return Double.compare(this.raw, number.doubleValue()); }
 	
-	public final int compareToNumber(final double number)
-	{
-		return Double.compare(this.raw, number);
-	}
-	
+	public final int compareToNumber(final double number) { return Double.compare(this.raw, number); }
+
 	@Override public boolean isZero() { return raw == 0d; }
 	@Override public boolean isPositive() { return raw > 0d; }
 	@Override public boolean isNegative() { return raw < 0d; }

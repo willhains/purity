@@ -1,14 +1,11 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.IntRule;
+import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.rule.IntRule.validUnless;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SingleIntTest
@@ -113,13 +110,9 @@ public class SingleIntTest
 		final Count x = new Count(100);
 		assertThat(x.toString(), equalTo("100"));
 	}
-	
-	static final class A extends SingleInt<A>
-	{
-		private static final IntRule MIN = min(2);
-		private static final IntRule MAX = max(5);
-		A(int a) { super(a, A::new); }
-	}
+
+	@Validate(min = 2, max = 5)
+	static final class A extends SingleInt<A> { A(int a) { super(a, A::new); } }
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -127,36 +120,27 @@ public class SingleIntTest
 		new A(2);
 		new A(5);
 	}
-	
-	static final class B extends SingleInt<B>
-	{
-		private static final IntRule MIN = min(2);
-		B(int a) { super(a, B::new); }
-	}
+
+	@Validate(min = 2)
+	static final class B extends SingleInt<B> { B(int a) { super(a, B::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
 		new B(1);
 	}
-	
-	static final class C extends SingleInt<C>
-	{
-		private static final IntRule MAX = max(5);
-		C(int a) { super(a, C::new); }
-	}
+
+	@Validate(max = 5)
+	static final class C extends SingleInt<C> { C(int a) { super(a, C::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
 		new C(6);
 	}
-	
-	static final class D extends SingleInt<D>
-	{
-		private static final IntRule[] RULES = {greaterThan(2), lessThan(5)};
-		D(int a) { super(a, D::new); }
-	}
+
+	@Validate(greaterThan = 2, lessThan = 5)
+	static final class D extends SingleInt<D> { D(int a) { super(a, D::new); } }
 	
 	@Test
 	public void shouldAcceptBetweenExclusive()
@@ -164,60 +148,45 @@ public class SingleIntTest
 		new D(3);
 		new D(4);
 	}
-	
-	static final class E extends SingleInt<E>
-	{
-		private static final IntRule UPPER_BOUND = greaterThan(2);
-		E(int a) { super(a, E::new); }
-	}
+
+	@Validate(greaterThan = 2)
+	static final class E extends SingleInt<E> { E(int a) { super(a, E::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
 		new E(2);
 	}
-	
-	static final class F extends SingleInt<F>
-	{
-		private static final IntRule LOWER_BOUND = lessThan(5);
-		F(int a) { super(a, F::new); }
-	}
+
+	@Validate(lessThan = 5)
+	static final class F extends SingleInt<F> { F(int a) { super(a, F::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
 		new F(5);
 	}
-	
-	static final class G extends SingleInt<G>
-	{
-		private static final IntRule[] NORMALISE = {floor(2), ceiling(5)};
-		G(int a) { super(a, G::new); }
-	}
+
+	@Adjust(floor = 2, ceiling = 5)
+	static final class G extends SingleInt<G> { G(int a) { super(a, G::new); } }
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
 		assertThat(new G(3).raw(), is(3));
 	}
-	
-	static final class H extends SingleInt<H>
-	{
-		private static final IntRule FLOOR = floor(2);
-		H(int a) { super(a, H::new); }
-	}
+
+	@Adjust(floor = 2)
+	static final class H extends SingleInt<H> { H(int a) { super(a, H::new); } }
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
 		assertThat(new H(1).raw(), is(2));
 	}
-	
-	static final class I extends SingleInt<I>
-	{
-		private static final IntRule CEILING = ceiling(5);
-		I(int a) { super(a, I::new); }
-	}
+
+	@Adjust(ceiling = 5)
+	static final class I extends SingleInt<I> { I(int a) { super(a, I::new); } }
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
@@ -280,18 +249,12 @@ public class SingleIntTest
 		final Count y = x.flatMap(f -> new Count(f + 1));
 		assertThat(y.raw(), equalTo(101));
 	}
-	
-	static final class J extends SingleInt<J>
-	{
-		private static final IntRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
-		J(int a) { super(a, J::new); }
-	}
+
+	@Validate(allowOdd = false)
+	static final class J extends SingleInt<J> { J(int a) { super(a, J::new); } }
 	
 	@Test
-	public void customRules()
-	{
-		new J(2);
-	}
+	public void customRules() { new J(2); }
 	
 	@Test
 	public void shouldCompareLarger()

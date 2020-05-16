@@ -73,12 +73,9 @@ public @interface Validate
 	boolean allowOdd() default true;
 	boolean allowNegative() default true;
 	boolean allowZero() default true;
-	double[] notEqualTo() default {};
 	boolean allowInfinity() default false;
 	boolean allowNaN() default false;
 
 	String[] validCharacters() default {};
 	String[] validPatterns() default {};
-	int[] minLength() default {};
-	int[] maxLength() default {};
 }

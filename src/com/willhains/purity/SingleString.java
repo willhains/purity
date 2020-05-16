@@ -1,15 +1,12 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.Rule;
 
-import java.util.function.Function;
-import java.util.function.IntSupplier;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
+import java.util.Optional;
+import java.util.function.*;
+import java.util.stream.Stream;
 
-import static com.willhains.purity.rule.Rule.validIf;
-import static com.willhains.purity.rule.Rule.validUnless;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A value type wrapping a {@link String}.
@@ -18,88 +15,33 @@ import static com.willhains.purity.rule.Rule.validUnless;
  * @author willhains
  */
 public abstract @Pure class SingleString<This extends SingleString<This>>
-	extends Single<String, This>
 	implements SingleComparable<This>, CharSequence, Supplier<String>
 {
+	// The single-argument constructor of the subclass
+	private final Function<? super String, ? extends This> _constructor;
+
 	/**
-	 * Equivalent to {@link #SingleString(String, Function, boolean) SingleString(rawValue, constructor, true)}.
+	 * The raw underlying value. This property should be used only when passing the underlying value to
+	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	protected SingleString(final String rawValue, final Function<? super String, ? extends This> constructor)
-	{
-		super(rawValue, constructor);
-	}
-	
+	protected final String raw;
+
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param applyRules Whether to apply rules to the raw value.
 	 */
-	protected SingleString(
-		final String rawValue,
-		final Function<? super String, ? extends This> constructor,
-		boolean applyRules)
+	protected SingleString(final String rawValue, final Function<? super String, ? extends This> constructor)
 	{
-		super(rawValue, constructor, applyRules);
+		raw = StringRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_constructor = requireNonNull(constructor);
 	}
 	
-	/**
-	 * Equivalent to {@link #SingleString(String, Function, boolean) SingleString(rawValue, constructor, true)}.
-	 */
-	@Override public final String raw() { return raw; }
+	public final String raw() { return raw; }
 	
 	@Override public String get() { return raw; }
 	
 	@Override public String toString() { return raw; }
 	@Override public int compareTo(This that) { return this.raw.compareTo(that.raw); }
-	
-	/** Rule to trim whitespace from beginning and end of raw string value. */
-	public static final Rule<String> trimWhitespace = String::trim;
-	
-	/** Rule to convert the raw string value to lowercase. */
-	public static final Rule<String> lowercase = String::toLowerCase;
-	
-	/** Rule to convert the raw string value to uppercase. */
-	public static final Rule<String> uppercase = String::toUpperCase;
-	
-	/** Letters (of the English alphabet). */
-	public static final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	
-	/** Digit characters. */
-	public static final String numbers = "0123456789";
-	
-	/** Generate rule to allow only the characters of `allowedCharacters`. */
-	public static Rule<String> validCharacters(final String allowedCharacters)
-	{
-		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
-		allowedCharacters.chars().forEach(c -> validCharMap[c] = true);
-		return validIf(raw -> raw.chars().allMatch(c -> validCharMap[c]),
-			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
-	}
-	
-	/** Generate rules to allow only raw strings that match `regExPattern`. */
-	public static Rule<String> validPattern(final String regExPattern)
-	{
-		final Pattern pattern = Pattern.compile(regExPattern);
-		return Rule.validIf(raw -> pattern.matcher(raw).matches(),
-			raw -> "\"" + raw + "\" does not match pattern: " + regExPattern);
-	}
-	
-	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
-	public static Rule<String> minLength(final int length)
-	{
-		return validUnless(raw -> raw.length() < length,
-			raw -> "Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
-	}
-	
-	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
-	public static Rule<String> maxLength(final int length)
-	{
-		return validUnless(raw -> raw.length() > length,
-			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
-	}
-	
-	/** Intern the raw string. Use this for values that are likely to repeat many times. */
-	public static final Rule<String> intern = String::intern;
 	
 	@Override public final int length() { return raw.length(); }
 	@Override public final char charAt(final int position) { return raw.charAt(position); }
@@ -107,10 +49,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	
 	/** @return a new value of the same type from a substring. */
 	@Override
-	public final This subSequence(final int start, final int end)
-	{
-		return map(s -> s.substring(start, end));
-	}
+	public final This subSequence(final int start, final int end) { return map(s -> s.substring(start, end)); }
 	
 	public final This subSequence(final IntSupplier start, final IntSupplier end)
 	{
@@ -167,4 +106,74 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	{
 		return replaceLiteral(literal.get(), replacement.get());
 	}
+
+	@Override
+	public final int hashCode() { return Single.hashCode(this.raw); }
+
+	@Override
+	public final boolean equals(final Object other)
+	{
+		if(other == this) return true;
+		if(other == null) return false;
+		if(!this.getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return Single.equals(this.raw, that.raw);
+	}
+
+	public final boolean equals(final This that)
+	{
+		if(that == this) return true;
+		if(that == null) return false;
+		return Single.equals(this.raw, that.raw);
+	}
+
+	/**
+	 * Test the raw value with {@code condition}.
+	 * This method is useful when using {@link Optional#filter} or {@link Stream#filter}.
+	 * <pre>
+	 * optional.filter(x -&gt; x.is(String::isEmpty))
+	 * </pre>
+	 *
+	 * @param condition a {@link Predicate} that tests the raw value type.
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
+	 *         {@code false} otherwise.
+	 */
+	public final boolean is(final Predicate<? super String> condition) { return condition.test(raw()); }
+
+	/** Reverse of {@link #is(Predicate)}. */
+	public final boolean isNot(final Predicate<? super String> condition) { return !is(condition); }
+
+	/**
+	 * Test the raw value by {@code condition}.
+	 *
+	 * @return an {@link Optional} containing this instance if the condition is met; empty otherwise.
+	 * @see #is(Predicate)
+	 */
+	public final Optional<This> filter(final Predicate<? super String> condition)
+	{
+		@SuppressWarnings("unchecked") final This self = (This)this;
+		return Optional.of(self).filter(it -> it.is(condition));
+	}
+
+	/**
+	 * Construct a new value of this type with the raw underlying value converted by {@code mapper}.
+	 *
+	 * @param mapper The mapping function to apply to the raw underlying value.
+	 * @return A new instance of this type.
+	 */
+	public final This map(final Function<? super String, ? extends String> mapper)
+	{
+		final String mapped = mapper.apply(raw());
+		@SuppressWarnings("unchecked") final This self = (This)this;
+		if(mapped.equals(raw())) return self;
+		return _constructor.apply(mapped);
+	}
+
+	/**
+	 * Construct a new value of this type with the raw underlying value converted by {@code mapper}.
+	 *
+	 * @param mapper The mapping function to apply to the raw underlying value.
+	 * @return The value returned by {@code mapper}.
+	 */
+	public final This flatMap(final Function<? super String, ? extends This> mapper) { return mapper.apply(raw()); }
 }

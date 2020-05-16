@@ -1,14 +1,11 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.LongRule;
+import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.willhains.purity.rule.LongRule.validUnless;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SingleLongTest
@@ -113,12 +110,9 @@ public class SingleLongTest
 		final Count x = new Count(100L);
 		assertThat(x.toString(), equalTo("100"));
 	}
-	
-	static final class A extends SingleLong<A>
-	{
-		private static final LongRule[] RULES = {min(2L), max(5L)};
-		A(long a) { super(a, A::new); }
-	}
+
+	@Validate(min = 2, max = 5)
+	static final class A extends SingleLong<A> { A(long a) { super(a, A::new); } }
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -126,36 +120,24 @@ public class SingleLongTest
 		new A(2L);
 		new A(5L);
 	}
-	
-	static final class B extends SingleLong<B>
-	{
-		private static final LongRule MIN = min(2L);
-		B(long a) { super(a, B::new); }
-	}
+
+	@Validate(min = 2)
+	static final class B extends SingleLong<B> { B(long a) { super(a, B::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
 		new B(1L);
 	}
-	
-	static final class C extends SingleLong<C>
-	{
-		private static final LongRule MAX = max(5L);
-		C(long a) { super(a, C::new); }
-	}
+
+	@Validate(max = 5)
+	static final class C extends SingleLong<C> { C(long a) { super(a, C::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldTrapGreaterThanExclusive()
-	{
-		new C(6L);
-	}
-	
-	static final class D extends SingleLong<D>
-	{
-		private static final LongRule[] RULES = {greaterThan(2L), lessThan(5L)};
-		D(long a) { super(a, D::new); }
-	}
+	public void shouldTrapGreaterThanExclusive() { new C(6L); }
+
+	@Validate(greaterThan = 2, lessThan = 5)
+	static final class D extends SingleLong<D> { D(long a) { super(a, D::new); } }
 	
 	@Test
 	public void shouldAcceptBetweenExclusive()
@@ -163,60 +145,45 @@ public class SingleLongTest
 		new D(3L);
 		new D(4L);
 	}
-	
-	static final class E extends SingleLong<E>
-	{
-		private static final LongRule RULES = greaterThan(2L);
-		E(long a) { super(a, E::new); }
-	}
+
+	@Validate(greaterThan = 2L)
+	static final class E extends SingleLong<E> { E(long a) { super(a, E::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
 		new E(2L);
 	}
-	
-	static final class F extends SingleLong<F>
-	{
-		private static final LongRule UPPER_BOUND = lessThan(5L);
-		F(long a) { super(a, F::new); }
-	}
+
+	@Validate(lessThan = 5L)
+	static final class F extends SingleLong<F> { F(long a) { super(a, F::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
 		new F(5L);
 	}
-	
-	static final class G extends SingleLong<G>
-	{
-		private static final LongRule[] RANGE = {floor(2L), ceiling(5L)};
-		G(long a) { super(a, G::new); }
-	}
+
+	@Adjust(floor = 2, ceiling = 5)
+	static final class G extends SingleLong<G> { G(long a) { super(a, G::new); } }
 	
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
 		assertThat(new G(3L).raw(), is(3L));
 	}
-	
-	static final class H extends SingleLong<H>
-	{
-		private static final LongRule FLOOR = floor(2L);
-		H(long a) { super(a, H::new); }
-	}
+
+	@Adjust(floor = 2)
+	static final class H extends SingleLong<H> { H(long a) { super(a, H::new); } }
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
 		assertThat(new H(1L).raw(), is(2L));
 	}
-	
-	static final class I extends SingleLong<I>
-	{
-		private static final LongRule CEILING = ceiling(5L);
-		I(long a) { super(a, I::new); }
-	}
+
+	@Adjust(ceiling = 5)
+	static final class I extends SingleLong<I> { I(long a) { super(a, I::new); } }
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()
@@ -279,12 +246,9 @@ public class SingleLongTest
 		final Count y = x.flatMap(f -> new Count(f + 1L));
 		assertThat(y.raw(), equalTo(101L));
 	}
-	
-	static final class J extends SingleLong<J>
-	{
-		private static final LongRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
-		J(long a) { super(a, J::new); }
-	}
+
+	@Validate(allowOdd = false)
+	static final class J extends SingleLong<J> { J(long a) { super(a, J::new); } }
 	
 	@Test
 	public void customRules()

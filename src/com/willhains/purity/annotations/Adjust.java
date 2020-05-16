@@ -19,7 +19,5 @@ public @interface Adjust
 	boolean uppercase() default false;
 	int[] truncate() default {};
 	boolean internRaw() default false;
-
-	boolean cloneRaw() default false;
 }
 

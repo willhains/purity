@@ -1,13 +1,12 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.*;
-import com.willhains.purity.rule.*;
 
 import java.util.*;
 import java.util.function.*;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} or other {@link Pure} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} object.
  *
  * @author willhains
  */
@@ -18,7 +17,6 @@ import java.util.function.*;
 
 	// Lazy cache of rules for subclasses
 	RulesCache<IntRule> CACHE = new RulesCache<>();
-
 	static IntRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, IntRule::fromAnnotations);
@@ -35,7 +33,6 @@ import java.util.function.*;
 		{
 			for(double limit: adjust.floor()) rules.add(floor((int)limit));
 			for(double limit: adjust.ceiling()) rules.add(ceiling((int)limit));
-//  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
 		}
 
 		// Raw value validations
@@ -54,8 +51,6 @@ import java.util.function.*;
 //		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
 				if(!validate.allowNegative()) rules.add(min(0));
 //		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
-				if(!validate.allowInfinity()) rules.add(validIf(Double::isFinite, "Must be finite"));
-				if(!validate.allowNaN()) rules.add(validUnless(Double::isNaN, "Not a number"));
 			}
 		}
 

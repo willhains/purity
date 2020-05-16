@@ -1,6 +1,6 @@
 package com.willhains.purity;
 
-import com.willhains.purity.rule.Rule;
+import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -89,12 +89,9 @@ public class SingleStringTest
 		final Name x = new Name("Will");
 		assertThat(x.subSequence(1, 3), is(new Name("il")));
 	}
-	
-	static final class A extends SingleString<A>
-	{
-		private static final Rule<String> TRIM = trimWhitespace;
-		A(String a) { super(a, A::new); }
-	}
+
+	@Adjust(trimWhitespace = true)
+	static final class A extends SingleString<A> { A(String a) { super(a, A::new); } }
 	
 	@Test
 	public void shouldTrimWhitespace()
@@ -102,84 +99,51 @@ public class SingleStringTest
 		final A x = new A(" abc ");
 		assertThat(x.raw, is("abc"));
 	}
-	
-	static final class B extends SingleString<B>
-	{
-		private static final Rule<String> CHARS = validCharacters("abcdefg");
-		B(String a) { super(a, B::new); }
-	}
+
+	@Validate(validCharacters = "abcdefg")
+	static final class B extends SingleString<B> { B(String a) { super(a, B::new); } }
 	
 	@Test
 	public void shouldAcceptAllValidCharacters()
 	{
 		new B("abc");
 	}
-	
-	static final class C extends SingleString<C>
-	{
-		private static final Rule<String> CHARS = validCharacters("abcdefg");
-		C(String a) { super(a, C::new); }
-	}
+
+	@Validate(validCharacters = "abcdefg")
+	static final class C extends SingleString<C> { C(String a) { super(a, C::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldTrapInvalidCharacters()
-	{
-		new C("abc ");
-	}
-	
-	static final class D extends SingleString<D>
-	{
-		private static final Rule<String> PATTERN = validPattern("[a-z]-[0-9]");
-		D(String a) { super(a, D::new); }
-	}
+	public void shouldTrapInvalidCharacters() { new C("abc "); }
+
+	@Validate(validPatterns = "[a-z]-[0-9]")
+	static final class D extends SingleString<D> { D(String a) { super(a, D::new); } }
 	
 	@Test
-	public void shouldAcceptMatchingPattern()
-	{
-		new D("b-7");
-	}
-	
-	static final class E extends SingleString<E>
-	{
-		private static final Rule<String> PATTERN = validPattern("[a-z]-[0-9]");
-		E(String a) { super(a, E::new); }
-	}
+	public void shouldAcceptMatchingPattern() { new D("b-7"); }
+
+	@Validate(validPatterns = "[a-z]-[0-9]")
+	static final class E extends SingleString<E> { E(String a) { super(a, E::new); }}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldTrapNonMatchingPattern()
-	{
-		new E("b-52");
-	}
-	
-	static final class F extends SingleString<F>
-	{
-		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
-		F(String a) { super(a, F::new); }
-	}
+	public void shouldTrapNonMatchingPattern() { new E("b-52"); }
+
+	@Validate(min = 2, max = 5)
+	static final class F extends SingleString<F> { F(String a) { super(a, F::new); } }
 	
 	@Test
-	public void shouldAcceptValidLength()
-	{
-		new F("abc");
-	}
-	
-	static final class G extends SingleString<G>
-	{
-		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
-		G(String a) { super(a, G::new); }
-	}
+	public void shouldAcceptValidLength() { new F("abc"); }
+
+	@Validate(min = 2, max = 5)
+	static final class G extends SingleString<G> { G(String a) { super(a, G::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLengthTooShort()
 	{
 		new G("a");
 	}
-	
-	static final class H extends SingleString<H>
-	{
-		private static final Rule<String> LENGTH = Rule.combine(minLength(2), maxLength(5));
-		H(String a) { super(a, H::new); }
-	}
+
+	@Validate(min = 2, max = 5)
+	static final class H extends SingleString<H> { H(String a) { super(a, H::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLengthTooLong()

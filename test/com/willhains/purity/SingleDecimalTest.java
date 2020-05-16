@@ -1,7 +1,6 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.Rule;
+import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -152,13 +151,9 @@ public class SingleDecimalTest
 	{
 		assertThat(new Price("14.1").roundUp().raw, is($("15")));
 	}
-	
-	static final class A extends SingleDecimal<A>
-	{
-		private static final Rule MIN = min($(2));
-		private static final Rule MAX = max($(5));
-		A(BigDecimal a) { super(a, A::new); }
-	}
+
+	@Validate(min = 2, max = 5)
+	static final class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new); } }
 	
 	@Test
 	public void shouldAcceptBetweenInclusive()
@@ -166,35 +161,28 @@ public class SingleDecimalTest
 		new A($(2));
 		new A($(5));
 	}
-	
-	static final class B extends SingleDecimal<B>
-	{
-		private static final Rule MIN = min($(2));
-		B(BigDecimal a) { super(a, B::new); }
-	}
+
+	@Validate(min = 2)
+	static final class B extends SingleDecimal<B> { B(BigDecimal a) { super(a, B::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
 		new B($(1));
 	}
-	
-	static final class C extends SingleDecimal<C>
-	{
-		private static final Rule MAX = max($(5));
-		C(BigDecimal a) { super(a, C::new); }
-	}
+
+	@Validate(max = 5)
+	static final class C extends SingleDecimal<C> { C(BigDecimal a) { super(a, C::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
 		new C($(6));
 	}
-	
+
+	@Validate(greaterThan = 2, lessThan = 5)
 	static final class D extends SingleDecimal<D>
 	{
-		private static final Rule<BigDecimal> MIN_EXC = greaterThan($(2));
-		private static final Rule<BigDecimal> MAX_EXC = lessThan($(5));
 		private D(BigDecimal a) { super(a, D::new); }
 		D(String a) { super(a, D::new); }
 	}
@@ -205,35 +193,28 @@ public class SingleDecimalTest
 		new D("3");
 		new D("4");
 	}
-	
-	static final class E extends SingleDecimal<E>
-	{
-		private static final Rule MIN_EXC = greaterThan($(2));
-		E(BigDecimal a) { super(a, E::new); }
-	}
+
+	@Validate(greaterThan = 2)
+	static final class E extends SingleDecimal<E> { E(BigDecimal a) { super(a, E::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
 		new E($(2));
 	}
-	
-	static final class F extends SingleDecimal<F>
-	{
-		private static final Rule MAX_EXC = lessThan($(5));
-		F(BigDecimal a) { super(a, F::new); }
-	}
+
+	@Validate(lessThan = 5)
+	static final class F extends SingleDecimal<F> { F(BigDecimal a) { super(a, F::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
 		new F($(5));
 	}
-	
+
+	@Adjust(floor = 2, ceiling = 5)
 	static final class G extends SingleDecimal<G>
 	{
-		private static final Rule<BigDecimal> FLOOR = floor($(2));
-		private static final Rule<BigDecimal> CEILING = ceiling($(5));
 		private G(BigDecimal a) { super(a, G::new); }
 		G(double a) { super(a, G::new); }
 	}
@@ -243,24 +224,18 @@ public class SingleDecimalTest
 	{
 		assertThat(new G(3.0).raw, is($(3.0)));
 	}
-	
-	static final class H extends SingleDecimal<H>
-	{
-		private static final Rule FLOOR = floor($(2));
-		H(BigDecimal a) { super(a, H::new); }
-	}
+
+	@Adjust(floor = 2)
+	static final class H extends SingleDecimal<H> { H(BigDecimal a) { super(a, H::new); } }
 	
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
 		assertThat(new H($(1)).raw, is($(2)));
 	}
-	
-	static final class I extends SingleDecimal<I>
-	{
-		private static final Rule CEILING = ceiling($(5));
-		I(BigDecimal a) { super(a, I::new); }
-	}
+
+	@Adjust(ceiling = 5)
+	static final class I extends SingleDecimal<I> { I(BigDecimal a) { super(a, I::new); } }
 	
 	@Test
 	public void shouldAdjustValueAboveCeiling()

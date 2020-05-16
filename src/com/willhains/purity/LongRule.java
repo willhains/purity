@@ -6,34 +6,33 @@ import java.util.*;
 import java.util.function.*;
 
 /**
- * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} object.
+ * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} object.
  *
  * @author willhains
  */
-@FunctionalInterface interface DoubleRule
+@FunctionalInterface interface LongRule
 {
 	/** Applies this rule to the raw value. */
-	double applyTo(double i);
+	long applyTo(long i);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<DoubleRule> CACHE = new RulesCache<>();
-	static DoubleRule rulesForClass(final Class<?> singleClass)
+	RulesCache<LongRule> CACHE = new RulesCache<>();
+	static LongRule rulesForClass(final Class<?> singleClass)
 	{
-		return CACHE.computeIfAbsent(singleClass, DoubleRule::fromAnnotations);
+		return CACHE.computeIfAbsent(singleClass, LongRule::fromAnnotations);
 	}
 
-	static DoubleRule fromAnnotations(final Class<?> singleClass)
+	static LongRule fromAnnotations(final Class<?> singleClass)
 	{
 		// Build a new rule from the annotations on the class
-		final List<DoubleRule> rules = new ArrayList<>();
+		final List<LongRule> rules = new ArrayList<>();
 
 		// Raw value adjustments
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(double limit: adjust.floor()) rules.add(floor(limit));
-			for(double limit: adjust.ceiling()) rules.add(ceiling(limit));
-//  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
+			for(double limit: adjust.floor()) rules.add(floor((long)limit));
+			for(double limit: adjust.ceiling()) rules.add(ceiling((long)limit));
 		}
 
 		// Raw value validations
@@ -43,61 +42,59 @@ import java.util.function.*;
 			// When the validation policy is ASSERT and assertions are disabled, don't even fromAnnotations the validation rules
 			if(validate.onFailure() != Validate.OnFailure.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(double min: validate.min()) rules.add(min(min));
-				for(double max: validate.max()) rules.add(max(max));
-				for(double bound: validate.greaterThan()) rules.add(greaterThan(bound));
-				for(double bound: validate.lessThan()) rules.add(lessThan(bound));
+				for(double min: validate.min()) rules.add(min((long)min));
+				for(double max: validate.max()) rules.add(max((long)max));
+				for(double bound: validate.greaterThan()) rules.add(greaterThan((long)bound));
+				for(double bound: validate.lessThan()) rules.add(lessThan((long)bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
 //		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
 //		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
-				if(!validate.allowNegative()) rules.add(min(0.0));
+				if(!validate.allowNegative()) rules.add(min(0));
 //		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
-				if(!validate.allowInfinity()) rules.add(validIf(Double::isFinite, "Must be finite"));
-				if(!validate.allowNaN()) rules.add(validUnless(Double::isNaN, "Not a number"));
 			}
 		}
 
 		// Build a new rule from the Rule constants declared in the class
-		return DoubleRule.combine(rules.toArray(new DoubleRule[0]));
+		return LongRule.combine(rules.toArray(new LongRule[0]));
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static DoubleRule min(final double minValue)
+	static LongRule min(final long minValue)
 	{
 		return validIf(raw -> raw >= minValue, raw -> raw + " < " + minValue);
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static DoubleRule max(final double maxValue)
+	static LongRule max(final long maxValue)
 	{
 		return validIf(raw -> raw <= maxValue, raw -> raw + " > " + maxValue);
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static DoubleRule greaterThan(final double lowerBound)
+	static LongRule greaterThan(final long lowerBound)
 	{
 		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static DoubleRule lessThan(final double upperBound)
+	static LongRule lessThan(final long upperBound)
 	{
 		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
 	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
-	static DoubleRule floor(final double minValue) { return raw -> Math.max(raw, minValue); }
+	static LongRule floor(final long minValue) { return raw -> Math.max(raw, minValue); }
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
-	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
+	static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
 
 	/** Combine multiple rules into a single rule. */
-	static DoubleRule combine(final DoubleRule... combiningRules)
+	static LongRule combine(final LongRule... combiningRules)
 	{
 		return raw ->
 		{
-			double result = raw;
-			for(final DoubleRule rule: combiningRules) result = rule.applyTo(result);
+			long result = raw;
+			for(final LongRule rule: combiningRules) result = rule.applyTo(result);
 			return result;
 		};
 	}
@@ -109,9 +106,9 @@ import java.util.function.*;
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
-	static DoubleRule validIf(
-		final DoublePredicate condition,
-		final DoubleFunction<String> errorMessageFactory)
+	static LongRule validIf(
+		final LongPredicate condition,
+		final LongFunction<String> errorMessageFactory)
 	{
 		return raw ->
 		{
@@ -127,25 +124,25 @@ import java.util.function.*;
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
 	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is satisfied.
 	 */
-	static DoubleRule validUnless(
-		final DoublePredicate condition,
-		final DoubleFunction<String> errorMessageFactory)
+	static LongRule validUnless(
+		final LongPredicate condition,
+		final LongFunction<String> errorMessageFactory)
 	{
 		return validIf(condition.negate(), errorMessageFactory);
 	}
 	
 	/**
-	 * @see #validIf(DoublePredicate,DoubleFunction)
+	 * @see #validIf(LongPredicate,LongFunction)
 	 */
-	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
+	static LongRule validIf(final LongPredicate condition, final String errorMessage)
 	{
 		return validIf(condition, $ -> errorMessage);
 	}
 
 	/**
-	 * @see #validUnless(DoublePredicate,DoubleFunction)
+	 * @see #validUnless(LongPredicate,LongFunction)
 	 */
-	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
+	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
 	{
 		return validIf(condition.negate(), errorMessage);
 	}

@@ -1,12 +1,9 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.Rule;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -28,26 +25,14 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	protected final Raw raw;
 	
 	/**
-	 * Equivalent to {@link #Single(Object, Function, boolean) Single(rawValue, constructor, true)}.
+	 * @param rawValue The raw value this object will represent.
+	 * @param constructor A method reference to the constructor of the implementing subclass.
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
 	{
-		this(rawValue, constructor, true);
-	}
-	
-	/**
-	 * @param rawValue The raw value this object will represent.
-	 * @param constructor A method reference to the constructor of the implementing subclass.
-	 * @param applyRules Whether to apply rules to the raw value.
-	 */
-	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor, boolean applyRules)
-	{
-		final Raw nonNullRaw = requireNonNull(rawValue);
-		this.raw = applyRules ? _rules().applyTo(nonNullRaw) : nonNullRaw;
+		this.raw = requireNonNull(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
-	
-	@SuppressWarnings("unchecked") private Rule<Raw> _rules() { return Rule.rulesForClass(this.getClass()); }
 	
 	/**
 	 * Return the raw underlying value.

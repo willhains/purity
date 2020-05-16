@@ -1,14 +1,11 @@
 package com.willhains.purity;
 
 import com.willhains.purity.annotations.Pure;
-import com.willhains.purity.rule.LongRule;
 
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;
 
-import static com.willhains.purity.rule.LongRule.validIf;
-import static com.willhains.purity.rule.LongRule.validUnless;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -72,36 +69,6 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		if(that == null) return false;
 		return this.raw == that.raw;
 	}
-	
-	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	public static LongRule min(final long minValue)
-	{
-		return validUnless(raw -> raw < minValue, raw -> raw + " < " + minValue);
-	}
-	
-	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	public static LongRule max(final long maxValue)
-	{
-		return validUnless(raw -> raw > maxValue, raw -> raw + " > " + maxValue);
-	}
-	
-	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	public static LongRule greaterThan(final long lowerBound)
-	{
-		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
-	}
-	
-	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	public static LongRule lessThan(final long upperBound)
-	{
-		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
-	}
-	
-	/** Generate rule to normalise the raw long value to a minimum floor value. */
-	public static LongRule floor(final long minValue) { return raw -> Math.max(raw, minValue); }
-	
-	/** Generate rule to normalise the raw long value to a maximum ceiling value. */
-	public static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
 	
 	@Override public Long asNumber() { return raw; }
 	
