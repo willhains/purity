@@ -4,6 +4,8 @@ import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import static com.willhains.purity.StringRule.*;
+import static com.willhains.purity.annotations.Adjust.InternPolicy.RAW;
+import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -15,7 +17,7 @@ public class SingleStringTest
 		public Name(final String rawValue) { super(rawValue, Name::new); }
 	}
 
-	@Adjust(trimWhitespace = true, internRaw = true)
+	@Adjust(trim = WHITESPACE, intern = RAW)
 	@Validate(min = 1, max = 255, validCharacters = LETTERS + DIGITS + "-._")
 	public static final @Pure class HostName extends SingleString<HostName>
 	{
@@ -98,7 +100,7 @@ public class SingleStringTest
 		assertThat(x.subSequence(1, 3), is(new Name("il")));
 	}
 
-	@Adjust(trimWhitespace = true)
+	@Adjust(trim = WHITESPACE)
 	static final class A extends SingleString<A> { A(String a) { super(a, A::new); } }
 	
 	@Test

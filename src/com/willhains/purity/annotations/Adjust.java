@@ -14,10 +14,12 @@ public @interface Adjust
 	double[] roundToIncrement() default {};
 	RoundingMode rounding() default RoundingMode.HALF_UP;
 
-	boolean trimWhitespace() default false;
-	boolean lowercase() default false;
-	boolean uppercase() default false;
-	int[] truncate() default {};
-	boolean internRaw() default false;
+	enum Trim { WHITESPACE, NEWLINES, PUNCTUATION, TRAILING_WHITESPACE, LEADING_WHITESPACE }
+	Trim[] trim() default {};
+	enum Case { LOWERCASE, UPPERCASE, TITLE_CASE }
+	Case[] transformTo() default {};
+	int[] truncateTo() default {};
+	enum InternPolicy { RAW }
+	InternPolicy[] intern() default {};
 }
 

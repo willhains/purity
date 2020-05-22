@@ -6,6 +6,10 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
+import static com.willhains.purity.annotations.Adjust.Case.*;
+import static com.willhains.purity.annotations.Adjust.InternPolicy.RAW;
+import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
+
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.
  *
@@ -32,11 +36,21 @@ import java.util.regex.Pattern;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			if(adjust.trimWhitespace()) rules.add(String::trim);
-			if(adjust.lowercase()) rules.add(String::toLowerCase);
-			if(adjust.uppercase()) rules.add(String::toUpperCase);
+			for(Adjust.Trim trim: adjust.trim())
+			{
+				if(trim == WHITESPACE) rules.add(String::trim);
+				// TODO: Other trim modes.
+			}
+			for(Adjust.Case adjustCase: adjust.transformTo())
+			{
+				if(adjustCase == LOWERCASE) rules.add(String::toLowerCase);
+				if(adjustCase == UPPERCASE) rules.add(String::toUpperCase);
+			}
 //			for(int length: adjust.truncate()) rules.add(truncate(length)); TODO
-			if(adjust.internRaw()) rules.add(String::intern);
+			for(Adjust.InternPolicy intern: adjust.intern())
+			{
+				if(intern == RAW) rules.add(String::intern);
+			}
 		}
 
 		// Raw value validations
