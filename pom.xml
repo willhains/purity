@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.willhains</groupId>
 	<artifactId>purity</artifactId>
-	<version>0.14-SNAPSHOT</version>
+	<version>0.14</version>
 	<name>Purity</name>
 	<description>Build robust, value-oriented applications in Java</description>
 	<licenses>
