@@ -5,6 +5,28 @@
 	<version>0.14-SNAPSHOT</version>
 	<name>Purity</name>
 	<description>Build robust, value-oriented applications in Java</description>
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>https://raw.githubusercontent.com/willhains/purity/master/LICENSE</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>willhains</id>
+			<name>Will Hains</name>
+			<email>purity@willhains.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-9</timezone>
+			<properties>
+				<picUrl>https://avatars3.githubusercontent.com/u/1386812?s=460&amp;v=4</picUrl>
+			</properties>
+		</developer>
+	</developers>
 	<properties>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 	</properties>
@@ -124,9 +146,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.6</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
