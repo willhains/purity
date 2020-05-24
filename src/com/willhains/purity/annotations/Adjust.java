@@ -14,7 +14,6 @@ public @interface Adjust
 	double[] roundToIncrement() default {};
 	RoundingMode rounding() default RoundingMode.HALF_UP;
 
-	enum Trim { WHITESPACE, NEWLINES, PUNCTUATION, TRAILING_WHITESPACE, LEADING_WHITESPACE }
 	Trim[] trim() default {};
 	enum Case { LOWERCASE, UPPERCASE, TITLE_CASE }
 	Case[] transformTo() default {};
@@ -23,3 +22,4 @@ public @interface Adjust
 	InternPolicy[] intern() default {};
 }
 
+d
