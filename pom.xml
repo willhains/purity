@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.willhains</groupId>
 	<artifactId>purity</artifactId>
-	<version>0.15</version>
+	<version>0.16-SNAPSHOT</version>
 	<name>Purity</name>
 	<description>Build robust, value-oriented applications in Java</description>
 	<licenses>
@@ -186,6 +186,6 @@
 		<connection>scm:git:git://github.com/willhains/purity.git</connection>
 		<developerConnection>scm:git:git@github.com:willhains/purity.git</developerConnection>
 		<url>https://github.com/willhains/purity</url>
-		<tag>v0.15</tag>
+		<tag>v0.14</tag>
 	</scm>
 </project>
