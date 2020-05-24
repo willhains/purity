@@ -1,6 +1,7 @@
 package com.willhains.purity.annotations;
 
-public @Pure enum Trim
+public enum LetterCase
 {
-    WHITESPACE
+	LOWERCASE,
+	UPPERCASE
 }

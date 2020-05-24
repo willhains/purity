@@ -1,11 +1,8 @@
 package com.willhains.purity.annotations;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.*;
 
 /**
  * Indicates that a method argument or return value is not retained (stored in a field) by the method, or by any objects

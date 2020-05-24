@@ -6,8 +6,7 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static com.willhains.purity.DoubleRule.validUnless;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SingleDoubleTest

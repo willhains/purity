@@ -8,7 +8,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.willhains.purity.SingleNumber.$;
-import static java.math.BigDecimal.*;
+import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.*;
 import static java.util.Objects.requireNonNull;
 

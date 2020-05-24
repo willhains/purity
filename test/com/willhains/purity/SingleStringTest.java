@@ -4,10 +4,8 @@ import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
 import static com.willhains.purity.StringRule.*;
-import static com.willhains.purity.annotations.Adjust.InternPolicy.RAW;
-import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static com.willhains.purity.annotations.Trim.WHITESPACE;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SingleStringTest
@@ -17,8 +15,9 @@ public class SingleStringTest
 		public Name(final String rawValue) { super(rawValue, Name::new); }
 	}
 
-	@Adjust(trim = WHITESPACE, intern = RAW)
+	@Adjust(trim = WHITESPACE)
 	@Validate(min = 1, max = 255, validCharacters = LETTERS + DIGITS + "-._")
+	@Intern
 	public static final @Pure class HostName extends SingleString<HostName>
 	{
 		public HostName(String hostName) { super(hostName, HostName::new); }

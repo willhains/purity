@@ -36,7 +36,6 @@ import static com.willhains.purity.SingleNumber.$;
 		{
 			for(double limit: adjust.floor()) rules.add(floor($(limit)));
 			for(double limit: adjust.ceiling()) rules.add(ceiling($(limit)));
-//			for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
 		}
 
 		// Raw value validations
@@ -51,11 +50,7 @@ import static com.willhains.purity.SingleNumber.$;
 				for(double max: validate.max()) rules.add(max($(max)));
 				for(double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
 				for(double bound: validate.lessThan()) rules.add(lessThan($(bound)));
-//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-//		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
-//		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
 				if(!validate.allowNegative()) rules.add(min($(0.0)));
-//		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
 			}
 		}
 
@@ -64,35 +59,35 @@ import static com.willhains.purity.SingleNumber.$;
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	public static DecimalRule min(final @Returned BigDecimal minValue)
+	static DecimalRule min(final @Returned BigDecimal minValue)
 	{
 		return validUnless(raw -> raw.compareTo(minValue) < 0, raw -> raw + " < " + minValue);
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	public static DecimalRule max(final @Returned BigDecimal maxValue)
+	static DecimalRule max(final @Returned BigDecimal maxValue)
 	{
 		return validUnless(raw -> raw.compareTo(maxValue) > 0, raw -> raw + " > " + maxValue);
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	public static DecimalRule greaterThan(final @Returned BigDecimal lowerBound)
+	static DecimalRule greaterThan(final @Returned BigDecimal lowerBound)
 	{
 		return validIf(raw -> raw.compareTo(lowerBound) > 0, raw -> raw + " <= " + lowerBound);
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	public static DecimalRule lessThan(final @Returned BigDecimal upperBound)
+	static DecimalRule lessThan(final @Returned BigDecimal upperBound)
 	{
 		return validIf(raw -> raw.compareTo(upperBound) < 0, raw -> raw + " >= " + upperBound);
 	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
-	public static DecimalRule floor(final BigDecimal minValue) { return raw -> raw.max(minValue); }
+	static DecimalRule floor(final BigDecimal minValue) { return raw -> raw.max(minValue); }
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
-	public static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
-
+	static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
+	
 	/** Combine multiple rules into a single rule. */
 	static DecimalRule combine(final DecimalRule... combiningRules)
 	{

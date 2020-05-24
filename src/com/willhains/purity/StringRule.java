@@ -6,9 +6,8 @@ import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
-import static com.willhains.purity.annotations.Adjust.Case.*;
-import static com.willhains.purity.annotations.Adjust.InternPolicy.RAW;
-import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
+import static com.willhains.purity.annotations.LetterCase.*;
+import static com.willhains.purity.annotations.Trim.WHITESPACE;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.
@@ -36,20 +35,14 @@ import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(Adjust.Trim trim: adjust.trim())
+			for(Trim trim: adjust.trim())
 			{
 				if(trim == WHITESPACE) rules.add(String::trim);
-				// TODO: Other trim modes.
 			}
-			for(Adjust.Case adjustCase: adjust.transformTo())
+			for(LetterCase adjustCase: adjust.transformTo())
 			{
 				if(adjustCase == LOWERCASE) rules.add(String::toLowerCase);
 				if(adjustCase == UPPERCASE) rules.add(String::toUpperCase);
-			}
-//			for(int length: adjust.truncate()) rules.add(truncate(length)); TODO
-			for(Adjust.InternPolicy intern: adjust.intern())
-			{
-				if(intern == RAW) rules.add(String::intern);
 			}
 		}
 
@@ -69,6 +62,14 @@ import static com.willhains.purity.annotations.Adjust.Trim.WHITESPACE;
 				final String allowedPattern = String.join("|", validate.validPatterns());
 				if(!allowedPattern.isEmpty()) rules.add(validPattern(allowedPattern));
 			}
+		}
+
+		// Heap management
+		final Intern intern = singleClass.getAnnotation(Intern.class);
+		if(intern != null)
+		{
+			// No annotation parameters
+			rules.add(String::intern);
 		}
 
 		// Build a new rule from the StringRule constants declared in the class

@@ -7,8 +7,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import static com.willhains.purity.SingleNumber.$;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SingleNumberTest
