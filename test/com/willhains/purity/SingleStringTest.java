@@ -1,10 +1,9 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.*;
 import org.junit.Test;
 
-import static com.willhains.purity.annotations.Trim.WHITESPACE;
-import static com.willhains.purity.annotations.Validate.*;
+import static com.willhains.purity.Trim.WHITESPACE;
+import static com.willhains.purity.Validate.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 

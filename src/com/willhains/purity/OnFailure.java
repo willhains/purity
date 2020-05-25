@@ -1,4 +1,4 @@
-package com.willhains.purity.annotations;
+package com.willhains.purity;
 
 /** Choices for what to do when validation fails. */
 public enum OnFailure

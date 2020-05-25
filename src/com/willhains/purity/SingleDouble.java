@@ -1,7 +1,5 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.Pure;
-
 import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Stream;

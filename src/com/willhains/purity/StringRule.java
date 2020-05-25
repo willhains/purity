@@ -1,13 +1,11 @@
 package com.willhains.purity;
 
-import com.willhains.purity.annotations.*;
-
 import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
 
-import static com.willhains.purity.annotations.LetterCase.*;
-import static com.willhains.purity.annotations.Trim.WHITESPACE;
+import static com.willhains.purity.LetterCase.*;
+import static com.willhains.purity.Trim.WHITESPACE;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.

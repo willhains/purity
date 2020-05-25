@@ -1,6 +1,4 @@
-package com.willhains.purity.annotations;
-
-import com.willhains.purity.*;
+package com.willhains.purity;
 
 import java.lang.annotation.*;
 

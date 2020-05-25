@@ -1,4 +1,4 @@
-package com.willhains.purity.annotations;
+package com.willhains.purity;
 
 public @Pure enum Trim
 {
