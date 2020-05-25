@@ -7,11 +7,5 @@ public enum OnFailure
 	THROW,
 
 	/** If JVM assertions are enabled, throw an {@link AssertionError}. */
-	ASSERT,
-
-	/** Exit the JVM, with a non-zero error code. */
-	EXIT,
-
-	/** Ignore validation failures. */
-	IGNORE
+	ASSERT
 }
