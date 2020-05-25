@@ -57,8 +57,18 @@ import static com.willhains.purity.Trim.WHITESPACE;
 				final String allowedCharacters = String.join("", validate.chars());
 				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters));
 
+				final String disallowedCharacters = String.join("", validate.notChars());
+				if(!disallowedCharacters.isEmpty()) rules.add(invalidCharacters(disallowedCharacters));
+
 				final String allowedPattern = String.join("|", validate.match());
 				if(!allowedPattern.isEmpty()) rules.add(validPattern(allowedPattern));
+
+				for(final String disallowedPattern: validate.notMatch()) rules.add(invalidPattern(disallowedPattern));
+
+				final String[] allowedValues = validate.equalTo();
+				if(allowedValues.length > 0) rules.add(equalTo(allowedValues));
+
+				for(final String disallowedValue: validate.notEqualTo()) rules.add(notEqualTo(disallowedValue));
 			}
 		}
 
@@ -83,12 +93,50 @@ import static com.willhains.purity.Trim.WHITESPACE;
 			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
 	}
 
+	/** Generate rule to disallow the characters of `disallowedCharacters`. */
+	static StringRule invalidCharacters(final String disallowedCharacters)
+	{
+		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
+		disallowedCharacters.chars().forEach(c -> validCharMap[c] = true);
+		return validIf(raw -> raw.chars().noneMatch(c -> validCharMap[c]),
+			raw -> "\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
+	}
+
 	/** Generate rules to allow only raw strings that match `regExPattern`. */
 	static StringRule validPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return StringRule.validIf(raw -> pattern.matcher(raw).matches(),
+		return validIf(raw -> pattern.matcher(raw).matches(),
 			raw -> "\"" + raw + "\" does not match pattern: " + regExPattern);
+	}
+
+	/** Generate rules to disallow raw strings that match `regExPattern`. */
+	static StringRule invalidPattern(final String regExPattern)
+	{
+		final Pattern pattern = Pattern.compile(regExPattern);
+		return validUnless(raw -> pattern.matcher(raw).matches(),
+			raw -> "\"" + raw + "\" matches pattern: " + regExPattern);
+	}
+
+	/** Generate rules to allow only raw strings that match one of `allowedValues`. */
+	static StringRule equalTo(final String[] allowedValues)
+	{
+		return raw ->
+		{
+			for(final String allowedValue: allowedValues)
+			{
+				if(raw.equals(allowedValue)) return raw;
+			}
+			throw new IllegalArgumentException(
+				"\"" + raw + "\" does not match one of " + Arrays.toString(allowedValues));
+		};
+	}
+
+	/** Generate rules to allow only raw strings that don't match of `disallowedValue`. */
+	static StringRule notEqualTo(final String disallowedValue)
+	{
+		return validUnless(disallowedValue::equals,
+			raw -> "\"" + raw + "\" matches \"" + disallowedValue + "\"");
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */

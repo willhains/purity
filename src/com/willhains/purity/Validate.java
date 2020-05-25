@@ -56,7 +56,13 @@ public @interface Validate
 	boolean allowNaN() default false;
 
 	String[] chars() default {};
+	String[] notChars() default {};
+
 	String[] match() default {};
+	String[] notMatch() default {};
+
+	String[] equalTo() default {};
+	String[] notEqualTo() default {};
 
 	/** Letters (of the English alphabet). */
 	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
