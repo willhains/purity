@@ -40,7 +40,7 @@ import java.util.function.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even fromAnnotations the validation rules
-			if(validate.onFailure() != Validate.OnFailure.ASSERT || singleClass.desiredAssertionStatus())
+			if(validate.onFailure() != OnFailure.ASSERT || singleClass.desiredAssertionStatus())
 			{
 				for(double min: validate.min()) rules.add(min((int)min));
 				for(double max: validate.max()) rules.add(max((int)max));

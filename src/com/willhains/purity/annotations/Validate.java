@@ -22,15 +22,6 @@ public @interface Validate
 	 */
 	OnFailure onFailure() default OnFailure.THROW;
 
-	/** Choices for what to do when validation fails. */
-	enum OnFailure
-	{
-		/** Throw an {@link java.lang.IllegalArgumentException}. */ THROW,
-		/** If JVM assertions are enabled, throw an {@link java.lang.AssertionError}. */ ASSERT,
-		/** Exit the JVM, with a non-zero error code. */ EXIT,
-		/** Ignore validation failures. */ IGNORE
-	}
-
 	/**
 	 * Numeric lower bound (inclusive).
 	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.

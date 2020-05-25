@@ -51,7 +51,7 @@ import static com.willhains.purity.annotations.Trim.WHITESPACE;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			if(validate.onFailure() != Validate.OnFailure.ASSERT || singleClass.desiredAssertionStatus())
+			if(validate.onFailure() != OnFailure.ASSERT || singleClass.desiredAssertionStatus())
 			{
 				for(double length: validate.min()) rules.add(minLength((int)length));
 				for(double length: validate.max()) rules.add(maxLength((int)length));

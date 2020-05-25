@@ -44,7 +44,7 @@ import static com.willhains.purity.SingleNumber.$;
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even fromAnnotations the
 			// validation rules
-			if(validate.onFailure() != Validate.OnFailure.ASSERT || singleClass.desiredAssertionStatus())
+			if(validate.onFailure() != OnFailure.ASSERT || singleClass.desiredAssertionStatus())
 			{
 				for(double min: validate.min()) rules.add(min($(min)));
 				for(double max: validate.max()) rules.add(max($(max)));
