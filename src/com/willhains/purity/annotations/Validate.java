@@ -52,16 +52,6 @@ public @interface Validate
 	 */
 	double[] multipleOf() default {}; double[] divisibleBy() default {}; // Same thing
 
-	/**
-	 * The value is allowed to be even. Defaults to true (even numbers allowed).
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
-	 */
-	boolean allowEven() default true;
-
-	/**
-	 * The value is allowed to be odd.
-	 */
-	boolean allowOdd() default true;
 	boolean allowNegative() default true;
 	boolean allowZero() default true;
 	boolean allowInfinity() default false;

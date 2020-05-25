@@ -250,9 +250,8 @@ public class SingleIntTest
 		assertThat(y.raw(), equalTo(101));
 	}
 
-	@Validate(allowOdd = false)
 	static final class J extends SingleInt<J> { J(int a) { super(a, J::new); } }
-	
+
 	@Test
 	public void customRules() { new J(2); }
 	

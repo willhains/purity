@@ -247,7 +247,6 @@ public class SingleLongTest
 		assertThat(y.raw(), equalTo(101L));
 	}
 
-	@Validate(allowOdd = false)
 	static final class J extends SingleLong<J> { J(long a) { super(a, J::new); } }
 	
 	@Test

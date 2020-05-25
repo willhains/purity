@@ -48,8 +48,6 @@ import java.util.function.*;
 				for(double bound: validate.greaterThan()) rules.add(greaterThan(bound));
 				for(double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-//		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
-//		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
 				if(!validate.allowNegative()) rules.add(min(0.0));
 //		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
 				if(!validate.allowInfinity()) rules.add(validIf(Double::isFinite, "Must be finite"));
