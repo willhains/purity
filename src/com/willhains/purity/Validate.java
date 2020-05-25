@@ -15,10 +15,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Validate
 {
 	/**
-	 * What to do when a raw value violates the validation rules. Defaults to {@link OnFailure#THROW}, which throws an
+	 * What to do when a raw value violates the validation rules. Defaults to {@link ValidationPolicy#THROW}, which throws an
 	 * {@link IllegalArgumentException}.
 	 */
-	OnFailure onFailure() default OnFailure.THROW;
+	ValidationPolicy onFailure() default ValidationPolicy.THROW;
 
 	/**
 	 * Numeric lower bound (inclusive).
