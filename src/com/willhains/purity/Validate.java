@@ -55,7 +55,7 @@ public @interface Validate
 	boolean allowInfinity() default false;
 	boolean allowNaN() default false;
 
-	String[] validCharacters() default {};
+	String[] chars() default {};
 	String[] match() default {};
 
 	/** Letters (of the English alphabet). */

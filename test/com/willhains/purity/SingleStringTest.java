@@ -15,7 +15,7 @@ public class SingleStringTest
 	}
 
 	@Adjust(trim = WHITESPACE)
-	@Validate(min = 1, max = 255, validCharacters = LETTERS + DIGITS + "-._")
+	@Validate(min = 1, max = 255, chars = LETTERS + DIGITS + "-._")
 	@Intern
 	public static final @Pure class HostName extends SingleString<HostName>
 	{
@@ -108,7 +108,7 @@ public class SingleStringTest
 		assertThat(x.raw(), is("abc"));
 	}
 
-	@Validate(validCharacters = "abcdefg")
+	@Validate(chars = "abcdefg")
 	static final class B extends SingleString<B> { B(String a) { super(a, B::new); } }
 	
 	@Test
@@ -117,7 +117,7 @@ public class SingleStringTest
 		new B("abc");
 	}
 
-	@Validate(validCharacters = "abcdefg")
+	@Validate(chars = "abcdefg")
 	static final class C extends SingleString<C> { C(String a) { super(a, C::new); } }
 	
 	@Test(expected = IllegalArgumentException.class)
