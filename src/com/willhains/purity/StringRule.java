@@ -57,7 +57,7 @@ import static com.willhains.purity.Trim.WHITESPACE;
 				final String allowedCharacters = String.join("", validate.validCharacters());
 				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters));
 
-				final String allowedPattern = String.join("|", validate.validPatterns());
+				final String allowedPattern = String.join("|", validate.match());
 				if(!allowedPattern.isEmpty()) rules.add(validPattern(allowedPattern));
 			}
 		}

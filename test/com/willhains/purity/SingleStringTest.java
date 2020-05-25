@@ -123,13 +123,13 @@ public class SingleStringTest
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapInvalidCharacters() { new C("abc "); }
 
-	@Validate(validPatterns = "[a-z]-[0-9]")
+	@Validate(match = "[a-z]-[0-9]")
 	static final class D extends SingleString<D> { D(String a) { super(a, D::new); } }
 	
 	@Test
 	public void shouldAcceptMatchingPattern() { new D("b-7"); }
 
-	@Validate(validPatterns = "[a-z]-[0-9]")
+	@Validate(match = "[a-z]-[0-9]")
 	static final class E extends SingleString<E> { E(String a) { super(a, E::new); }}
 	
 	@Test(expected = IllegalArgumentException.class)
