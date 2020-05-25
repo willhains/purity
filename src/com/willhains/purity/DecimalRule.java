@@ -49,6 +49,12 @@ import static com.willhains.purity.SingleNumber.$;
 				for(double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
 				for(double bound: validate.lessThan()) rules.add(lessThan($(bound)));
 				if(!validate.allowNegative()) rules.add(min($(0.0)));
+				if(!validate.allowZero()) rules.add(notEqualTo("0"));
+
+				final String[] allowedValues = validate.equalTo();
+				if(allowedValues.length > 0) rules.add(equalTo(allowedValues));
+
+				for(final String disallowedValue: validate.notEqualTo()) rules.add(notEqualTo(disallowedValue));
 			}
 		}
 
@@ -78,6 +84,29 @@ import static com.willhains.purity.SingleNumber.$;
 	static DecimalRule lessThan(final @Returned BigDecimal upperBound)
 	{
 		return validIf(raw -> raw.compareTo(upperBound) < 0, raw -> raw + " >= " + upperBound);
+	}
+
+	static DecimalRule equalTo(final @Returned String[] allowedValues)
+	{
+		final BigDecimal[] allowedDecimals = Arrays.stream(allowedValues)
+			.map(BigDecimal::new)
+			.toArray(BigDecimal[]::new);
+		return raw ->
+		{
+			for(final BigDecimal allowedDecimal: allowedDecimals)
+			{
+				if(raw.compareTo(allowedDecimal) == 0) return raw;
+			}
+			throw new IllegalArgumentException(
+				"\"" + raw + "\" does not match one of " + Arrays.toString(allowedValues));
+		};
+	}
+
+	static DecimalRule notEqualTo(final @Returned String disallowedValue)
+	{
+		final BigDecimal disallowedDecimal = new BigDecimal(disallowedValue);
+		return validUnless(raw -> raw.compareTo(disallowedDecimal) == 0,
+			raw -> "\"" + raw + "\" matches \"" + disallowedValue + "\"");
 	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
