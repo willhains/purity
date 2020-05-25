@@ -59,4 +59,10 @@ public @interface Validate
 
 	String[] validCharacters() default {};
 	String[] validPatterns() default {};
+
+	/** Letters (of the English alphabet). */
+	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	/** Digit characters. */
+	String DIGITS = "0123456789";
 }

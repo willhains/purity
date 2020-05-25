@@ -76,12 +76,6 @@ import static com.willhains.purity.annotations.Trim.WHITESPACE;
 		return StringRule.combine(rules.toArray(new StringRule[0]));
 	}
 
-	/** Letters (of the English alphabet). */
-	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	/** Digit characters. */
-	String DIGITS = "0123456789";
-
 	/** Generate rule to allow only the characters of `allowedCharacters`. */
 	static StringRule validCharacters(final String allowedCharacters)
 	{
