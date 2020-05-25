@@ -23,7 +23,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	protected final double raw;
+	private final double _raw;
 	
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -31,17 +31,17 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor)
 	{
-		raw = DoubleRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = DoubleRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
 	/** Return the raw underlying value. */
-	public final double raw() { return raw; }
+	public final double raw() { return _raw; }
 	
-	@Override public double getAsDouble() { return raw; }
+	@Override public double getAsDouble() { return _raw; }
 	
-	@Override public final int hashCode() { return Double.hashCode(raw); }
-	@Override public String toString() { return Double.toString(raw); }
+	@Override public final int hashCode() { return Double.hashCode(_raw); }
+	@Override public String toString() { return Double.toString(_raw); }
 	
 	@Override
 	public final boolean equals(final Object other)
@@ -50,28 +50,28 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
 		@SuppressWarnings("unchecked") final This that = (This) other;
-		return this.raw == that.raw;
+		return this.raw() == that.raw();
 	}
 	
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return this.raw == that.raw;
+		return this.raw() == that.raw();
 	}
 
-	@Override public Double asNumber() { return raw; }
+	@Override public Double asNumber() { return _raw; }
 	
-	@Override public final int compareTo(final This that) { return Double.compare(this.raw, that.raw); }
+	@Override public final int compareTo(final This that) { return Double.compare(this.raw(), that.raw()); }
 	
 	@Override
-	public final int compareToNumber(final Number number) { return Double.compare(this.raw, number.doubleValue()); }
+	public final int compareToNumber(final Number number) { return Double.compare(this._raw, number.doubleValue()); }
 	
-	public final int compareToNumber(final double number) { return Double.compare(this.raw, number); }
+	public final int compareToNumber(final double number) { return Double.compare(this._raw, number); }
 
-	@Override public boolean isZero() { return raw == 0d; }
-	@Override public boolean isPositive() { return raw > 0d; }
-	@Override public boolean isNegative() { return raw < 0d; }
+	@Override public boolean isZero() { return _raw == 0d; }
+	@Override public boolean isPositive() { return _raw > 0d; }
+	@Override public boolean isNegative() { return _raw < 0d; }
 	
 	@Override public final This plus(final Number number) { return plus(number.doubleValue()); }
 	@Override public final This minus(final Number number) { return minus(number.doubleValue()); }
@@ -88,10 +88,10 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	public final This multiplyBy(final DoubleSupplier number) { return multiplyBy(number.getAsDouble()); }
 	public final This divideBy(final DoubleSupplier number) { return divideBy(number.getAsDouble()); }
 	
-	public final boolean isGreaterThan(final DoubleSupplier number) { return raw > number.getAsDouble(); }
-	public final boolean isGreaterThanOrEqualTo(final DoubleSupplier number) { return raw >= number.getAsDouble(); }
-	public final boolean isLessThan(final DoubleSupplier number) { return raw < number.getAsDouble(); }
-	public final boolean isLessThanOrEqualTo(final DoubleSupplier number) { return raw <= number.getAsDouble(); }
+	public final boolean isGreaterThan(final DoubleSupplier number) { return _raw > number.getAsDouble(); }
+	public final boolean isGreaterThanOrEqualTo(final DoubleSupplier number) { return _raw >= number.getAsDouble(); }
+	public final boolean isLessThan(final DoubleSupplier number) { return _raw < number.getAsDouble(); }
+	public final boolean isLessThanOrEqualTo(final DoubleSupplier number) { return _raw <= number.getAsDouble(); }
 	
 	public final This round() { return map(Math::round); }
 	public final This roundUp() { return map(Math::ceil); }
@@ -105,10 +105,10 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
 	 *         {@code false} otherwise.
 	 */
-	public final boolean is(final DoublePredicate condition) { return condition.test(raw); }
+	public final boolean is(final DoublePredicate condition) { return condition.test(_raw); }
 	
 	/** Reverse of {@link #is(DoublePredicate)}. */
 	public final boolean isNot(final DoublePredicate condition) { return !is(condition); }
@@ -133,9 +133,9 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	public final This map(final DoubleUnaryOperator mapper)
 	{
-		final double mapped = mapper.applyAsDouble(raw);
+		final double mapped = mapper.applyAsDouble(_raw);
 		@SuppressWarnings("unchecked") final This self = (This)this;
-		if(mapped == raw) return self;
+		if(mapped == _raw) return self;
 		return _constructor.apply(mapped);
 	}
 	
@@ -145,5 +145,5 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 * @param mapper The mapping function to apply to the raw underlying value.
 	 * @return The value returned by {@code mapper}.
 	 */
-	public final This flatMap(final DoubleFunction<? extends This> mapper) { return mapper.apply(raw); }
+	public final This flatMap(final DoubleFunction<? extends This> mapper) { return mapper.apply(_raw); }
 }

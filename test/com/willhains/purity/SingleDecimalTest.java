@@ -38,7 +38,7 @@ public class SingleDecimalTest
 	public void shouldRepresentRawAsNumber()
 	{
 		final Price x = new Price("12.3");
-		assertThat(x.asNumber(), is(x.raw));
+		assertThat(x.asNumber(), is(x.raw()));
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class SingleDecimalTest
 		final Price x = new Price("10.0");
 		final Price y = new Price("5.0");
 		assertTrue(x.compareTo(y) > 0);
-		assertTrue(x.compareToNumber(y.raw) > 0);
+		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class SingleDecimalTest
 		final Price x = new Price("5.0");
 		final Price y = new Price("10.0");
 		assertTrue(x.compareTo(y) < 0);
-		assertTrue(x.compareToNumber(y.raw) < 0);
+		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class SingleDecimalTest
 		final Price y = new Price("10.0");
 		assertEquals(x, y);
 		assertTrue(x.compareTo(y) == 0);
-		assertTrue(x.compareToNumber(y.raw) == 0);
+		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
 	
 	@Test
@@ -115,41 +115,41 @@ public class SingleDecimalTest
 	
 	@Test public void shouldAdd()
 	{
-		assertThat(new Price("12.3").plus("0.7").raw, is($("13.0")));
+		assertThat(new Price("12.3").plus("0.7").raw(), is($("13.0")));
 	}
 	
 	@Test public void shouldSubtract()
 	{
-		assertThat(new Price("12.3").minus("0.3").raw, is($("12.0")));
+		assertThat(new Price("12.3").minus("0.3").raw(), is($("12.0")));
 	}
 	
 	@Test public void shouldMultiply()
 	{
-		assertThat(new Price("12.3").multiplyBy("10").raw, is($("123.0")));
+		assertThat(new Price("12.3").multiplyBy("10").raw(), is($("123.0")));
 	}
 	
 	@Test public void shouldDivide()
 	{
-		assertThat(new Price("12.8").divideBy(2).raw, is($("6.4")));
+		assertThat(new Price("12.8").divideBy(2).raw(), is($("6.4")));
 	}
 	
 	@Test
 	public void shouldRoundHalfUp()
 	{
-		assertThat(new Price("14.5").round().raw, is($("15")));
-		assertThat(new Price("14.4").round().raw, is($("14")));
+		assertThat(new Price("14.5").round().raw(), is($("15")));
+		assertThat(new Price("14.4").round().raw(), is($("14")));
 	}
 	
 	@Test
 	public void shouldRoundDown()
 	{
-		assertThat(new Price("14.9").roundDown().raw, is($("14")));
+		assertThat(new Price("14.9").roundDown().raw(), is($("14")));
 	}
 	
 	@Test
 	public void shouldRoundUp()
 	{
-		assertThat(new Price("14.1").roundUp().raw, is($("15")));
+		assertThat(new Price("14.1").roundUp().raw(), is($("15")));
 	}
 
 	@Validate(min = 2, max = 5)
@@ -222,7 +222,7 @@ public class SingleDecimalTest
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
-		assertThat(new G(3.0).raw, is($(3.0)));
+		assertThat(new G(3.0).raw(), is($(3.0)));
 	}
 
 	@Adjust(floor = 2)
@@ -231,7 +231,7 @@ public class SingleDecimalTest
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
-		assertThat(new H($(1)).raw, is($(2)));
+		assertThat(new H($(1)).raw(), is($(2)));
 	}
 
 	@Adjust(ceiling = 5)
@@ -240,15 +240,15 @@ public class SingleDecimalTest
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
-		assertThat(new I($(6)).raw, is($(5)));
+		assertThat(new I($(6)).raw(), is($(5)));
 	}
 	
 	@Test
 	public void shouldRoundToSpecifiedNumberOfPlaces()
 	{
-		assertThat(new Price("14").roundToPrecision(4).raw, is($("14.0000")));
-		assertThat(new Price("12.345").roundToPrecision(2).raw, is($("12.35")));
-		assertThat(new Price("12.345").roundToPrecision(3).raw, is($("12.345")));
-		assertThat(new Price("12345.6").roundToPrecision(0).raw, is($("12346")));
+		assertThat(new Price("14").roundToPrecision(4).raw(), is($("14.0000")));
+		assertThat(new Price("12.345").roundToPrecision(2).raw(), is($("12.35")));
+		assertThat(new Price("12.345").roundToPrecision(3).raw(), is($("12.345")));
+		assertThat(new Price("12345.6").roundToPrecision(0).raw(), is($("12346")));
 	}
 }

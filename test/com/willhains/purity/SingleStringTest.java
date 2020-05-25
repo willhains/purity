@@ -106,7 +106,7 @@ public class SingleStringTest
 	public void shouldTrimWhitespace()
 	{
 		final A x = new A(" abc ");
-		assertThat(x.raw, is("abc"));
+		assertThat(x.raw(), is("abc"));
 	}
 
 	@Validate(validCharacters = "abcdefg")

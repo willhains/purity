@@ -22,7 +22,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	private final Function<? super Raw, ? extends This> _constructor;
 	
 	/** The raw underlying value. Do not mutate! */
-	protected final Raw raw;
+	private final Raw _raw;
 	
 	/**
 	 * @param rawValue The raw value this object will represent.
@@ -30,23 +30,23 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
 	{
-		this.raw = requireNonNull(rawValue);
+		this._raw = requireNonNull(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 	
 	/**
 	 * Return the raw underlying value.
 	 *
-	 * @implSpec Override this method if {@link Raw} is mutable. The default implementation assumes {@link #raw} is
+	 * @implSpec Override this method if {@link Raw} is mutable. The default implementation assumes {@link #_raw} is
 	 *  immutable, and returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the
 	 *  overriding method should be careful to make a deep, defensive copy to return to the caller.
 	 */
-	public Raw raw() { return raw; }
+	public Raw raw() { return _raw; }
 	
 	@Override
 	public final int hashCode()
 	{
-		return hashCode(this.raw);
+		return hashCode(this._raw);
 	}
 	
 	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
@@ -72,18 +72,18 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
 		@SuppressWarnings("unchecked") final This that = (This) other;
-		return equals(this.raw, that.raw);
+		return equals(this.raw(), that.raw());
 	}
 	
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return equals(this.raw, that.raw);
+		return equals(this.raw(), that.raw());
 	}
 	
 	/** Compare two objects for equality. If they are arrays, compare their elements. */
-	public static boolean equals(Object object1, Object object2)
+	static boolean equals(Object object1, Object object2)
 	{
 		if(object1 == object2) return true;
 		if(object1 == null || object2 == null) return false;
@@ -104,7 +104,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@Override
 	public String toString()
 	{
-		return toString(this.raw);
+		return toString(this._raw);
 	}
 	
 	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */
@@ -131,7 +131,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
 	 *         {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super Raw> condition) { return condition.test(raw()); }

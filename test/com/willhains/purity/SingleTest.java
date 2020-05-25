@@ -34,7 +34,7 @@ public class SingleTest
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
-		assertThat(new Height(173f).raw, equalTo(173f));
+		assertThat(new Height(173f).raw(), equalTo(173f));
 	}
 	
 	@Test
@@ -60,7 +60,7 @@ public class SingleTest
 		final Float f = 123f;
 		final Height x = new Height(f);
 		final Height y = new Height(f);
-		assertThat(x.raw, is(sameInstance(y.raw)));
+		assertThat(x.raw(), is(sameInstance(y.raw())));
 		assertTrue(x.equals(y));
 	}
 	
@@ -127,7 +127,7 @@ public class SingleTest
 	public void shouldGenerateSameStringAsUnderlying()
 	{
 		final Height x = new Height(100f);
-		assertThat(x.toString(), equalTo(x.raw.toString()));
+		assertThat(x.toString(), equalTo(x.raw().toString()));
 	}
 	
 	static final @Pure class A1 extends Single<String[], A1> { A1(final String[] a) { super(a, A1::new); } }
@@ -265,7 +265,7 @@ public class SingleTest
 	{
 		final Height x = new Height(100f);
 		final Height y = x.map(f -> f + 1);
-		assertThat(y.raw, equalTo(101f));
+		assertThat(y.raw(), equalTo(101f));
 	}
 	
 	@Test
@@ -273,6 +273,6 @@ public class SingleTest
 	{
 		final Height x = new Height(100f);
 		final Height y = x.flatMap(f -> new Height(f + 1));
-		assertThat(y.raw, equalTo(101f));
+		assertThat(y.raw(), equalTo(101f));
 	}
 }

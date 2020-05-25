@@ -10,7 +10,7 @@ public class SingleComparableTest
 	public static final class Height extends Single<Float, Height> implements SingleComparable<Height>
 	{
 		public Height(final Float rawValue) { super(rawValue, Height::new); }
-		@Override public int compareTo(Height that) { return this.raw.compareTo(that.raw); }
+		@Override public int compareTo(Height that) { return this.raw().compareTo(that.raw()); }
 	}
 	
 	@Test

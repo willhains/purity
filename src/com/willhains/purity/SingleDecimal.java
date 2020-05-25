@@ -28,7 +28,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 * The raw underlying value. This property should be used only when passing the underlying value to
 	 * external APIs. As much as possible, use the wrapped value type.
 	 */
-	protected final BigDecimal raw;
+	private final BigDecimal _raw;
 
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
@@ -36,7 +36,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 */
 	protected SingleDecimal(final BigDecimal rawValue, final Function<? super BigDecimal, ? extends This> constructor)
 	{
-		raw = DecimalRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = DecimalRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 	
@@ -58,20 +58,20 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		this(new BigDecimal(rawValue), constructor);
 	}
 
-	public final BigDecimal raw() { return raw; }
+	public final BigDecimal raw() { return _raw; }
 	
-	@Override public BigDecimal get() { return raw; }
+	@Override public BigDecimal get() { return _raw; }
 	
-	@Override public String toString() { return raw.toPlainString(); }
+	@Override public String toString() { return _raw.toPlainString(); }
 	
-	@Override public BigDecimal asNumber() { return raw; }
+	@Override public BigDecimal asNumber() { return _raw; }
 	
-	@Override public final int compareTo(final This that) { return this.raw.compareTo(that.raw); }
-	@Override public final int compareToNumber(final Number number) { return this.raw.compareTo($(number)); }
+	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
+	@Override public final int compareToNumber(final Number number) { return this._raw.compareTo($(number)); }
 	
-	@Override public boolean isZero() { return raw.compareTo(ZERO) == 0; }
-	@Override public boolean isPositive() { return raw.compareTo(ZERO) > 0; }
-	@Override public boolean isNegative() { return raw.compareTo(ZERO) < 0; }
+	@Override public boolean isZero() { return _raw.compareTo(ZERO) == 0; }
+	@Override public boolean isPositive() { return _raw.compareTo(ZERO) > 0; }
+	@Override public boolean isNegative() { return _raw.compareTo(ZERO) < 0; }
 	
 	@Override public final This plus(final Number number) { return map(d -> d.add($(number))); }
 	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
@@ -84,7 +84,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	public final This roundToPrecision(final int decimals) { return map(d -> d.setScale(decimals, HALF_UP)); }
 
 	@Override
-	public final int hashCode() { return Single.hashCode(this.raw); }
+	public final int hashCode() { return Single.hashCode(this._raw); }
 
 	@Override
 	public final boolean equals(final Object other)
@@ -93,14 +93,14 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
 		@SuppressWarnings("unchecked") final This that = (This) other;
-		return Single.equals(this.raw, that.raw);
+		return Single.equals(this.raw(), that.raw());
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return Single.equals(this.raw, that.raw);
+		return Single.equals(this.raw(), that.raw());
 	}
 
 	/**
@@ -111,7 +111,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
 	 *         {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super BigDecimal> condition) { return condition.test(raw()); }
