@@ -15,58 +15,54 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Validate
 {
 	/**
-	 * What to do when a raw value violates the validation rules. Defaults to {@link ValidationPolicy#THROW}, which throws an
-	 * {@link IllegalArgumentException}.
+	 * What to do when a raw value violates the validation rules.
+     * Defaults to {@link ValidationPolicy#THROW}, which throws an {@link IllegalArgumentException}.
 	 */
 	ValidationPolicy onFailure() default ValidationPolicy.THROW;
 
-	/**
-	 * Numeric lower bound (inclusive).
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
- 	 */
+	/** Lower bound (inclusive) for numeric values, or the length of strings. */
 	double[] min() default {};
 
-	/**
-	 * Numeric upper bound (inclusive).
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
-	 */
+	/** Upper bound (inclusive) for numeric values, or the length of strings. */
 	double[] max() default {};
 
-	/**
-	 * Numeric lower bound (exclusive).
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
-	 */
+	/** Lower bound (exclusive) for numeric values, or the length of strings. */
 	double[] greaterThan() default {};
 
-	/**
-	 * Numeric upper bound (exclusive).
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
-	 */
+	/** Numeric upper bound (exclusive) for numeric values, or the length of strings. */
 	double[] lessThan() default {};
 
-	/**
-	 * Number must be divisible by this.
-	 * Applies to: {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, {@link SingleDouble}.
-	 */
+	/** Number must be divisible by this. */
 	double[] multipleOf() default {}; double[] divisibleBy() default {}; // Same thing
 
+    /** Set false to disallow negative numeric values. */
 	boolean allowNegative() default true;
+
+	/** Set false to disallow zero numeric values. */
 	boolean allowZero() default true;
+
+	/** Set true to allow infinite floating-point values. */
 	boolean allowInfinity() default false;
+
+	/** Set true to allow not-a-number floating-point values. */
 	boolean allowNaN() default false;
 
+	/** Strings containing all allowed characters. */
 	String[] chars() default {};
+
+	/** Strings containing all disallowed characters. */
 	String[] notChars() default {};
 
+	/** Allowed regex patterns for string values. */
 	String[] match() default {};
+
+	/** Disallowed regex patterns for string values. */
 	String[] notMatch() default {};
 
 	String[] equalTo() default {};
 	String[] notEqualTo() default {};
 
-	/** Letters (of the English alphabet). */
-	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	/** Digit characters. */
-	String DIGITS = "0123456789";
+	// Character sets
+	/** Letters (of the English alphabet). */ String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    /** Digit characters. */ String DIGITS = "0123456789";
 }
