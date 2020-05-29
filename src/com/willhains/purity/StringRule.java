@@ -65,11 +65,6 @@ import static com.willhains.purity.Trim.WHITESPACE;
 				if(!allowedPattern.isEmpty()) rules.add(validPattern(allowedPattern));
 
 				for(final String disallowedPattern: validate.notMatch()) rules.add(invalidPattern(disallowedPattern));
-
-				final String[] allowedValues = validate.equalTo();
-				if(allowedValues.length > 0) rules.add(equalTo(allowedValues));
-
-				for(final String disallowedValue: validate.notEqualTo()) rules.add(notEqualTo(disallowedValue));
 			}
 		}
 
@@ -109,27 +104,6 @@ import static com.willhains.purity.Trim.WHITESPACE;
 		final Pattern pattern = Pattern.compile(regExPattern);
 		return validUnless(raw -> pattern.matcher(raw).matches(),
 			raw -> "\"" + raw + "\" matches pattern: " + regExPattern);
-	}
-
-	/** Generate rules to allow only raw strings that match one of `allowedValues`. */
-	static StringRule equalTo(final String[] allowedValues)
-	{
-		return raw ->
-		{
-			for(final String allowedValue: allowedValues)
-			{
-				if(raw.equals(allowedValue)) return raw;
-			}
-			throw new IllegalArgumentException(
-				"\"" + raw + "\" does not match one of " + Arrays.toString(allowedValues));
-		};
-	}
-
-	/** Generate rules to allow only raw strings that don't match of `disallowedValue`. */
-	static StringRule notEqualTo(final String disallowedValue)
-	{
-		return validUnless(disallowedValue::equals,
-			raw -> "\"" + raw + "\" matches \"" + disallowedValue + "\"");
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */

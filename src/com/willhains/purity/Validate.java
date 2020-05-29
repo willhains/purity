@@ -59,9 +59,6 @@ public @interface Validate
 	/** Disallowed regex patterns for string values. */
 	String[] notMatch() default {};
 
-	String[] equalTo() default {};
-	String[] notEqualTo() default {};
-
 	// Character sets
 	/** Letters (of the English alphabet). */ String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     /** Digit characters. */ String DIGITS = "0123456789";
