@@ -42,6 +42,7 @@ import static com.willhains.purity.Trim.WHITESPACE;
 				if(adjustCase == LOWERCASE) rules.add(String::toLowerCase);
 				if(adjustCase == UPPERCASE) rules.add(String::toUpperCase);
 			}
+			if(adjust.intern()) rules.add(String::intern);
 		}
 
 		// Raw value validations
@@ -70,14 +71,6 @@ import static com.willhains.purity.Trim.WHITESPACE;
 
 				for(final String disallowedValue: validate.notEqualTo()) rules.add(notEqualTo(disallowedValue));
 			}
-		}
-
-		// Heap management
-		final Intern intern = singleClass.getAnnotation(Intern.class);
-		if(intern != null)
-		{
-			// No annotation parameters
-			rules.add(String::intern);
 		}
 
 		// Build a new rule from the StringRule constants declared in the class

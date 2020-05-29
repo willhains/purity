@@ -7,6 +7,7 @@ import static com.willhains.purity.Validate.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ALL")
 public class SingleStringTest
 {
 	public static final class Name extends SingleString<Name>
@@ -14,9 +15,8 @@ public class SingleStringTest
 		public Name(final String rawValue) { super(rawValue, Name::new); }
 	}
 
-	@Adjust(trim = WHITESPACE)
+	@Adjust(trim = WHITESPACE, intern = true)
 	@Validate(min = 1, max = 255, chars = LETTERS + DIGITS + "-._")
-	@Intern
 	public static final @Pure class HostName extends SingleString<HostName>
 	{
 		public HostName(String hostName) { super(hostName, HostName::new); }
@@ -43,7 +43,7 @@ public class SingleStringTest
 	{
 		final Name x = new Name("Anthony");
 		final Name y = new Name("Anthony");
-		assertTrue(x.compareTo(y) == 0);
+        assertEquals(0, x.compareTo(y));
 	}
 	
 	@Test
