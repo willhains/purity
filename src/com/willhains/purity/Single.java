@@ -35,9 +35,9 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	/**
 	 * Return the raw underlying value.
 	 *
-	 * @implSpec Override this method if {@link Raw} is mutable. The default implementation assumes {@link #_raw} is
-	 *  immutable, and returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the
-	 *  overriding method should be careful to make a deep, defensive copy to return to the caller.
+	 * Override this method if {@link Raw} is mutable. The default implementation assumes {@link #_raw} is
+	 * immutable, and returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the
+	 * overriding method should be careful to make a deep, defensive copy to return to the caller.
 	 */
 	public Raw raw() { return _raw; }
 	
