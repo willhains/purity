@@ -37,7 +37,7 @@ import java.util.function.*;
 		final Validate validate = singleClass.getAnnotation(Validate.class);
 		if(validate != null)
 		{
-			// When the validation policy is ASSERT and assertions are disabled, don't even fromAnnotations the validation rules
+			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
 				for(double min: validate.min()) rules.add(min((long)min));
