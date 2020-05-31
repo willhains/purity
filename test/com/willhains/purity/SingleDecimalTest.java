@@ -8,6 +8,7 @@ import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 public class SingleDecimalTest
 {
 	static final @Pure class Price extends SingleDecimal<Price>

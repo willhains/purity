@@ -1,6 +1,10 @@
 package com.willhains.purity;
 
-/** Choices for what to do when validation fails. */
+/**
+ * Choices for what to do when validation fails.
+ *
+ * @author willhains
+ */
 public enum ValidationPolicy
 {
 	/** Throw an {@link IllegalArgumentException}. */

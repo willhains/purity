@@ -3,7 +3,12 @@ package com.willhains.purity;
 import java.util.*;
 import java.util.function.Function;
 
-// Lock-free, thread-safe (but forgetful), copy-on-write index of rules for each Single* class
+/**
+ * Lock-free, thread-safe (but forgetful), copy-on-write index of rules for each Single* class
+ *
+ * @param <RuleType> the rule interface type to cache.
+ * @author willhains
+ */
 final @Mutable class RulesCache<RuleType>
 {
 	private Map<Class<?>, RuleType> _rules = new HashMap<>();

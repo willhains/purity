@@ -9,6 +9,7 @@ import static com.willhains.purity.SingleNumber.$;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 public class SingleNumberTest
 {
 	static final @Pure class Height implements SingleNumber<Height>

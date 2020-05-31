@@ -7,6 +7,7 @@ import static com.willhains.purity.Validate.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 @SuppressWarnings("ALL")
 public class SingleStringTest
 {

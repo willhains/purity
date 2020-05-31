@@ -7,6 +7,7 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 public class SingleTest
 {
 	public static final class Height extends Single<Float, Height>

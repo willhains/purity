@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/** @author willhains */
 public class SingleComparableTest
 {
 	public static final class Height extends Single<Float, Height> implements SingleComparable<Height>

@@ -7,6 +7,7 @@ import java.util.Optional;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 public class SingleIntTest
 {
 	public static final @Pure class Count extends SingleInt<Count>

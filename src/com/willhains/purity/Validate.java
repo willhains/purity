@@ -10,6 +10,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * {@link SingleDouble} subclasses, to ensure their values are always valid. Doing so tends to push data validation
  * out to the edges of an application, where it receives input from the outside world, freeing the internal logic from
  * the need to think about the possibility of invalid values.
+ *
+ * @author willhains
  */
 @Documented @Retention(RUNTIME) @Target(TYPE)
 public @interface Validate

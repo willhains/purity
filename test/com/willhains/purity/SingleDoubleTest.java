@@ -8,6 +8,7 @@ import static com.willhains.purity.DoubleRule.validUnless;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+/** @author willhains */
 public class SingleDoubleTest
 {
 	public static final @Pure class Height extends SingleDouble<Height>
