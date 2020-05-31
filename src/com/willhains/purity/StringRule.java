@@ -2,10 +2,10 @@ package com.willhains.purity;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 import static com.willhains.purity.LetterCase.*;
-import static com.willhains.purity.Trim.WHITESPACE;
+import static com.willhains.purity.Trim.*;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.
@@ -33,11 +33,11 @@ import static com.willhains.purity.Trim.WHITESPACE;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(Trim trim: adjust.trim())
+			for(final Trim trim: adjust.trim())
 			{
 				if(trim == WHITESPACE) rules.add(String::trim);
 			}
-			for(LetterCase adjustCase: adjust.transformTo())
+			for(final LetterCase adjustCase: adjust.transformTo())
 			{
 				if(adjustCase == LOWERCASE) rules.add(String::toLowerCase);
 				if(adjustCase == UPPERCASE) rules.add(String::toUpperCase);
@@ -52,8 +52,8 @@ import static com.willhains.purity.Trim.WHITESPACE;
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(double length: validate.min()) rules.add(minLength((int)length));
-				for(double length: validate.max()) rules.add(maxLength((int)length));
+				for(final double length: validate.min()) rules.add(minLength((int)length));
+				for(final double length: validate.max()) rules.add(maxLength((int)length));
 
 				final String allowedCharacters = String.join("", validate.chars());
 				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters));
@@ -77,7 +77,8 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		allowedCharacters.chars().forEach(c -> validCharMap[c] = true);
-		return validIf(raw -> raw.chars().allMatch(c -> validCharMap[c]),
+		return validIf(
+			raw -> raw.chars().allMatch(c -> validCharMap[c]),
 			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
 	}
 
@@ -86,7 +87,8 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		disallowedCharacters.chars().forEach(c -> validCharMap[c] = true);
-		return validIf(raw -> raw.chars().noneMatch(c -> validCharMap[c]),
+		return validIf(
+			raw -> raw.chars().noneMatch(c -> validCharMap[c]),
 			raw -> "\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
 	}
 
@@ -94,7 +96,8 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	static StringRule validPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return validIf(raw -> pattern.matcher(raw).matches(),
+		return validIf(
+			raw -> pattern.matcher(raw).matches(),
 			raw -> "\"" + raw + "\" does not match pattern: " + regExPattern);
 	}
 
@@ -102,21 +105,24 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	static StringRule invalidPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return validUnless(raw -> pattern.matcher(raw).matches(),
+		return validUnless(
+			raw -> pattern.matcher(raw).matches(),
 			raw -> "\"" + raw + "\" matches pattern: " + regExPattern);
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
 	static StringRule minLength(final int length)
 	{
-		return validUnless(raw -> raw.length() < length,
+		return validUnless(
+			raw -> raw.length() < length,
 			raw -> "Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
 	}
 
 	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
 	static StringRule maxLength(final int length)
 	{
-		return validUnless(raw -> raw.length() > length,
+		return validUnless(
+			raw -> raw.length() > length,
 			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
 	}
 
@@ -164,7 +170,7 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	}
 
 	/**
-	 * @see #validIf(Predicate,Function)
+	 * @see #validIf(Predicate, Function)
 	 */
 	static StringRule validIf(final Predicate<String> condition, final String errorMessage)
 	{
@@ -172,7 +178,7 @@ import static com.willhains.purity.Trim.WHITESPACE;
 	}
 
 	/**
-	 * @see #validUnless(Predicate,Function)
+	 * @see #validUnless(Predicate, Function)
 	 */
 	static StringRule validUnless(final Predicate<String> condition, final String errorMessage)
 	{

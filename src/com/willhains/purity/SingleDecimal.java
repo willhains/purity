@@ -1,14 +1,14 @@
 package com.willhains.purity;
 
-import java.math.BigDecimal;
-import java.util.Optional;
+import java.math.*;
+import java.util.*;
 import java.util.function.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
-import static com.willhains.purity.SingleNumber.$;
-import static java.math.BigDecimal.ZERO;
+import static com.willhains.purity.SingleNumber.*;
+import static java.math.BigDecimal.*;
 import static java.math.RoundingMode.*;
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.*;
 
 /**
  * A value type wrapping a {@link BigDecimal}.
@@ -37,7 +37,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		_raw = DecimalRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
-	
+
 	/**
 	 * @param rawValue The raw, immutable value this object will represent.
 	 * @param constructor A method reference to the constructor of the implementing subclass.
@@ -57,25 +57,25 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	}
 
 	public final BigDecimal raw() { return _raw; }
-	
+
 	@Override public BigDecimal get() { return _raw; }
-	
+
 	@Override public String toString() { return _raw.toPlainString(); }
-	
+
 	@Override public BigDecimal asNumber() { return _raw; }
-	
+
 	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
 	@Override public final int compareToNumber(final Number number) { return this._raw.compareTo($(number)); }
-	
+
 	@Override public boolean isZero() { return _raw.compareTo(ZERO) == 0; }
 	@Override public boolean isPositive() { return _raw.compareTo(ZERO) > 0; }
 	@Override public boolean isNegative() { return _raw.compareTo(ZERO) < 0; }
-	
+
 	@Override public final This plus(final Number number) { return map(d -> d.add($(number))); }
 	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
 	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
 	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number), HALF_UP)); }
-	
+
 	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
 	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }
 	public final This roundDown() { return map(d -> d.setScale(0, FLOOR)); }
@@ -90,7 +90,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This) other;
+		final This that = (This)other;
 		return Single.equals(this.raw(), that.raw());
 	}
 
@@ -110,7 +110,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
 	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
-	 *         {@code false} otherwise.
+	 *    {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super BigDecimal> condition) { return condition.test(raw()); }
 
@@ -125,7 +125,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super BigDecimal> condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -138,7 +138,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	public final This map(final Function<? super BigDecimal, ? extends BigDecimal> mapper)
 	{
 		final BigDecimal mapped = mapper.apply(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		final This self = (This)this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}

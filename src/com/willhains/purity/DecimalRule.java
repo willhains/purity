@@ -1,10 +1,10 @@
 package com.willhains.purity;
 
-import java.math.BigDecimal;
+import java.math.*;
 import java.util.*;
 import java.util.function.*;
 
-import static com.willhains.purity.SingleNumber.$;
+import static com.willhains.purity.SingleNumber.*;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDecimal} object.
@@ -32,8 +32,8 @@ import static com.willhains.purity.SingleNumber.$;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(double limit: adjust.floor()) rules.add(floor($(limit)));
-			for(double limit: adjust.ceiling()) rules.add(ceiling($(limit)));
+			for(final double limit: adjust.floor()) rules.add(floor($(limit)));
+			for(final double limit: adjust.ceiling()) rules.add(ceiling($(limit)));
 		}
 
 		// Raw value validations
@@ -44,10 +44,10 @@ import static com.willhains.purity.SingleNumber.$;
 			// validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(double min: validate.min()) rules.add(min($(min)));
-				for(double max: validate.max()) rules.add(max($(max)));
-				for(double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
-				for(double bound: validate.lessThan()) rules.add(lessThan($(bound)));
+				for(final double min: validate.min()) rules.add(min($(min)));
+				for(final double max: validate.max()) rules.add(max($(max)));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
+				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound)));
 				if(!validate.allowNegative()) rules.add(min($(0.0)));
 				if(!validate.allowZero()) rules.add(notEqualTo("0"));
 			}
@@ -84,7 +84,8 @@ import static com.willhains.purity.SingleNumber.$;
 	static DecimalRule notEqualTo(final @Returned String disallowedValue)
 	{
 		final BigDecimal disallowedDecimal = new BigDecimal(disallowedValue);
-		return validUnless(raw -> raw.compareTo(disallowedDecimal) == 0,
+		return validUnless(
+			raw -> raw.compareTo(disallowedDecimal) == 0,
 			raw -> "\"" + raw + "\" matches \"" + disallowedValue + "\"");
 	}
 
@@ -93,7 +94,7 @@ import static com.willhains.purity.SingleNumber.$;
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
-	
+
 	/** Combine multiple rules into a single rule. */
 	static DecimalRule combine(final DecimalRule... combiningRules)
 	{
@@ -138,7 +139,7 @@ import static com.willhains.purity.SingleNumber.$;
 	}
 
 	/**
-	 * @see #validIf(Predicate,Function)
+	 * @see #validIf(Predicate, Function)
 	 */
 	static DecimalRule validIf(final Predicate<BigDecimal> condition, final String errorMessage)
 	{
@@ -146,7 +147,7 @@ import static com.willhains.purity.SingleNumber.$;
 	}
 
 	/**
-	 * @see #validUnless(Predicate,Function)
+	 * @see #validUnless(Predicate, Function)
 	 */
 	static DecimalRule validUnless(final Predicate<BigDecimal> condition, final String errorMessage)
 	{

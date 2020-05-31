@@ -2,12 +2,12 @@ package com.willhains.purity;
 
 import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.*;
 
 /**
  * Indicates that a method argument is not retained (stored in a field) by the method, or by any objects it calls,
  * except those that are returned to the caller.
- *
+ * <p>
  * Formally, the annotated argument:
  * <ol>
  * <li>Is not stored in a field of the method's class.</li>
@@ -16,13 +16,13 @@ import static java.lang.annotation.ElementType.PARAMETER;
  * <li>Is returned as the method's return value; or, if passed to a constructor or method as a {@link Returned}
  *     argument, the return value of that method/constructor satisfies these conditions.</li>
  * </ol>
- *
+ * <p>
  * Constructor arguments (for both {@link Pure} and non-{@link Pure} types) are {@link Returned} by default.
  *
+ * @author willhains
  * @see Retained
  * @see Released
- * @author willhains
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(PARAMETER)
-public @interface Returned {}
+public @interface Returned { }

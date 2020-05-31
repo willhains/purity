@@ -29,8 +29,8 @@ import java.util.function.*;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(double limit: adjust.floor()) rules.add(floor(limit));
-			for(double limit: adjust.ceiling()) rules.add(ceiling(limit));
+			for(final double limit: adjust.floor()) rules.add(floor(limit));
+			for(final double limit: adjust.ceiling()) rules.add(ceiling(limit));
 //  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
 		}
 
@@ -41,10 +41,10 @@ import java.util.function.*;
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(double min: validate.min()) rules.add(min(min));
-				for(double max: validate.max()) rules.add(max(max));
-				for(double bound: validate.greaterThan()) rules.add(greaterThan(bound));
-				for(double bound: validate.lessThan()) rules.add(lessThan(bound));
+				for(final double min: validate.min()) rules.add(min(min));
+				for(final double max: validate.max()) rules.add(max(max));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
+				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
 				if(!validate.allowNegative()) rules.add(min(0.0));
 //		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
@@ -97,7 +97,7 @@ import java.util.function.*;
 			return result;
 		};
 	}
-	
+
 	/**
 	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `true`.
 	 *
@@ -129,9 +129,9 @@ import java.util.function.*;
 	{
 		return validIf(condition.negate(), errorMessageFactory);
 	}
-	
+
 	/**
-	 * @see #validIf(DoublePredicate,DoubleFunction)
+	 * @see #validIf(DoublePredicate, DoubleFunction)
 	 */
 	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
 	{
@@ -139,7 +139,7 @@ import java.util.function.*;
 	}
 
 	/**
-	 * @see #validUnless(DoublePredicate,DoubleFunction)
+	 * @see #validUnless(DoublePredicate, DoubleFunction)
 	 */
 	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
 	{

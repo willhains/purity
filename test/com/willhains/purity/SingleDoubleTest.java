@@ -1,10 +1,10 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import java.util.Optional;
+import java.util.*;
 
-import static com.willhains.purity.DoubleRule.validUnless;
+import static com.willhains.purity.DoubleRule.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -15,29 +15,32 @@ public class SingleDoubleTest
 	{
 		public Height(final double rawValue) { super(rawValue, Height::new); }
 	}
-	
+
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
 		assertThat(new Height(17.3).raw(), equalTo(17.3));
 	}
-	
+
 	@Test
 	public void shouldRepresentRawAsNumber()
 	{
 		final Height x = new Height(12.3d);
 		assertThat(x.asNumber(), is(x.raw()));
 	}
-	
+
 	@Test
 	public void shouldAlwaysBeUnequalToNull()
 	{
 		final Height x = new Height(12.3);
 		assertFalse(x.equals(null));
 	}
-	
-	static final class Height2 extends SingleDouble<Height2> { public Height2(double x) { super(x, Height2::new); } }
-	
+
+	static final class Height2 extends SingleDouble<Height2>
+	{
+		public Height2(final double x) { super(x, Height2::new); }
+	}
+
 	@Test
 	public void shouldAlwaysBeUnequalToDifferentClass()
 	{
@@ -45,14 +48,14 @@ public class SingleDoubleTest
 		final Height2 y = new Height2(12.3);
 		assertFalse(x.equals(y));
 	}
-	
+
 	@Test
 	public void shouldBeReflexive()
 	{
 		final Height x = new Height(12.3);
 		assertTrue(x.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeSymmetric()
 	{
@@ -64,7 +67,7 @@ public class SingleDoubleTest
 		assertFalse(x.equals(z));
 		assertFalse(z.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeTransitive()
 	{
@@ -78,7 +81,7 @@ public class SingleDoubleTest
 		assertFalse(w.equals(y));
 		assertFalse(w.equals(z));
 	}
-	
+
 	@Test
 	public void shouldBeConsistent()
 	{
@@ -93,7 +96,7 @@ public class SingleDoubleTest
 		final double xHash2 = x.hashCode();
 		assertThat(xHash1, equalTo(xHash2));
 	}
-	
+
 	@Test
 	public void shouldHaveSameHashCode()
 	{
@@ -104,17 +107,20 @@ public class SingleDoubleTest
 		final double yHash = y.hashCode();
 		assertThat(xHash, equalTo(yHash));
 	}
-	
+
 	@Test
 	public void shouldGenerateSameStringAsUnderlying()
 	{
 		final Height x = new Height(10.0);
 		assertThat(x.toString(), equalTo("10.0"));
 	}
-	
+
 	@Validate(allowInfinity = false, allowNaN = false) // Actually, these are the defaults
-	static final class A extends SingleDouble<A> { A(double a) { super(a, A::new); } }
-	
+	static final class A extends SingleDouble<A>
+	{
+		A(final double a) { super(a, A::new); }
+	}
+
 	@Test
 	public void shouldAcceptRealNumber()
 	{
@@ -124,8 +130,11 @@ public class SingleDoubleTest
 	}
 
 	@Validate
-	static final class B extends SingleDouble<B> { B(double a) { super(a, B::new); } }
-	
+	static final class B extends SingleDouble<B>
+	{
+		B(final double a) { super(a, B::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapNaN()
 	{
@@ -133,8 +142,11 @@ public class SingleDoubleTest
 	}
 
 	@Validate
-	static final class C extends SingleDouble<C> { C(double a) { super(a, C::new); } }
-	
+	static final class C extends SingleDouble<C>
+	{
+		C(final double a) { super(a, C::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapNegativeInfinity()
 	{
@@ -142,73 +154,97 @@ public class SingleDoubleTest
 	}
 
 	@Validate
-	static final class D extends SingleDouble<D> { D(double a) { super(a, D::new); } }
-	
+	static final class D extends SingleDouble<D>
+	{
+		D(final double a) { super(a, D::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapPositiveInfinity()
 	{
 		new D(Double.POSITIVE_INFINITY);
 	}
-	
+
 	@Validate(min = 2.0, max = 5.0)
-	static final class E extends SingleDouble<E> { E(double a) { super(a, E::new); } }
-	
+	static final class E extends SingleDouble<E>
+	{
+		E(final double a) { super(a, E::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
 		new E(2.0);
 		new E(5.0);
 	}
-	
+
 	@Validate(min = 2)
-	static final class F extends SingleDouble<F> { F(double a) { super(a, F::new); } }
-	
+	static final class F extends SingleDouble<F>
+	{
+		F(final double a) { super(a, F::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
 		new F(1.0);
 	}
-	
+
 	@Validate(max = 5)
-	static final class G extends SingleDouble<G> { G(double a) { super(a, G::new); } }
-	
+	static final class G extends SingleDouble<G>
+	{
+		G(final double a) { super(a, G::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
 		new G(5.00000001);
 	}
-	
+
 	@Validate(greaterThan = 2, lessThan = 5)
-	static final class H extends SingleDouble<H> { H(double a) { super(a, H::new); } }
-	
+	static final class H extends SingleDouble<H>
+	{
+		H(final double a) { super(a, H::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
 		new H(3.0);
 		new H(4.0);
 	}
-	
+
 	@Validate(greaterThan = 2.0)
-	static final class I extends SingleDouble<I> { I(double a) { super(a, I::new); } }
-	
+	static final class I extends SingleDouble<I>
+	{
+		I(final double a) { super(a, I::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
 		new I(2.0);
 	}
-	
+
 	@Validate(lessThan = 5)
-	static final class J extends SingleDouble<J> { J(double a) { super(a, J::new); } }
-	
+	static final class J extends SingleDouble<J>
+	{
+		J(final double a) { super(a, J::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
 		new J(5.0);
 	}
-	
+
 	@Adjust(floor = 2.0, ceiling = 5.0)
-	static final class K extends SingleDouble<K> { K(double a) { super(a, K::new); } }
-	
+	static final class K extends SingleDouble<K>
+	{
+		K(final double a) { super(a, K::new); }
+	}
+
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
@@ -216,26 +252,29 @@ public class SingleDoubleTest
 	}
 
 	@Adjust(floor = 2.0)
-	static final class L extends SingleDouble<L> { L(double a) { super(a, L::new); } }
-	
+	static final class L extends SingleDouble<L>
+	{
+		L(final double a) { super(a, L::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
 		assertThat(new L(1.0).raw(), is(2.0));
 	}
-	
+
 	@Adjust(ceiling = 5.0)
 	static final class M extends SingleDouble<M>
 	{
-		M(double a) { super(a, M::new); }
+		M(final double a) { super(a, M::new); }
 	}
-	
+
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
 		assertThat(new M(6.0).raw(), is(5.0));
 	}
-	
+
 	@Test
 	public void shouldTestRawValue()
 	{
@@ -243,7 +282,7 @@ public class SingleDoubleTest
 		assertTrue(x.is(i -> i < 100.0));
 		assertFalse(x.is(i -> i > 100.0));
 	}
-	
+
 	@Test
 	public void shouldTestRawValueAndNegate()
 	{
@@ -251,7 +290,7 @@ public class SingleDoubleTest
 		assertFalse(x.isNot(i -> i < 100.0));
 		assertTrue(x.isNot(i -> i > 100.0));
 	}
-	
+
 	@Test
 	public void shouldPassFilterOnMatchingCondition()
 	{
@@ -259,7 +298,7 @@ public class SingleDoubleTest
 		final Optional<Height> opX = x.filter(Double::isFinite);
 		assertThat(opX.get(), is(x));
 	}
-	
+
 	@Test
 	public void shouldFailFilterOnNonMatchingCondition()
 	{
@@ -267,7 +306,7 @@ public class SingleDoubleTest
 		final Optional<Height> opX = x.filter(Double::isInfinite);
 		assertFalse(opX.isPresent());
 	}
-	
+
 	@Test
 	public void shouldMapToNewValue()
 	{
@@ -275,7 +314,7 @@ public class SingleDoubleTest
 		final Height y = x.map(f -> f + 0.1);
 		assertThat(y.raw(), equalTo(10.1));
 	}
-	
+
 	@Test
 	public void shouldMapToSameValue()
 	{
@@ -283,7 +322,7 @@ public class SingleDoubleTest
 		final Height y = x.map(f -> f + 0d);
 		assertEquals(x, y);
 	}
-	
+
 	@Test
 	public void shouldFlatMapToNewValue()
 	{
@@ -291,19 +330,19 @@ public class SingleDoubleTest
 		final Height y = x.flatMap(f -> new Height(f + 0.1));
 		assertThat(y.raw(), equalTo(10.1));
 	}
-	
+
 	static final class N extends SingleDouble<N>
 	{
 		static final DoubleRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
-		N(double a) { super(a, N::new); }
+		N(final double a) { super(a, N::new); }
 	}
-	
+
 	@Test
 	public void customRules()
 	{
 		new N(2d);
 	}
-	
+
 	@Test
 	public void shouldCompareLarger()
 	{
@@ -312,7 +351,7 @@ public class SingleDoubleTest
 		assertTrue(x.compareTo(y) > 0);
 		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
-	
+
 	@Test
 	public void shouldCompareSmaller()
 	{
@@ -321,7 +360,7 @@ public class SingleDoubleTest
 		assertTrue(x.compareTo(y) < 0);
 		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
-	
+
 	@Test
 	public void shouldCompareEqual()
 	{
@@ -331,7 +370,7 @@ public class SingleDoubleTest
 		assertTrue(x.compareTo(y) == 0);
 		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
-	
+
 	@Test
 	public void shouldIdentifyZero()
 	{
@@ -341,7 +380,7 @@ public class SingleDoubleTest
 		assertFalse(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
+
 	@Test
 	public void shouldIdentifyPositive()
 	{
@@ -351,9 +390,12 @@ public class SingleDoubleTest
 		assertTrue(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
-	static final @Pure class Factor extends SingleDouble<Factor> { Factor(double factor) { super(factor, Factor::new); } }
-	
+
+	static final @Pure class Factor extends SingleDouble<Factor>
+	{
+		Factor(final double factor) { super(factor, Factor::new); }
+	}
+
 	@Test
 	public void shouldIdentifyNegative()
 	{
@@ -363,25 +405,25 @@ public class SingleDoubleTest
 		assertFalse(x.isPositive());
 		assertTrue(x.isNegative());
 	}
-	
+
 	@Test public void shouldAdd() { assertThat(new Height(12.3).plus(0.7).raw(), is(13.0)); }
 	@Test public void shouldSubtract() { assertThat(new Height(12.3).minus(0.3).raw(), is(12.0)); }
 	@Test public void shouldMultiply() { assertThat(new Height(12.3).multiplyBy(10).raw(), is(123.0)); }
 	@Test public void shouldDivide() { assertThat(new Height(12.8).divideBy(2).raw(), is(6.4)); }
-	
+
 	@Test
 	public void shouldRoundHalfUp()
 	{
 		assertThat(new Height(14.5).round().raw(), is(15.0));
 		assertThat(new Height(14.4).round().raw(), is(14.0));
 	}
-	
+
 	@Test
 	public void shouldRoundDown()
 	{
 		assertThat(new Height(14.9).roundDown().raw(), is(14.0));
 	}
-	
+
 	@Test
 	public void shouldRoundUp()
 	{

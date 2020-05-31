@@ -2,8 +2,8 @@ package com.willhains.purity;
 
 import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
  * Normalise the raw values of {@link SingleString}, {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, or
@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented @Retention(RUNTIME) @Target(TYPE)
 public @interface Adjust
 {
-    /** Adjust numeric values to a minimum (inclusive) value. */
+	/** Adjust numeric values to a minimum (inclusive) value. */
 	double[] floor() default {};
 
 	/** Adjust numeric values to a maximum (inclusive) value. */

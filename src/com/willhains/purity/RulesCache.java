@@ -1,7 +1,7 @@
 package com.willhains.purity;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * Lock-free, thread-safe (but forgetful), copy-on-write index of rules for each Single* class

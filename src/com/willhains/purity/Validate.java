@@ -2,8 +2,8 @@ package com.willhains.purity;
 
 import java.lang.annotation.*;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
  * Validate the raw values of {@link SingleString}, {@link SingleInt}, {@link SingleLong}, {@link SingleDecimal}, or
@@ -18,7 +18,7 @@ public @interface Validate
 {
 	/**
 	 * What to do when a raw value violates the validation rules.
-     * Defaults to {@link ValidationPolicy#THROW}, which throws an {@link IllegalArgumentException}.
+	 * Defaults to {@link ValidationPolicy#THROW}, which throws an {@link IllegalArgumentException}.
 	 */
 	ValidationPolicy onFailure() default ValidationPolicy.THROW;
 
@@ -35,9 +35,10 @@ public @interface Validate
 	double[] lessThan() default {};
 
 	/** Number must be divisible by this. */
-	double[] multipleOf() default {}; double[] divisibleBy() default {}; // Same thing
+	double[] multipleOf() default {};
+	double[] divisibleBy() default {}; // Same thing
 
-    /** Set false to disallow negative numeric values. */
+	/** Set false to disallow negative numeric values. */
 	boolean allowNegative() default true;
 
 	/** Set false to disallow zero numeric values. */
@@ -61,7 +62,9 @@ public @interface Validate
 	/** Disallowed regex patterns for string values. */
 	String[] notMatch() default {};
 
-	// Character sets
-	/** Letters (of the English alphabet). */ String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    /** Digit characters. */ String DIGITS = "0123456789";
+	/** Letters (of the English alphabet). */
+	String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	/** Digit characters. */
+	String DIGITS = "0123456789";
 }

@@ -3,11 +3,11 @@ package com.willhains.purity;
 import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
  * Indicates that a type has cache semantics.
- *
+ * <p>
  * Formally:
  * <ol>
  * <li>It is final, or all of its subtypes are guaranteed to have cache semantics.</li>
@@ -18,11 +18,11 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * <li>It has no interaction with locks or concurrency mechanisms whatsoever</li>
  * </ol>
  *
+ * @author willhains
  * @see Pure
  * @see IO
  * @see Barrier
- * @author willhains
  */
 @Retention(SOURCE)
 @Target({TYPE, TYPE_PARAMETER})
-public @interface Mutable {}
+public @interface Mutable { }

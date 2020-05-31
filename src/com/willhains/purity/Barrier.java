@@ -3,11 +3,11 @@ package com.willhains.purity;
 import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
  * Indicates that a type has barrier semantics.
- *
+ * <p>
  * Formally:
  * <ol>
  * <li>It is final, or all of its subtypes are guaranteed to have barrier semantics.</li>
@@ -18,11 +18,11 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * <li><b>It uses locks or concurrency mechanisms to guarantee thread safety for some non-barrier object(s).</b></li>
  * </ol>
  *
+ * @author willhains
  * @see Pure
  * @see Mutable
  * @see IO
- * @author willhains
  */
 @Retention(SOURCE)
 @Target({TYPE, TYPE_PARAMETER})
-public @interface Barrier {}
+public @interface Barrier { }

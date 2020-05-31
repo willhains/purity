@@ -1,11 +1,11 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.math.*;
+import java.text.*;
 
-import static com.willhains.purity.SingleNumber.$;
+import static com.willhains.purity.SingleNumber.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -16,22 +16,22 @@ public class SingleNumberTest
 	{
 		final float raw;
 		Height(final float rawValue) { raw = rawValue; }
-		
+
 		@Override public Number asNumber() { return raw; }
-		
-		@Override public int compareTo(Height that) { return Float.compare(this.raw, that.raw); }
-		@Override public int compareToNumber(Number number) { return Float.compare(raw, number.floatValue()); }
-		
+
+		@Override public int compareTo(final Height that) { return Float.compare(this.raw, that.raw); }
+		@Override public int compareToNumber(final Number number) { return Float.compare(raw, number.floatValue()); }
+
 		@Override public boolean isZero() { return raw == 0f; }
 		@Override public boolean isPositive() { return raw > 0f; }
 		@Override public boolean isNegative() { return raw < 0f; }
-		
-		@Override public Height plus(Number number) { return new Height(raw + number.floatValue()); }
-		@Override public Height minus(Number number) { return new Height(raw - number.floatValue()); }
-		@Override public Height multiplyBy(Number number) { return new Height(raw * number.floatValue()); }
-		@Override public Height divideBy(Number number) { return new Height(raw / number.floatValue()); }
+
+		@Override public Height plus(final Number number) { return new Height(raw + number.floatValue()); }
+		@Override public Height minus(final Number number) { return new Height(raw - number.floatValue()); }
+		@Override public Height multiplyBy(final Number number) { return new Height(raw * number.floatValue()); }
+		@Override public Height divideBy(final Number number) { return new Height(raw / number.floatValue()); }
 	}
-	
+
 	@Test
 	public void shouldFormatAsDecimal()
 	{
@@ -39,7 +39,7 @@ public class SingleNumberTest
 		assertThat(x.format(new DecimalFormat("#,###.00")), is("12,345.68"));
 		assertThat(x.format("#,###.00"), is("12,345.68"));
 	}
-	
+
 	@Test
 	public void shouldIdentifyZero()
 	{
@@ -47,19 +47,19 @@ public class SingleNumberTest
 		assertTrue(x.isZero());
 		assertFalse(x.isNonZero());
 	}
-	
+
 	@Test
 	public void shouldCompareLarger()
 	{
 		final Height x = new Height(10f);
-		
+
 		assertTrue(x.isGreaterThan(8));
 		assertTrue(x.isGreaterThan(8.0d));
 		assertTrue(x.isGreaterThan(8.0f));
 		assertTrue(x.isGreaterThanOrEqualTo(8));
 		assertTrue(x.isGreaterThanOrEqualTo(8.0d));
 		assertTrue(x.isGreaterThanOrEqualTo(8.0f));
-		
+
 		assertFalse(x.isGreaterThan(12));
 		assertFalse(x.isGreaterThan(12.0d));
 		assertFalse(x.isGreaterThan(12.0f));
@@ -67,19 +67,19 @@ public class SingleNumberTest
 		assertFalse(x.isGreaterThanOrEqualTo(12.0d));
 		assertFalse(x.isGreaterThanOrEqualTo(12.0f));
 	}
-	
+
 	@Test
 	public void shouldCompareSmaller()
 	{
 		final Height x = new Height(10f);
-		
+
 		assertTrue(x.isLessThan(12));
 		assertTrue(x.isLessThan(12.0d));
 		assertTrue(x.isLessThan(12.0f));
 		assertTrue(x.isLessThanOrEqualTo(12));
 		assertTrue(x.isLessThanOrEqualTo(12.0d));
 		assertTrue(x.isLessThanOrEqualTo(12.0f));
-		
+
 		assertFalse(x.isLessThan(8));
 		assertFalse(x.isLessThan(8.0d));
 		assertFalse(x.isLessThan(8.0f));
@@ -87,9 +87,12 @@ public class SingleNumberTest
 		assertFalse(x.isLessThanOrEqualTo(8.0d));
 		assertFalse(x.isLessThanOrEqualTo(8.0f));
 	}
-	
-	static final class Name extends SingleString<Name> { Name(final String x) { super(x, Name::new); } }
-	
+
+	static final class Name extends SingleString<Name>
+	{
+		Name(final String x) { super(x, Name::new); }
+	}
+
 	@Test
 	public void shouldConvertAnythingToDecimal()
 	{
@@ -98,14 +101,14 @@ public class SingleNumberTest
 		assertThat($(6), is(new BigDecimal("6")));
 		assertThat($(new Name("12.345")), is(new BigDecimal("12.345")));
 	}
-	
+
 	@Test
 	public void shouldKeepBigDecimal()
 	{
 		final BigDecimal x = new BigDecimal("123.4500");
 		assertThat($(x), is(sameInstance(x)));
 	}
-	
+
 	@Test
 	public void shouldConvertStrings()
 	{

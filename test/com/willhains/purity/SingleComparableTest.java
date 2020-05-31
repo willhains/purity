@@ -1,9 +1,9 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /** @author willhains */
 public class SingleComparableTest
@@ -11,9 +11,9 @@ public class SingleComparableTest
 	public static final class Height extends Single<Float, Height> implements SingleComparable<Height>
 	{
 		public Height(final Float rawValue) { super(rawValue, Height::new); }
-		@Override public int compareTo(Height that) { return this.raw().compareTo(that.raw()); }
+		@Override public int compareTo(final Height that) { return this.raw().compareTo(that.raw()); }
 	}
-	
+
 	@Test
 	public void shouldChooseLarger()
 	{

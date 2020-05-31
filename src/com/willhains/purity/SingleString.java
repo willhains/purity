@@ -1,10 +1,10 @@
 package com.willhains.purity;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Objects.*;
 
 /**
  * A value type wrapping a {@link String}.
@@ -33,27 +33,27 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		_raw = StringRule.rulesForClass(this.getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
-	
+
 	public final String raw() { return _raw; }
-	
+
 	@Override public String get() { return _raw; }
-	
+
 	@Override public String toString() { return _raw; }
-	@Override public int compareTo(This that) { return this.raw().compareTo(that.raw()); }
-	
+	@Override public int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
+
 	@Override public final int length() { return _raw.length(); }
 	@Override public final char charAt(final int position) { return _raw.charAt(position); }
 	public final char charAt(final IntSupplier position) { return charAt(position.getAsInt()); }
-	
+
 	/** @return a new value of the same type from a substring. */
 	@Override
 	public final This subSequence(final int start, final int end) { return map(s -> s.substring(start, end)); }
-	
+
 	public final This subSequence(final IntSupplier start, final IntSupplier end)
 	{
 		return subSequence(start.getAsInt(), end.getAsInt());
 	}
-	
+
 	/** @return a new value of the same type, wrapping only the first (up to) {@code length} characters. */
 	public final This left(final int length)
 	{
@@ -61,9 +61,9 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		final int lengthOfSubstring = Math.min(lengthOfString, length);
 		return subSequence(0, lengthOfSubstring);
 	}
-	
+
 	public final This left(final IntSupplier length) { return left(length.getAsInt()); }
-	
+
 	/** @return a new value of the same type, wrapping only the last (up to) {@code length} characters. */
 	public final This right(final int length)
 	{
@@ -71,35 +71,35 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		final int lengthOfSubstring = Math.min(lengthOfString, length);
 		return subSequence(lengthOfString - lengthOfSubstring, lengthOfString);
 	}
-	
+
 	public final This right(final IntSupplier length) { return right(length.getAsInt()); }
-	
+
 	/** @return a new value of the same type from the trimmed string. */
 	public final This trim() { return map(String::trim); }
-	
+
 	/** @return {@code true} if the raw string is zero-length; {@code false} otherwise. */
 	public final boolean isEmpty() { return is(String::isEmpty); }
-	
+
 	/** @return {@code true} if the raw string is non-zero-length; {@code false} otherwise. */
 	public final boolean isNotEmpty() { return isNot(String::isEmpty); }
-	
+
 	/** @return a new value of the same type with all instances of the specified pattern replaced. */
 	public final This replaceRegex(final String regex, final String replacement)
 	{
 		return map(s -> s.replaceAll(regex, replacement));
 	}
-	
+
 	public final This replaceRegex(final Supplier<String> regex, final Supplier<String> replacement)
 	{
 		return replaceRegex(regex.get(), replacement.get());
 	}
-	
+
 	/** @return a new value of the same type with all instances of the specified literal string replaced. */
 	public final This replaceLiteral(final String literal, final String replacement)
 	{
 		return map(s -> s.replace(literal, replacement));
 	}
-	
+
 	public final This replaceLiteral(final Supplier<String> literal, final Supplier<String> replacement)
 	{
 		return replaceLiteral(literal.get(), replacement.get());
@@ -114,7 +114,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This) other;
+		final This that = (This)other;
 		return Single.equals(this.raw(), that.raw());
 	}
 
@@ -134,7 +134,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
 	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
-	 *         {@code false} otherwise.
+	 *    {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super String> condition) { return condition.test(raw()); }
 
@@ -149,7 +149,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super String> condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -162,7 +162,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	public final This map(final Function<? super String, ? extends String> mapper)
 	{
 		final String mapped = mapper.apply(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		final This self = (This)this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}

@@ -29,8 +29,8 @@ import java.util.function.*;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(double limit: adjust.floor()) rules.add(floor((long)limit));
-			for(double limit: adjust.ceiling()) rules.add(ceiling((long)limit));
+			for(final double limit: adjust.floor()) rules.add(floor((long)limit));
+			for(final double limit: adjust.ceiling()) rules.add(ceiling((long)limit));
 		}
 
 		// Raw value validations
@@ -40,10 +40,10 @@ import java.util.function.*;
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(double min: validate.min()) rules.add(min((long)min));
-				for(double max: validate.max()) rules.add(max((long)max));
-				for(double bound: validate.greaterThan()) rules.add(greaterThan((long)bound));
-				for(double bound: validate.lessThan()) rules.add(lessThan((long)bound));
+				for(final double min: validate.min()) rules.add(min((long)min));
+				for(final double max: validate.max()) rules.add(max((long)max));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan((long)bound));
+				for(final double bound: validate.lessThan()) rules.add(lessThan((long)bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
 //		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
 //		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
@@ -96,7 +96,7 @@ import java.util.function.*;
 			return result;
 		};
 	}
-	
+
 	/**
 	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `true`.
 	 *
@@ -128,9 +128,9 @@ import java.util.function.*;
 	{
 		return validIf(condition.negate(), errorMessageFactory);
 	}
-	
+
 	/**
-	 * @see #validIf(LongPredicate,LongFunction)
+	 * @see #validIf(LongPredicate, LongFunction)
 	 */
 	static LongRule validIf(final LongPredicate condition, final String errorMessage)
 	{
@@ -138,7 +138,7 @@ import java.util.function.*;
 	}
 
 	/**
-	 * @see #validUnless(LongPredicate,LongFunction)
+	 * @see #validUnless(LongPredicate, LongFunction)
 	 */
 	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
 	{

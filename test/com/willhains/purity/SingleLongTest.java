@@ -1,8 +1,8 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -14,22 +14,25 @@ public class SingleLongTest
 	{
 		public Count(final long rawValue) { super(rawValue, Count::new); }
 	}
-	
+
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
 		assertThat(new Count(173L).raw(), equalTo(173L));
 	}
-	
+
 	@Test
 	public void shouldAlwaysBeUnequalToNull()
 	{
 		final Count x = new Count(123L);
 		assertFalse(x.equals(null));
 	}
-	
-	static final class Count2 extends SingleLong<Count2> { public Count2(long x) { super(x, Count2::new); } }
-	
+
+	static final class Count2 extends SingleLong<Count2>
+	{
+		public Count2(final long x) { super(x, Count2::new); }
+	}
+
 	@Test
 	public void shouldAlwaysBeUnequalToDifferentClass()
 	{
@@ -37,21 +40,21 @@ public class SingleLongTest
 		final Count2 y = new Count2(123L);
 		assertFalse(x.equals(y));
 	}
-	
+
 	@Test
 	public void shouldRepresentRawAsNumber()
 	{
 		final Count x = new Count(12);
 		assertThat(x.asNumber(), is(x.raw()));
 	}
-	
+
 	@Test
 	public void shouldBeReflexive()
 	{
 		final Count x = new Count(123L);
 		assertTrue(x.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeSymmetric()
 	{
@@ -63,7 +66,7 @@ public class SingleLongTest
 		assertFalse(x.equals(z));
 		assertFalse(z.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeTransitive()
 	{
@@ -77,7 +80,7 @@ public class SingleLongTest
 		assertFalse(w.equals(y));
 		assertFalse(w.equals(z));
 	}
-	
+
 	@Test
 	public void shouldBeConsistent()
 	{
@@ -92,7 +95,7 @@ public class SingleLongTest
 		final long xHash2 = x.hashCode();
 		assertThat(xHash1, equalTo(xHash2));
 	}
-	
+
 	@Test
 	public void shouldHaveSameHashCode()
 	{
@@ -103,7 +106,7 @@ public class SingleLongTest
 		final long yHash = y.hashCode();
 		assertThat(xHash, equalTo(yHash));
 	}
-	
+
 	@Test
 	public void shouldGenerateSameStringAsUnderlying()
 	{
@@ -112,8 +115,11 @@ public class SingleLongTest
 	}
 
 	@Validate(min = 2, max = 5)
-	static final class A extends SingleLong<A> { A(long a) { super(a, A::new); } }
-	
+	static final class A extends SingleLong<A>
+	{
+		A(final long a) { super(a, A::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
@@ -122,8 +128,11 @@ public class SingleLongTest
 	}
 
 	@Validate(min = 2)
-	static final class B extends SingleLong<B> { B(long a) { super(a, B::new); } }
-	
+	static final class B extends SingleLong<B>
+	{
+		B(final long a) { super(a, B::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
@@ -131,14 +140,20 @@ public class SingleLongTest
 	}
 
 	@Validate(max = 5)
-	static final class C extends SingleLong<C> { C(long a) { super(a, C::new); } }
-	
+	static final class C extends SingleLong<C>
+	{
+		C(final long a) { super(a, C::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive() { new C(6L); }
 
 	@Validate(greaterThan = 2, lessThan = 5)
-	static final class D extends SingleLong<D> { D(long a) { super(a, D::new); } }
-	
+	static final class D extends SingleLong<D>
+	{
+		D(final long a) { super(a, D::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
@@ -147,8 +162,11 @@ public class SingleLongTest
 	}
 
 	@Validate(greaterThan = 2L)
-	static final class E extends SingleLong<E> { E(long a) { super(a, E::new); } }
-	
+	static final class E extends SingleLong<E>
+	{
+		E(final long a) { super(a, E::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
@@ -156,8 +174,11 @@ public class SingleLongTest
 	}
 
 	@Validate(lessThan = 5L)
-	static final class F extends SingleLong<F> { F(long a) { super(a, F::new); } }
-	
+	static final class F extends SingleLong<F>
+	{
+		F(final long a) { super(a, F::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
@@ -165,8 +186,11 @@ public class SingleLongTest
 	}
 
 	@Adjust(floor = 2, ceiling = 5)
-	static final class G extends SingleLong<G> { G(long a) { super(a, G::new); } }
-	
+	static final class G extends SingleLong<G>
+	{
+		G(final long a) { super(a, G::new); }
+	}
+
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
@@ -174,8 +198,11 @@ public class SingleLongTest
 	}
 
 	@Adjust(floor = 2)
-	static final class H extends SingleLong<H> { H(long a) { super(a, H::new); } }
-	
+	static final class H extends SingleLong<H>
+	{
+		H(final long a) { super(a, H::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
@@ -183,14 +210,17 @@ public class SingleLongTest
 	}
 
 	@Adjust(ceiling = 5)
-	static final class I extends SingleLong<I> { I(long a) { super(a, I::new); } }
-	
+	static final class I extends SingleLong<I>
+	{
+		I(final long a) { super(a, I::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
 		assertThat(new I(6L).raw(), is(5L));
 	}
-	
+
 	@Test
 	public void shouldTestRawValue()
 	{
@@ -198,7 +228,7 @@ public class SingleLongTest
 		assertTrue(x.is(i -> i < 1000L));
 		assertFalse(x.is(i -> i > 1000L));
 	}
-	
+
 	@Test
 	public void shouldTestRawValueAndNegate()
 	{
@@ -206,7 +236,7 @@ public class SingleLongTest
 		assertFalse(x.isNot(i -> i < 1000L));
 		assertTrue(x.isNot(i -> i > 1000L));
 	}
-	
+
 	@Test
 	public void shouldPassFilterOnMatchingCondition()
 	{
@@ -214,7 +244,7 @@ public class SingleLongTest
 		final Optional<Count> opX = x.filter($ -> $ > 50L);
 		assertThat(opX.get(), is(x));
 	}
-	
+
 	@Test
 	public void shouldFailFilterOnNonMatchingCondition()
 	{
@@ -222,7 +252,7 @@ public class SingleLongTest
 		final Optional<Count> opX = x.filter($ -> $ > 1000L);
 		assertFalse(opX.isPresent());
 	}
-	
+
 	@Test
 	public void shouldMapToNewValue()
 	{
@@ -230,7 +260,7 @@ public class SingleLongTest
 		final Count y = x.map(f -> f + 1L);
 		assertThat(y.raw(), equalTo(101L));
 	}
-	
+
 	@Test
 	public void shouldMapToSameValue()
 	{
@@ -238,7 +268,7 @@ public class SingleLongTest
 		final Count y = x.map(f -> f + 0L);
 		assertEquals(x, y);
 	}
-	
+
 	@Test
 	public void shouldFlatMapToNewValue()
 	{
@@ -247,14 +277,17 @@ public class SingleLongTest
 		assertThat(y.raw(), equalTo(101L));
 	}
 
-	static final class J extends SingleLong<J> { J(long a) { super(a, J::new); } }
-	
+	static final class J extends SingleLong<J>
+	{
+		J(final long a) { super(a, J::new); }
+	}
+
 	@Test
 	public void customRules()
 	{
 		new J(2L);
 	}
-	
+
 	@Test
 	public void shouldCompareLarger()
 	{
@@ -263,7 +296,7 @@ public class SingleLongTest
 		assertTrue(x.compareTo(y) > 0);
 		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
-	
+
 	@Test
 	public void shouldCompareSmaller()
 	{
@@ -272,7 +305,7 @@ public class SingleLongTest
 		assertTrue(x.compareTo(y) < 0);
 		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
-	
+
 	@Test
 	public void shouldCompareEqual()
 	{
@@ -282,7 +315,7 @@ public class SingleLongTest
 		assertTrue(x.compareTo(y) == 0);
 		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
-	
+
 	@Test
 	public void shouldIdentifyZero()
 	{
@@ -292,7 +325,7 @@ public class SingleLongTest
 		assertFalse(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
+
 	@Test
 	public void shouldIdentifyPositive()
 	{
@@ -302,9 +335,12 @@ public class SingleLongTest
 		assertTrue(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
-	static final @Pure class Id extends SingleLong<Id> { Id(long id) { super(id, Id::new); } }
-	
+
+	static final @Pure class Id extends SingleLong<Id>
+	{
+		Id(final long id) { super(id, Id::new); }
+	}
+
 	@Test
 	public void shouldIdentifyNegative()
 	{
@@ -314,7 +350,7 @@ public class SingleLongTest
 		assertFalse(x.isPositive());
 		assertTrue(x.isNegative());
 	}
-	
+
 	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw(), is(12L)); }
 	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw(), is(2L)); }
 	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw(), is(15L)); }

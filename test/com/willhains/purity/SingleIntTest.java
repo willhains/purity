@@ -1,8 +1,8 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -14,22 +14,25 @@ public class SingleIntTest
 	{
 		public Count(final int rawValue) { super(rawValue, Count::new); }
 	}
-	
+
 	@Test
 	public void shouldReturnRawValueAfterConstruction()
 	{
 		assertThat(new Count(173).raw(), equalTo(173));
 	}
-	
+
 	@Test
 	public void shouldAlwaysBeUnequalToNull()
 	{
 		final Count x = new Count(123);
 		assertFalse(x.equals(null));
 	}
-	
-	static final class Count2 extends SingleInt<Count2> { public Count2(int x) { super(x, Count2::new); } }
-	
+
+	static final class Count2 extends SingleInt<Count2>
+	{
+		public Count2(final int x) { super(x, Count2::new); }
+	}
+
 	@Test
 	public void shouldAlwaysBeUnequalToDifferentClass()
 	{
@@ -37,21 +40,21 @@ public class SingleIntTest
 		final Count2 y = new Count2(123);
 		assertFalse(x.equals(y));
 	}
-	
+
 	@Test
 	public void shouldRepresentRawAsNumber()
 	{
 		final Count x = new Count(12);
 		assertThat(x.asNumber(), is(x.raw()));
 	}
-	
+
 	@Test
 	public void shouldBeReflexive()
 	{
 		final Count x = new Count(123);
 		assertTrue(x.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeSymmetric()
 	{
@@ -63,7 +66,7 @@ public class SingleIntTest
 		assertFalse(x.equals(z));
 		assertFalse(z.equals(x));
 	}
-	
+
 	@Test
 	public void shouldBeTransitive()
 	{
@@ -77,7 +80,7 @@ public class SingleIntTest
 		assertFalse(w.equals(y));
 		assertFalse(w.equals(z));
 	}
-	
+
 	@Test
 	public void shouldBeConsistent()
 	{
@@ -92,7 +95,7 @@ public class SingleIntTest
 		final int xHash2 = x.hashCode();
 		assertThat(xHash1, equalTo(xHash2));
 	}
-	
+
 	@Test
 	public void shouldHaveSameHashCode()
 	{
@@ -103,7 +106,7 @@ public class SingleIntTest
 		final int yHash = y.hashCode();
 		assertThat(xHash, equalTo(yHash));
 	}
-	
+
 	@Test
 	public void shouldGenerateSameStringAsUnderlying()
 	{
@@ -112,8 +115,11 @@ public class SingleIntTest
 	}
 
 	@Validate(min = 2, max = 5)
-	static final class A extends SingleInt<A> { A(int a) { super(a, A::new); } }
-	
+	static final class A extends SingleInt<A>
+	{
+		A(final int a) { super(a, A::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
@@ -122,8 +128,11 @@ public class SingleIntTest
 	}
 
 	@Validate(min = 2)
-	static final class B extends SingleInt<B> { B(int a) { super(a, B::new); } }
-	
+	static final class B extends SingleInt<B>
+	{
+		B(final int a) { super(a, B::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
@@ -131,8 +140,11 @@ public class SingleIntTest
 	}
 
 	@Validate(max = 5)
-	static final class C extends SingleInt<C> { C(int a) { super(a, C::new); } }
-	
+	static final class C extends SingleInt<C>
+	{
+		C(final int a) { super(a, C::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
@@ -140,8 +152,11 @@ public class SingleIntTest
 	}
 
 	@Validate(greaterThan = 2, lessThan = 5)
-	static final class D extends SingleInt<D> { D(int a) { super(a, D::new); } }
-	
+	static final class D extends SingleInt<D>
+	{
+		D(final int a) { super(a, D::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
@@ -150,8 +165,11 @@ public class SingleIntTest
 	}
 
 	@Validate(greaterThan = 2)
-	static final class E extends SingleInt<E> { E(int a) { super(a, E::new); } }
-	
+	static final class E extends SingleInt<E>
+	{
+		E(final int a) { super(a, E::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
@@ -159,8 +177,11 @@ public class SingleIntTest
 	}
 
 	@Validate(lessThan = 5)
-	static final class F extends SingleInt<F> { F(int a) { super(a, F::new); } }
-	
+	static final class F extends SingleInt<F>
+	{
+		F(final int a) { super(a, F::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
@@ -168,8 +189,11 @@ public class SingleIntTest
 	}
 
 	@Adjust(floor = 2, ceiling = 5)
-	static final class G extends SingleInt<G> { G(int a) { super(a, G::new); } }
-	
+	static final class G extends SingleInt<G>
+	{
+		G(final int a) { super(a, G::new); }
+	}
+
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
@@ -177,8 +201,11 @@ public class SingleIntTest
 	}
 
 	@Adjust(floor = 2)
-	static final class H extends SingleInt<H> { H(int a) { super(a, H::new); } }
-	
+	static final class H extends SingleInt<H>
+	{
+		H(final int a) { super(a, H::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
@@ -186,14 +213,17 @@ public class SingleIntTest
 	}
 
 	@Adjust(ceiling = 5)
-	static final class I extends SingleInt<I> { I(int a) { super(a, I::new); } }
-	
+	static final class I extends SingleInt<I>
+	{
+		I(final int a) { super(a, I::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
 		assertThat(new I(6).raw(), is(5));
 	}
-	
+
 	@Test
 	public void shouldTestRawValue()
 	{
@@ -201,7 +231,7 @@ public class SingleIntTest
 		assertTrue(x.is(i -> i < 1000));
 		assertFalse(x.is(i -> i > 1000));
 	}
-	
+
 	@Test
 	public void shouldTestRawValueAndNegate()
 	{
@@ -209,7 +239,7 @@ public class SingleIntTest
 		assertFalse(x.isNot(i -> i < 1000));
 		assertTrue(x.isNot(i -> i > 1000));
 	}
-	
+
 	@Test
 	public void shouldPassFilterOnMatchingCondition()
 	{
@@ -217,7 +247,7 @@ public class SingleIntTest
 		final Optional<Count> opX = x.filter($ -> $ > 50);
 		assertThat(opX.get(), is(x));
 	}
-	
+
 	@Test
 	public void shouldFailFilterOnNonMatchingCondition()
 	{
@@ -225,7 +255,7 @@ public class SingleIntTest
 		final Optional<Count> opX = x.filter($ -> $ > 1000);
 		assertFalse(opX.isPresent());
 	}
-	
+
 	@Test
 	public void shouldMapToNewValue()
 	{
@@ -233,7 +263,7 @@ public class SingleIntTest
 		final Count y = x.map(f -> f + 1);
 		assertThat(y.raw(), equalTo(101));
 	}
-	
+
 	@Test
 	public void shouldMapToSameValue()
 	{
@@ -241,7 +271,7 @@ public class SingleIntTest
 		final Count y = x.map(f -> f + 0);
 		assertEquals(x, y);
 	}
-	
+
 	@Test
 	public void shouldFlatMapToNewValue()
 	{
@@ -250,11 +280,14 @@ public class SingleIntTest
 		assertThat(y.raw(), equalTo(101));
 	}
 
-	static final class J extends SingleInt<J> { J(int a) { super(a, J::new); } }
+	static final class J extends SingleInt<J>
+	{
+		J(final int a) { super(a, J::new); }
+	}
 
 	@Test
 	public void customRules() { new J(2); }
-	
+
 	@Test
 	public void shouldCompareLarger()
 	{
@@ -263,7 +296,7 @@ public class SingleIntTest
 		assertTrue(x.compareTo(y) > 0);
 		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
-	
+
 	@Test
 	public void shouldCompareSmaller()
 	{
@@ -272,7 +305,7 @@ public class SingleIntTest
 		assertTrue(x.compareTo(y) < 0);
 		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
-	
+
 	@Test
 	public void shouldCompareEqual()
 	{
@@ -282,7 +315,7 @@ public class SingleIntTest
 		assertTrue(x.compareTo(y) == 0);
 		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
-	
+
 	@Test
 	public void shouldIdentifyZero()
 	{
@@ -292,7 +325,7 @@ public class SingleIntTest
 		assertFalse(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
+
 	@Test
 	public void shouldIdentifyPositive()
 	{
@@ -302,9 +335,12 @@ public class SingleIntTest
 		assertTrue(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
-	static final @Pure class Id extends SingleInt<Id> { Id(int id) { super(id, Id::new); } }
-	
+
+	static final @Pure class Id extends SingleInt<Id>
+	{
+		Id(final int id) { super(id, Id::new); }
+	}
+
 	@Test
 	public void shouldIdentifyNegative()
 	{
@@ -314,7 +350,7 @@ public class SingleIntTest
 		assertFalse(x.isPositive());
 		assertTrue(x.isNegative());
 	}
-	
+
 	@Test public void shouldAdd() { assertThat(new Count(5).plus(7).raw(), is(12)); }
 	@Test public void shouldSubtract() { assertThat(new Count(5).minus(3).raw(), is(2)); }
 	@Test public void shouldMultiply() { assertThat(new Count(5).multiplyBy(3).raw(), is(15)); }

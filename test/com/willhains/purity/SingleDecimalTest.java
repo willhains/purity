@@ -1,11 +1,11 @@
 package com.willhains.purity;
 
-import org.junit.Test;
+import org.junit.*;
 
-import java.math.BigDecimal;
+import java.math.*;
 
-import static com.willhains.purity.SingleNumber.$;
-import static org.hamcrest.CoreMatchers.is;
+import static com.willhains.purity.SingleNumber.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 /** @author willhains */
@@ -17,7 +17,7 @@ public class SingleDecimalTest
 		Price(final double p) { super(p, Price::new); }
 		Price(final String p) { super(p, Price::new); }
 	}
-	
+
 	@Test
 	public void shouldConstructFromDouble()
 	{
@@ -25,7 +25,7 @@ public class SingleDecimalTest
 		final Price y = new Price(12.3);
 		assertEquals(x, y);
 	}
-	
+
 	@Test
 	public void shouldConstructFromString()
 	{
@@ -33,14 +33,14 @@ public class SingleDecimalTest
 		final Price y = new Price("12.3");
 		assertEquals(x, y);
 	}
-	
+
 	@Test
 	public void shouldRepresentRawAsNumber()
 	{
 		final Price x = new Price("12.3");
 		assertThat(x.asNumber(), is(x.raw()));
 	}
-	
+
 	@Test
 	public void shouldNotUseScientificNotationByDefault()
 	{
@@ -49,7 +49,7 @@ public class SingleDecimalTest
 		final Price y = new Price("0.000000000000000123");
 		assertThat(y.toString(), is("0.000000000000000123"));
 	}
-	
+
 	@Test
 	public void shouldCompareLarger()
 	{
@@ -58,7 +58,7 @@ public class SingleDecimalTest
 		assertTrue(x.compareTo(y) > 0);
 		assertTrue(x.compareToNumber(y.raw()) > 0);
 	}
-	
+
 	@Test
 	public void shouldCompareSmaller()
 	{
@@ -67,7 +67,7 @@ public class SingleDecimalTest
 		assertTrue(x.compareTo(y) < 0);
 		assertTrue(x.compareToNumber(y.raw()) < 0);
 	}
-	
+
 	@Test
 	public void shouldCompareEqual()
 	{
@@ -77,7 +77,7 @@ public class SingleDecimalTest
 		assertTrue(x.compareTo(y) == 0);
 		assertTrue(x.compareToNumber(y.raw()) == 0);
 	}
-	
+
 	@Test
 	public void shouldIdentifyZero()
 	{
@@ -87,7 +87,7 @@ public class SingleDecimalTest
 		assertFalse(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
+
 	@Test
 	public void shouldIdentifyPositive()
 	{
@@ -97,12 +97,12 @@ public class SingleDecimalTest
 		assertTrue(x.isPositive());
 		assertFalse(x.isNegative());
 	}
-	
+
 	static final @Pure class Factor extends SingleDecimal<Factor>
 	{
-		Factor(BigDecimal factor) { super(factor, Factor::new); }
+		Factor(final BigDecimal factor) { super(factor, Factor::new); }
 	}
-	
+
 	@Test
 	public void shouldIdentifyNegative()
 	{
@@ -112,40 +112,40 @@ public class SingleDecimalTest
 		assertFalse(x.isPositive());
 		assertTrue(x.isNegative());
 	}
-	
+
 	@Test public void shouldAdd()
 	{
 		assertThat(new Price("12.3").plus("0.7").raw(), is($("13.0")));
 	}
-	
+
 	@Test public void shouldSubtract()
 	{
 		assertThat(new Price("12.3").minus("0.3").raw(), is($("12.0")));
 	}
-	
+
 	@Test public void shouldMultiply()
 	{
 		assertThat(new Price("12.3").multiplyBy("10").raw(), is($("123.0")));
 	}
-	
+
 	@Test public void shouldDivide()
 	{
 		assertThat(new Price("12.8").divideBy(2).raw(), is($("6.4")));
 	}
-	
+
 	@Test
 	public void shouldRoundHalfUp()
 	{
 		assertThat(new Price("14.5").round().raw(), is($("15")));
 		assertThat(new Price("14.4").round().raw(), is($("14")));
 	}
-	
+
 	@Test
 	public void shouldRoundDown()
 	{
 		assertThat(new Price("14.9").roundDown().raw(), is($("14")));
 	}
-	
+
 	@Test
 	public void shouldRoundUp()
 	{
@@ -153,8 +153,11 @@ public class SingleDecimalTest
 	}
 
 	@Validate(min = 2, max = 5)
-	static final class A extends SingleDecimal<A> { A(BigDecimal a) { super(a, A::new); } }
-	
+	static final class A extends SingleDecimal<A>
+	{
+		A(final BigDecimal a) { super(a, A::new); }
+	}
+
 	@Test
 	public void shouldAcceptBetweenInclusive()
 	{
@@ -163,8 +166,11 @@ public class SingleDecimalTest
 	}
 
 	@Validate(min = 2)
-	static final class B extends SingleDecimal<B> { B(BigDecimal a) { super(a, B::new); } }
-	
+	static final class B extends SingleDecimal<B>
+	{
+		B(final BigDecimal a) { super(a, B::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanExclusive()
 	{
@@ -172,8 +178,11 @@ public class SingleDecimalTest
 	}
 
 	@Validate(max = 5)
-	static final class C extends SingleDecimal<C> { C(BigDecimal a) { super(a, C::new); } }
-	
+	static final class C extends SingleDecimal<C>
+	{
+		C(final BigDecimal a) { super(a, C::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
@@ -183,10 +192,10 @@ public class SingleDecimalTest
 	@Validate(greaterThan = 2, lessThan = 5)
 	static final class D extends SingleDecimal<D>
 	{
-		private D(BigDecimal a) { super(a, D::new); }
-		D(String a) { super(a, D::new); }
+		private D(final BigDecimal a) { super(a, D::new); }
+		D(final String a) { super(a, D::new); }
 	}
-	
+
 	@Test
 	public void shouldAcceptBetweenExclusive()
 	{
@@ -195,8 +204,11 @@ public class SingleDecimalTest
 	}
 
 	@Validate(greaterThan = 2)
-	static final class E extends SingleDecimal<E> { E(BigDecimal a) { super(a, E::new); } }
-	
+	static final class E extends SingleDecimal<E>
+	{
+		E(final BigDecimal a) { super(a, E::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapLessThanInclusive()
 	{
@@ -204,8 +216,11 @@ public class SingleDecimalTest
 	}
 
 	@Validate(lessThan = 5)
-	static final class F extends SingleDecimal<F> { F(BigDecimal a) { super(a, F::new); } }
-	
+	static final class F extends SingleDecimal<F>
+	{
+		F(final BigDecimal a) { super(a, F::new); }
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldTrapGreaterThanInclusive()
 	{
@@ -215,10 +230,10 @@ public class SingleDecimalTest
 	@Adjust(floor = 2, ceiling = 5)
 	static final class G extends SingleDecimal<G>
 	{
-		private G(BigDecimal a) { super(a, G::new); }
-		G(double a) { super(a, G::new); }
+		private G(final BigDecimal a) { super(a, G::new); }
+		G(final double a) { super(a, G::new); }
 	}
-	
+
 	@Test
 	public void shouldPassThroughValueWithinRange()
 	{
@@ -226,8 +241,11 @@ public class SingleDecimalTest
 	}
 
 	@Adjust(floor = 2)
-	static final class H extends SingleDecimal<H> { H(BigDecimal a) { super(a, H::new); } }
-	
+	static final class H extends SingleDecimal<H>
+	{
+		H(final BigDecimal a) { super(a, H::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueBelowFloor()
 	{
@@ -235,14 +253,17 @@ public class SingleDecimalTest
 	}
 
 	@Adjust(ceiling = 5)
-	static final class I extends SingleDecimal<I> { I(BigDecimal a) { super(a, I::new); } }
-	
+	static final class I extends SingleDecimal<I>
+	{
+		I(final BigDecimal a) { super(a, I::new); }
+	}
+
 	@Test
 	public void shouldAdjustValueAboveCeiling()
 	{
 		assertThat(new I($(6)).raw(), is($(5)));
 	}
-	
+
 	@Test
 	public void shouldRoundToSpecifiedNumberOfPlaces()
 	{
