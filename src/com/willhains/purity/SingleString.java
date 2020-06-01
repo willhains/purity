@@ -167,7 +167,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 * @param mapper The mapping function to apply to the raw underlying value.
 	 * @return A new instance of this type.
 	 */
-	public final This map(final Function<? super String, ? extends String> mapper)
+	public final This map(final Function<? super String, String> mapper)
 	{
 		final String mapped = mapper.apply(raw());
 		@SuppressWarnings("unchecked") final This self = (This)this;
