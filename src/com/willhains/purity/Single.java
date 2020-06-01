@@ -32,14 +32,16 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		_constructor = requireNonNull(constructor);
 	}
 
+	/** Return the raw underlying value. */
+	public final Raw raw() { return defensiveCopy(_raw); }
+
 	/**
-	 * Return the raw underlying value.
-	 * <p>
-	 * Override this method if {@link Raw} is mutable. The default implementation assumes {@link #_raw} is
-	 * immutable, and returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the
-	 * overriding method should be careful to make a deep, defensive copy to return to the caller.
+	 * Override this method if {@link Raw} is mutable. The default implementation assumes {@link Raw} is immutable, and
+	 * returns it as-is. The returned {@link Raw} value, if mutable, could be mutated, so the overriding method should
+	 * be careful to make a deep, defensive copy to return to the caller.
 	 */
-	public Raw raw() { return _raw; }
+	@SuppressWarnings({"WeakerAccess", "DesignForExtension"})
+	protected Raw defensiveCopy(final Raw raw) { return raw; }
 
 	@Override public final int hashCode() { return hashCode(this._raw); }
 
