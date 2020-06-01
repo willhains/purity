@@ -12,6 +12,7 @@ import static java.util.Objects.*;
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {
 	// The single-argument constructor of the subclass
@@ -47,17 +48,20 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		final This that = (This)other;
-		return this.raw() == that.raw();
+		@SuppressWarnings("unchecked") final This that = (This)other;
+		@SuppressWarnings("FloatingPointEquality") final boolean same = this.raw() == that.raw();
+		return same;
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return this.raw() == that.raw();
+		@SuppressWarnings("FloatingPointEquality") final boolean same = this.raw() == that.raw();
+		return same;
 	}
 
+	@SuppressWarnings("AutoBoxing")
 	@Override public Double asNumber() { return _raw; }
 
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw(), that.raw()); }
@@ -119,7 +123,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	public final Optional<This> filter(final DoublePredicate condition)
 	{
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -132,8 +136,9 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	public final This map(final DoubleUnaryOperator mapper)
 	{
 		final double mapped = mapper.applyAsDouble(_raw);
-		final This self = (This)this;
-		if(mapped == _raw) return self;
+		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("FloatingPointEquality") final boolean same = mapped == _raw;
+		if(same) return self;
 		return _constructor.apply(mapped);
 	}
 

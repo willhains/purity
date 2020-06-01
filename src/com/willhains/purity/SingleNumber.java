@@ -10,6 +10,7 @@ import java.util.function.*;
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
  */
+@SuppressWarnings({"ClassWithTooManyMethods", "DollarSignInName"})
 public @Pure interface SingleNumber<This extends SingleNumber<This>> extends SingleComparable<This>
 {
 	Number asNumber();

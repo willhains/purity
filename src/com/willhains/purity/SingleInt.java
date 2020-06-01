@@ -12,6 +12,7 @@ import static java.util.Objects.*;
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleInt<This extends SingleInt<This>> implements SingleNumber<This>, IntSupplier
 {
 	// The single-argument constructor of the subclass
@@ -47,7 +48,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		final This that = (This)other;
+		@SuppressWarnings("unchecked") final This that = (This)other;
 		return this.raw() == that.raw();
 	}
 
@@ -58,6 +59,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 		return this.raw() == that.raw();
 	}
 
+	@SuppressWarnings("AutoBoxing")
 	@Override public Integer asNumber() { return _raw; }
 
 	@Override public final int compareTo(final This that) { return Integer.compare(this.raw(), that.raw()); }
@@ -117,7 +119,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 */
 	public final Optional<This> filter(final IntPredicate condition)
 	{
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -130,7 +132,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	public final This map(final IntUnaryOperator mapper)
 	{
 		final int mapped = mapper.applyAsInt(_raw);
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		if(mapped == _raw) return self;
 		return _constructor.apply(mapped);
 	}

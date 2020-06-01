@@ -44,6 +44,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@Override public final int hashCode() { return hashCode(this._raw); }
 
 	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
+	@SuppressWarnings("ChainOfInstanceofChecks")
 	public static int hashCode(final Object object)
 	{
 		if(!object.getClass().isArray()) return object.hashCode();
@@ -56,7 +57,8 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(object instanceof double[]) return Arrays.hashCode((double[])object);
 		if(object instanceof float[]) return Arrays.hashCode((float[])object);
 		if(object instanceof char[]) return Arrays.hashCode((char[])object);
-		return Arrays.hashCode((short[])object);
+		if(object instanceof short[]) return Arrays.hashCode((short[])object);
+		throw new AssertionError("Missing array case in Purity");
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(obj == this) return true;
 		if(obj == null) return false;
 		if(!this.getClass().equals(obj.getClass())) return false;
-		final This that = (This)obj;
+		@SuppressWarnings("unchecked") final This that = (This)obj;
 		return equals(this.raw(), that.raw());
 	}
 
@@ -77,6 +79,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	}
 
 	/** Compare two objects for equality. If they are arrays, compare their elements. */
+	@SuppressWarnings("ChainOfInstanceofChecks")
 	static boolean equals(final Object object1, final Object object2)
 	{
 		if(object1 == object2) return true;
@@ -92,7 +95,8 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(object1 instanceof double[]) return Arrays.equals((double[])object1, (double[])object2);
 		if(object1 instanceof float[]) return Arrays.equals((float[])object1, (float[])object2);
 		if(object1 instanceof char[]) return Arrays.equals((char[])object1, (char[])object2);
-		return Arrays.equals((short[])object1, (short[])object2);
+		if(object1 instanceof short[]) return Arrays.equals((short[])object1, (short[])object2);
+		throw new AssertionError("Missing array case in Purity");
 	}
 
 	@Override
@@ -102,6 +106,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	}
 
 	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */
+	@SuppressWarnings("ChainOfInstanceofChecks")
 	public static String toString(final Object object)
 	{
 		if(!object.getClass().isArray()) return String.valueOf(object);
@@ -114,7 +119,8 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(object instanceof double[]) return Arrays.toString((double[])object);
 		if(object instanceof float[]) return Arrays.toString((float[])object);
 		if(object instanceof char[]) return Arrays.toString((char[])object);
-		return Arrays.toString((short[])object);
+		if(object instanceof short[]) return Arrays.toString((short[])object);
+		throw new AssertionError("Missing array case in Purity");
 	}
 
 	/**
@@ -141,7 +147,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super Raw> condition)
 	{
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -154,7 +160,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	public final This map(final Function<? super Raw, ? extends Raw> mapper)
 	{
 		final Raw mapped = mapper.apply(raw());
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}

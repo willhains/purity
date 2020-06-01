@@ -12,6 +12,7 @@ import static java.util.Objects.*;
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleLong<This extends SingleLong<This>> implements SingleNumber<This>, LongSupplier
 {
 	// The single-argument constructor of the subclass
@@ -57,7 +58,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		final This that = (This)other;
+		@SuppressWarnings("unchecked") final This that = (This)other;
 		return this.raw() == that.raw();
 	}
 
@@ -68,6 +69,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		return this.raw() == that.raw();
 	}
 
+	@SuppressWarnings("AutoBoxing")
 	@Override public Long asNumber() { return _raw; }
 
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw(), that.raw()); }
@@ -125,7 +127,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	public final Optional<This> filter(final LongPredicate condition)
 	{
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -138,7 +140,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	public final This map(final LongUnaryOperator mapper)
 	{
 		final long mapped = mapper.applyAsLong(_raw);
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		if(mapped == _raw) return self;
 		return _constructor.apply(mapped);
 	}
