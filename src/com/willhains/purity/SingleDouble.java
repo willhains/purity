@@ -77,9 +77,9 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 
 	public final int compareToNumber(final double number) { return Double.compare(this.raw(), number); }
 
-	@Override public final boolean isZero() { return raw() == 0d; }
-	@Override public final boolean isPositive() { return raw() > 0d; }
-	@Override public final boolean isNegative() { return raw() < 0d; }
+	@Override public final boolean isZero() { return raw() == 0.0; }
+	@Override public final boolean isPositive() { return raw() > 0.0; }
+	@Override public final boolean isNegative() { return raw() < 0.0; }
 
 	@Override public final This plus(final Number number) { return plus(number.doubleValue()); }
 	@Override public final This minus(final Number number) { return minus(number.doubleValue()); }
