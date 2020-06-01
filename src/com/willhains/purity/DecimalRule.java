@@ -4,6 +4,7 @@ import java.math.*;
 import java.util.*;
 
 import static com.willhains.purity.SingleNumber.*;
+import static java.math.RoundingMode.*;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDecimal} object.
@@ -33,6 +34,7 @@ import static com.willhains.purity.SingleNumber.*;
 		{
 			for(final double limit: adjust.floor()) rules.add(floor($(limit)));
 			for(final double limit: adjust.ceiling()) rules.add(ceiling($(limit)));
+			for(final double increment: adjust.roundToIncrement()) rules.add(round(increment));
 		}
 
 		// Raw value validations
@@ -117,4 +119,14 @@ import static com.willhains.purity.SingleNumber.*;
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
+
+	/** Generate rule to round the raw value to an increment. */
+	static DecimalRule round(final double increment)
+	{
+		return raw ->
+		{
+			final BigDecimal decimalIncrement = $(increment);
+			return raw.divide(decimalIncrement, HALF_UP).setScale(0, HALF_UP).multiply(decimalIncrement);
+		};
+	}
 }

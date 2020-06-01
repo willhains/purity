@@ -342,6 +342,32 @@ public class SingleDoubleTest
 		new N(2d);
 	}
 
+	@Adjust(roundToIncrement = 0.1)
+	static final class O extends SingleDouble<O>
+	{
+		O(final double o) { super(o, O::new); }
+	}
+
+	@Test
+	public void shouldRoundToFraction()
+	{
+		final O x = new O(1.298);
+		assertThat(x.raw(), is(1.3));
+	}
+
+	@Adjust(roundToIncrement = 5)
+	static final class P extends SingleDouble<P>
+	{
+		P(final double p) { super(p, P::new); }
+	}
+
+	@Test
+	public void shouldRoundToIncrementGreaterThanOne()
+	{
+		final P x = new P(12.5001);
+		assertThat(x.raw(), is(15.0));
+	}
+
 	@Test
 	public void shouldCompareLarger()
 	{

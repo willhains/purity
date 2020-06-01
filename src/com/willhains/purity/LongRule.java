@@ -32,6 +32,7 @@ import static java.lang.Long.*;
 		{
 			for(final double limit: adjust.floor()) rules.add(floor(limit));
 			for(final double limit: adjust.ceiling()) rules.add(ceiling(limit));
+			for(final double increment: adjust.roundToIncrement()) rules.add(round(increment));
 		}
 
 		// Raw value validations
@@ -123,4 +124,8 @@ import static java.lang.Long.*;
 		@SuppressWarnings("NumericCastThatLosesPrecision") final long max = (long)Math.min(maxValue, MAX_VALUE);
 		return raw -> Math.min(raw, max);
 	}
+
+	/** Generate rule to round the raw value to an increment. */
+	@SuppressWarnings("NumericCastThatLosesPrecision")
+	static LongRule round(final double increment) { return raw -> (long)(Math.round(raw / increment) * increment); }
 }

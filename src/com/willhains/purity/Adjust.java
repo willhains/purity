@@ -1,6 +1,7 @@
 package com.willhains.purity;
 
 import java.lang.annotation.*;
+import java.math.*;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -30,4 +31,7 @@ public @interface Adjust
 
 	/** {@linkplain String#intern Intern} string values. */
 	boolean intern() default false;
+
+	/** Round numeric values to an increment (multiple). Rounding method is {@link RoundingMode#HALF_UP} */
+	double[] roundToIncrement() default {};
 }

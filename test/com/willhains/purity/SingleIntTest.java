@@ -288,6 +288,21 @@ public class SingleIntTest
 	@Test
 	public void customRules() { new J(2); }
 
+	@Adjust(roundToIncrement = 5)
+	static final class K extends SingleInt<K>
+	{
+		K(final int k) { super(k, K::new); }
+	}
+
+	@Test
+	public void shouldRoundToIncrementGreaterThanOne()
+	{
+		final K x = new K(13);
+		final K y = new K(12);
+		assertThat(x.raw(), is(15));
+		assertThat(y.raw(), is(10));
+	}
+
 	@Test
 	public void shouldCompareLarger()
 	{

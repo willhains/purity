@@ -288,6 +288,21 @@ public class SingleLongTest
 		new J(2L);
 	}
 
+	@Adjust(roundToIncrement = 5)
+	static final class K extends SingleLong<K>
+	{
+		K(final long k) { super(k, K::new); }
+	}
+
+	@Test
+	public void shouldRoundToIncrementGreaterThanOne()
+	{
+		final K x = new K(13);
+		final K y = new K(12);
+		assertThat(x.raw(), is(15L));
+		assertThat(y.raw(), is(10L));
+	}
+
 	@Test
 	public void shouldCompareLarger()
 	{

@@ -30,7 +30,7 @@ import java.util.*;
 		{
 			for(final double limit: adjust.floor()) rules.add(floor(limit));
 			for(final double limit: adjust.ceiling()) rules.add(ceiling(limit));
-//  	    for(double increment: adjust.roundToIncrement()) rules.add(round(increment, adjust.rounding())); TODO
+			for(final double increment: adjust.roundToIncrement()) rules.add(round(increment));
 		}
 
 		// Raw value validations
@@ -136,4 +136,7 @@ import java.util.*;
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
+
+	/** Generate rule to round the raw value to an increment. */
+	static DoubleRule round(final double increment) { return raw -> Math.round(raw / increment) * increment; }
 }

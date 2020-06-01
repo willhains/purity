@@ -265,6 +265,32 @@ public class SingleDecimalTest
 		assertThat(new I($(6)).raw(), is($(5)));
 	}
 
+	@Adjust(roundToIncrement = 0.1)
+	static final class J extends SingleDecimal<J>
+	{
+		J(final BigDecimal j) { super(j, J::new); }
+	}
+
+	@Test
+	public void shouldRoundToFraction()
+	{
+		final J x = new J($(1.298));
+		assertThat(x.raw(), is($(1.3)));
+	}
+
+	@Adjust(roundToIncrement = 5)
+	static final class K extends SingleDecimal<K>
+	{
+		K(final BigDecimal k) { super(k, K::new); }
+	}
+
+	@Test
+	public void shouldRoundToIncrementGreaterThanOne()
+	{
+		final K x = new K($(12.5001));
+		assertThat(x.raw(), is($(15.0)));
+	}
+
 	@Test
 	public void shouldRoundToSpecifiedNumberOfPlaces()
 	{
