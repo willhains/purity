@@ -34,6 +34,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		_constructor = requireNonNull(constructor);
 	}
 
+	/** Return the raw underlying value. */
 	public final String raw() { return _raw; }
 
 	@Override public String get() { return _raw; }
