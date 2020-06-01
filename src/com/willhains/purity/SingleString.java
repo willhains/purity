@@ -38,13 +38,13 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	/** Return the raw underlying value. */
 	public final String raw() { return _raw; }
 
-	@Override public String get() { return _raw; }
+	@Override public String get() { return raw(); }
 
-	@Override public String toString() { return _raw; }
+	@Override public String toString() { return raw(); }
 	@Override public int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
 
-	@Override public final int length() { return _raw.length(); }
-	@Override public final char charAt(final int position) { return _raw.charAt(position); }
+	@Override public final int length() { return raw().length(); }
+	@Override public final char charAt(final int position) { return raw().charAt(position); }
 	public final char charAt(final IntSupplier position) { return charAt(position.getAsInt()); }
 
 	/** @return a new value of the same type from a substring. */
@@ -108,7 +108,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	}
 
 	@Override
-	public final int hashCode() { return Single.hashCode(this._raw); }
+	public final int hashCode() { return Single.hashCode(this.raw()); }
 
 	@Override
 	public final boolean equals(final Object other)
@@ -135,7 +135,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
 	 *    {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super String> condition) { return condition.test(raw()); }
