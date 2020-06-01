@@ -109,8 +109,8 @@ import static com.willhains.purity.SingleNumber.*;
 	 * @return a {@link DecimalRule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
 	static DecimalRule validIf(
-		final Predicate<BigDecimal> condition,
-		final Function<BigDecimal, String> errorMessageFactory)
+		final Predicate<? super BigDecimal> condition,
+		final Function<? super BigDecimal, String> errorMessageFactory)
 	{
 		return raw ->
 		{

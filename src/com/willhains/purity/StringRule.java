@@ -140,8 +140,8 @@ import static com.willhains.purity.Trim.*;
 	 * @return a {@link StringRule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
 	static StringRule validIf(
-		final Predicate<String> condition,
-		final Function<String, String> errorMessageFactory)
+		final Predicate<? super String> condition,
+		final Function<? super String, String> errorMessageFactory)
 	{
 		return raw ->
 		{
