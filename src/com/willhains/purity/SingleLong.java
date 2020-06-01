@@ -86,10 +86,10 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	@Override public final This multiplyBy(final Number number) { return multiplyBy(number.longValue()); }
 	@Override public final This divideBy(final Number number) { return divideBy(number.longValue()); }
 
-	public final This plus(final long number) { return map($ -> $ + number); }
-	public final This minus(final long number) { return map($ -> $ - number); }
-	public final This multiplyBy(final long number) { return map($ -> $ * number); }
-	public final This divideBy(final long number) { return map($ -> $ / number); }
+	public final This plus(final long number) { return map(raw -> raw + number); }
+	public final This minus(final long number) { return map(raw -> raw - number); }
+	public final This multiplyBy(final long number) { return map(raw -> raw * number); }
+	public final This divideBy(final long number) { return map(raw -> raw / number); }
 
 	public final This plus(final LongSupplier number) { return plus(number.getAsLong()); }
 	public final This minus(final LongSupplier number) { return minus(number.getAsLong()); }

@@ -76,10 +76,10 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	@Override public final This multiplyBy(final Number number) { return multiplyBy(number.doubleValue()); }
 	@Override public final This divideBy(final Number number) { return divideBy(number.doubleValue()); }
 
-	public final This plus(final double number) { return map($ -> $ + number); }
-	public final This minus(final double number) { return map($ -> $ - number); }
-	public final This multiplyBy(final double number) { return map($ -> $ * number); }
-	public final This divideBy(final double number) { return map($ -> $ / number); }
+	public final This plus(final double number) { return map(raw -> raw + number); }
+	public final This minus(final double number) { return map(raw -> raw - number); }
+	public final This multiplyBy(final double number) { return map(raw -> raw * number); }
+	public final This divideBy(final double number) { return map(raw -> raw / number); }
 
 	public final This plus(final DoubleSupplier number) { return plus(number.getAsDouble()); }
 	public final This minus(final DoubleSupplier number) { return minus(number.getAsDouble()); }

@@ -62,16 +62,12 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 
 	@Override public final int compareTo(final This that) { return Integer.compare(this.raw(), that.raw()); }
 
-	@Override
-	public final int compareToNumber(final Number number)
+	@Override public final int compareToNumber(final Number number)
 	{
 		return Integer.compare(this._raw, number.intValue());
 	}
 
-	public final int compareToNumber(final int number)
-	{
-		return Integer.compare(this._raw, number);
-	}
+	public final int compareToNumber(final int number) { return Integer.compare(this._raw, number); }
 
 	@Override public boolean isZero() { return _raw == 0; }
 	@Override public boolean isPositive() { return _raw > 0; }
@@ -82,10 +78,10 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	@Override public final This multiplyBy(final Number number) { return multiplyBy(number.intValue()); }
 	@Override public final This divideBy(final Number number) { return divideBy(number.intValue()); }
 
-	public final This plus(final int number) { return map($ -> $ + number); }
-	public final This minus(final int number) { return map($ -> $ - number); }
-	public final This multiplyBy(final int number) { return map($ -> $ * number); }
-	public final This divideBy(final int number) { return map($ -> $ / number); }
+	public final This plus(final int number) { return map(raw -> raw + number); }
+	public final This minus(final int number) { return map(raw -> raw - number); }
+	public final This multiplyBy(final int number) { return map(raw -> raw * number); }
+	public final This divideBy(final int number) { return map(raw -> raw / number); }
 
 	public final This plus(final IntSupplier number) { return plus(number.getAsInt()); }
 	public final This minus(final IntSupplier number) { return minus(number.getAsInt()); }

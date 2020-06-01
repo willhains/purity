@@ -135,7 +135,7 @@ import java.util.function.*;
 	 */
 	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
 	{
-		return validIf(condition, $ -> errorMessage);
+		return validIf(condition, raw -> errorMessage);
 	}
 
 	/**

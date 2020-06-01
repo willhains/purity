@@ -76,9 +76,9 @@ import static com.willhains.purity.Trim.*;
 	static StringRule validCharacters(final String allowedCharacters)
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
-		allowedCharacters.chars().forEach(c -> validCharMap[c] = true);
+		allowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
 		return validIf(
-			raw -> raw.chars().allMatch(c -> validCharMap[c]),
+			raw -> raw.chars().allMatch(charIndex -> validCharMap[charIndex]),
 			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
 	}
 
@@ -86,9 +86,9 @@ import static com.willhains.purity.Trim.*;
 	static StringRule invalidCharacters(final String disallowedCharacters)
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
-		disallowedCharacters.chars().forEach(c -> validCharMap[c] = true);
+		disallowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
 		return validIf(
-			raw -> raw.chars().noneMatch(c -> validCharMap[c]),
+			raw -> raw.chars().noneMatch(charIndex -> validCharMap[charIndex]),
 			raw -> "\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
 	}
 
@@ -174,7 +174,7 @@ import static com.willhains.purity.Trim.*;
 	 */
 	static StringRule validIf(final Predicate<String> condition, final String errorMessage)
 	{
-		return validIf(condition, $ -> errorMessage);
+		return validIf(condition, raw -> errorMessage);
 	}
 
 	/**

@@ -132,7 +132,7 @@ import java.util.function.*;
 	 */
 	static IntRule validIf(final IntPredicate condition, final String errorMessage)
 	{
-		return validIf(condition, $ -> errorMessage);
+		return validIf(condition, raw -> errorMessage);
 	}
 
 	/**

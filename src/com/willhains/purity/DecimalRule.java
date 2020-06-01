@@ -143,7 +143,7 @@ import static com.willhains.purity.SingleNumber.*;
 	 */
 	static DecimalRule validIf(final Predicate<BigDecimal> condition, final String errorMessage)
 	{
-		return validIf(condition, $ -> errorMessage);
+		return validIf(condition, raw -> errorMessage);
 	}
 
 	/**

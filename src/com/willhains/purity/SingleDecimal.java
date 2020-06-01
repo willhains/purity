@@ -71,15 +71,15 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public boolean isPositive() { return _raw.compareTo(ZERO) > 0; }
 	@Override public boolean isNegative() { return _raw.compareTo(ZERO) < 0; }
 
-	@Override public final This plus(final Number number) { return map(d -> d.add($(number))); }
-	@Override public final This minus(final Number number) { return map(d -> d.subtract($(number))); }
-	@Override public final This multiplyBy(final Number number) { return map(d -> d.multiply($(number))); }
-	@Override public final This divideBy(final Number number) { return map(d -> d.divide($(number), HALF_UP)); }
+	@Override public final This plus(final Number number) { return map(raw -> raw.add($(number))); }
+	@Override public final This minus(final Number number) { return map(raw -> raw.subtract($(number))); }
+	@Override public final This multiplyBy(final Number number) { return map(raw -> raw.multiply($(number))); }
+	@Override public final This divideBy(final Number number) { return map(raw -> raw.divide($(number), HALF_UP)); }
 
-	public final This round() { return map(d -> d.setScale(0, HALF_UP)); }
-	public final This roundUp() { return map(d -> d.setScale(0, CEILING)); }
-	public final This roundDown() { return map(d -> d.setScale(0, FLOOR)); }
-	public final This roundToPrecision(final int decimals) { return map(d -> d.setScale(decimals, HALF_UP)); }
+	public final This round() { return map(raw -> raw.setScale(0, HALF_UP)); }
+	public final This roundUp() { return map(raw -> raw.setScale(0, CEILING)); }
+	public final This roundDown() { return map(raw -> raw.setScale(0, FLOOR)); }
+	public final This roundToPrecision(final int decimals) { return map(raw -> raw.setScale(decimals, HALF_UP)); }
 
 	@Override
 	public final int hashCode() { return Single.hashCode(this._raw); }

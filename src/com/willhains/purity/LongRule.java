@@ -134,7 +134,7 @@ import java.util.function.*;
 	 */
 	static LongRule validIf(final LongPredicate condition, final String errorMessage)
 	{
-		return validIf(condition, $ -> errorMessage);
+		return validIf(condition, raw -> errorMessage);
 	}
 
 	/**
