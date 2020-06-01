@@ -111,16 +111,6 @@ import static com.willhains.purity.SingleNumber.*;
 		};
 	}
 
-	static DecimalRule notEqualTo(final @Returned String disallowedValue)
-	{
-		final BigDecimal disallowedDecimal = new BigDecimal(disallowedValue);
-		return raw ->
-		{
-			if(raw.compareTo(disallowedDecimal) != 0) return raw;
-			throw new IllegalArgumentException("\"" + raw + "\" matches \"" + disallowedValue + "\"");
-		};
-	}
-
 	/** Generate rule to normalise the raw value to a minimum floor value. */
 	static DecimalRule floor(final BigDecimal minValue) { return raw -> raw.max(minValue); }
 
