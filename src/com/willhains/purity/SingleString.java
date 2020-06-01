@@ -103,7 +103,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	}
 
 	/** @return a new value of the same type with all instances of the specified literal string replaced. */
-	public final This replaceLiteral(final String literal, final String replacement)
+	public final This replaceLiteral(final CharSequence literal, final CharSequence replacement)
 	{
 		return map(s -> s.replace(literal, replacement));
 	}
