@@ -1,10 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.willhains</groupId>
 	<artifactId>purity</artifactId>
-	<version>0.17-SNAPSHOT</version>
+	<version>0.17</version>
 	<name>Purity</name>
 	<description>Build robust, value-oriented applications in Java</description>
 	<licenses>
@@ -188,6 +186,6 @@
 		<connection>scm:git:git://github.com/willhains/purity.git</connection>
 		<developerConnection>scm:git:git@github.com:willhains/purity.git</developerConnection>
 		<url>https://github.com/willhains/purity</url>
-		<tag>v0.14</tag>
+		<tag>v0.17</tag>
 	</scm>
 </project>
