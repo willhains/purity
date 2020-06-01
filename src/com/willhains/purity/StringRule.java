@@ -52,8 +52,8 @@ import static com.willhains.purity.Trim.*;
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double length: validate.min()) rules.add(minLength((int)length));
-				for(final double length: validate.max()) rules.add(maxLength((int)length));
+				for(final double length: validate.min()) rules.add(minLength(length));
+				for(final double length: validate.max()) rules.add(maxLength(length));
 
 				final String allowedCharacters = String.join("", validate.chars());
 				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters));
@@ -117,7 +117,7 @@ import static com.willhains.purity.Trim.*;
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
-	static StringRule minLength(final int length)
+	static StringRule minLength(final double length)
 	{
 		return validUnless(
 			raw -> raw.length() < length,
@@ -125,7 +125,7 @@ import static com.willhains.purity.Trim.*;
 	}
 
 	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
-	static StringRule maxLength(final int length)
+	static StringRule maxLength(final double length)
 	{
 		return validUnless(
 			raw -> raw.length() > length,

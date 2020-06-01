@@ -3,6 +3,8 @@ package com.willhains.purity;
 import java.util.*;
 import java.util.function.*;
 
+import static java.lang.Long.*;
+
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} object.
  *
@@ -29,8 +31,8 @@ import java.util.function.*;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(final double limit: adjust.floor()) rules.add(floor((long)limit));
-			for(final double limit: adjust.ceiling()) rules.add(ceiling((long)limit));
+			for(final double limit: adjust.floor()) rules.add(floor(limit));
+			for(final double limit: adjust.ceiling()) rules.add(ceiling(limit));
 		}
 
 		// Raw value validations
@@ -40,10 +42,10 @@ import java.util.function.*;
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
 			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double min: validate.min()) rules.add(min((long)min));
-				for(final double max: validate.max()) rules.add(max((long)max));
-				for(final double bound: validate.greaterThan()) rules.add(greaterThan((long)bound));
-				for(final double bound: validate.lessThan()) rules.add(lessThan((long)bound));
+				for(final double min: validate.min()) rules.add(min(min));
+				for(final double max: validate.max()) rules.add(max(max));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
+				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
 //		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
 //		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
@@ -63,34 +65,42 @@ import java.util.function.*;
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static LongRule min(final long minValue)
+	static LongRule min(final double minValue)
 	{
 		return validIf(raw -> raw >= minValue, raw -> raw + " < " + minValue);
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static LongRule max(final long maxValue)
+	static LongRule max(final double maxValue)
 	{
 		return validIf(raw -> raw <= maxValue, raw -> raw + " > " + maxValue);
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static LongRule greaterThan(final long lowerBound)
+	static LongRule greaterThan(final double lowerBound)
 	{
 		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static LongRule lessThan(final long upperBound)
+	static LongRule lessThan(final double upperBound)
 	{
 		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
 	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
-	static LongRule floor(final long minValue) { return raw -> Math.max(raw, minValue); }
+	static LongRule floor(final double minValue)
+	{
+		@SuppressWarnings("NumericCastThatLosesPrecision") final long min = (long)Math.max(minValue, MIN_VALUE);
+		return raw -> Math.max(raw, min);
+	}
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
-	static LongRule ceiling(final long maxValue) { return raw -> Math.min(raw, maxValue); }
+	static LongRule ceiling(final double maxValue)
+	{
+		@SuppressWarnings("NumericCastThatLosesPrecision") final long max = (long)Math.min(maxValue, MAX_VALUE);
+		return raw -> Math.min(raw, max);
+	}
 
 	/**
 	 * Convert the {@link Predicate} `condition` into a {@link LongRule} where `condition` must evaluate to `true`.
