@@ -53,13 +53,23 @@ import java.util.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
-		rules.trimToSize();
-		return raw ->
+		switch(rules.size())
 		{
-			double result = raw;
-			for(final DoubleRule rule: rules) result = rule.applyTo(result);
-			return result;
-		};
+			case 0:
+				return raw -> raw;
+			case 1:
+				return rules.get(0);
+			default:
+			{
+				rules.trimToSize();
+				return raw ->
+				{
+					double result = raw;
+					for(final DoubleRule rule: rules) result = rule.applyTo(result);
+					return result;
+				};
+			}
+		}
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */

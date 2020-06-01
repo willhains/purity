@@ -53,13 +53,23 @@ import static com.willhains.purity.SingleNumber.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
-		rules.trimToSize();
-		return raw ->
+		switch(rules.size())
 		{
-			BigDecimal result = raw;
-			for(final DecimalRule rule: rules) result = rule.applyTo(result);
-			return result;
-		};
+			case 0:
+				return raw -> raw;
+			case 1:
+				return rules.get(0);
+			default:
+			{
+				rules.trimToSize();
+				return raw ->
+				{
+					BigDecimal result = raw;
+					for(final DecimalRule rule: rules) result = rule.applyTo(result);
+					return result;
+				};
+			}
+		}
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */

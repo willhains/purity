@@ -68,13 +68,23 @@ import static com.willhains.purity.Trim.*;
 		}
 
 		// Build a new rule from the StringRule constants declared in the class
-		rules.trimToSize();
-		return raw ->
+		switch(rules.size())
 		{
-			String result = raw;
-			for(final StringRule rule: rules) result = rule.applyTo(result);
-			return result;
-		};
+			case 0:
+				return raw -> raw;
+			case 1:
+				return rules.get(0);
+			default:
+			{
+				rules.trimToSize();
+				return raw ->
+				{
+					String result = raw;
+					for(final StringRule rule: rules) result = rule.applyTo(result);
+					return result;
+				};
+			}
+		}
 	}
 
 	/** Generate rule to allow only the characters of `allowedCharacters`. */
