@@ -101,8 +101,12 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		throw new AssertionError("Missing array case in Purity");
 	}
 
-	@Override
-	public String toString()
+	/**
+	 * Override this method to provide custom {@link Object#toString} formatting.
+	 * The default passes the call through to {@link Raw Raw.toString()}.
+	 */
+	@SuppressWarnings("DesignForExtension")
+	@Override public String toString()
 	{
 		return Single.toString(raw());
 	}

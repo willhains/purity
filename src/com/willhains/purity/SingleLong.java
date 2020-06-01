@@ -47,9 +47,15 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 
 	public final long raw() { return _raw; }
 
-	@Override public long getAsLong() { return raw(); }
+	@Override public final long getAsLong() { return raw(); }
 
 	@Override public final int hashCode() { return Long.hashCode(_raw); }
+
+	/**
+	 * Override this method to provide custom {@link Object#toString} formatting.
+	 * The default passes the call through to {@link Long#toString()}.
+	 */
+	@SuppressWarnings("DesignForExtension")
 	@Override public String toString() { return Long.toString(_raw); }
 
 	@Override
@@ -70,7 +76,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	}
 
 	@SuppressWarnings("AutoBoxing")
-	@Override public Long asNumber() { return raw(); }
+	@Override public final Long asNumber() { return raw(); }
 
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw(), that.raw()); }
 
@@ -79,9 +85,9 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 
 	public final int compareToNumber(final long number) { return Long.compare(this.raw(), number); }
 
-	@Override public boolean isZero() { return raw() == 0L; }
-	@Override public boolean isPositive() { return raw() > 0L; }
-	@Override public boolean isNegative() { return raw() < 0L; }
+	@Override public final boolean isZero() { return raw() == 0L; }
+	@Override public final boolean isPositive() { return raw() > 0L; }
+	@Override public final boolean isNegative() { return raw() < 0L; }
 
 	@Override public final This plus(final Number number) { return plus(number.longValue()); }
 	@Override public final This minus(final Number number) { return minus(number.longValue()); }

@@ -37,9 +37,15 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	/** Return the raw underlying value. */
 	public final double raw() { return _raw; }
 
-	@Override public double getAsDouble() { return raw(); }
+	@Override public final double getAsDouble() { return raw(); }
 
 	@Override public final int hashCode() { return Double.hashCode(raw()); }
+
+	/**
+	 * Override this method to provide custom {@link Object#toString} formatting.
+	 * The default passes the call through to {@link Double#toString()}.
+	 */
+	@SuppressWarnings("DesignForExtension")
 	@Override public String toString() { return Double.toString(raw()); }
 
 	@Override
@@ -62,7 +68,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	}
 
 	@SuppressWarnings("AutoBoxing")
-	@Override public Double asNumber() { return raw(); }
+	@Override public final Double asNumber() { return raw(); }
 
 	@Override public final int compareTo(final This that) { return Double.compare(this.raw(), that.raw()); }
 
@@ -71,9 +77,9 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 
 	public final int compareToNumber(final double number) { return Double.compare(this.raw(), number); }
 
-	@Override public boolean isZero() { return raw() == 0d; }
-	@Override public boolean isPositive() { return raw() > 0d; }
-	@Override public boolean isNegative() { return raw() < 0d; }
+	@Override public final boolean isZero() { return raw() == 0d; }
+	@Override public final boolean isPositive() { return raw() > 0d; }
+	@Override public final boolean isNegative() { return raw() < 0d; }
 
 	@Override public final This plus(final Number number) { return plus(number.doubleValue()); }
 	@Override public final This minus(final Number number) { return minus(number.doubleValue()); }
