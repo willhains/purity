@@ -43,7 +43,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@SuppressWarnings({"WeakerAccess", "DesignForExtension"})
 	protected Raw defensiveCopy(final Raw raw) { return raw; }
 
-	@Override public final int hashCode() { return hashCode(this._raw); }
+	@Override public final int hashCode() { return hashCode(raw()); }
 
 	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
 	@SuppressWarnings("ChainOfInstanceofChecks")
@@ -104,7 +104,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@Override
 	public String toString()
 	{
-		return toString(this._raw);
+		return toString(raw());
 	}
 
 	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */

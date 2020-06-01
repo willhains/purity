@@ -60,18 +60,18 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	/** Return the raw underlying value. */
 	public final BigDecimal raw() { return _raw; }
 
-	@Override public BigDecimal get() { return _raw; }
+	@Override public BigDecimal get() { return raw(); }
 
-	@Override public String toString() { return _raw.toPlainString(); }
+	@Override public String toString() { return raw().toPlainString(); }
 
-	@Override public BigDecimal asNumber() { return _raw; }
+	@Override public BigDecimal asNumber() { return raw(); }
 
 	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
-	@Override public final int compareToNumber(final Number number) { return this._raw.compareTo($(number)); }
+	@Override public final int compareToNumber(final Number number) { return raw().compareTo($(number)); }
 
-	@Override public boolean isZero() { return _raw.compareTo(ZERO) == 0; }
-	@Override public boolean isPositive() { return _raw.compareTo(ZERO) > 0; }
-	@Override public boolean isNegative() { return _raw.compareTo(ZERO) < 0; }
+	@Override public boolean isZero() { return raw().compareTo(ZERO) == 0; }
+	@Override public boolean isPositive() { return raw().compareTo(ZERO) > 0; }
+	@Override public boolean isNegative() { return raw().compareTo(ZERO) < 0; }
 
 	@Override public final This plus(final Number number) { return map(raw -> raw.add($(number))); }
 	@Override public final This minus(final Number number) { return map(raw -> raw.subtract($(number))); }
@@ -84,7 +84,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	public final This roundToPrecision(final int decimals) { return map(raw -> raw.setScale(decimals, HALF_UP)); }
 
 	@Override
-	public final int hashCode() { return Single.hashCode(this._raw); }
+	public final int hashCode() { return Single.hashCode(this.raw()); }
 
 	@Override
 	public final boolean equals(final Object other)
@@ -111,7 +111,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
 	 *    {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super BigDecimal> condition) { return condition.test(raw()); }

@@ -37,10 +37,10 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	/** Return the raw underlying value. */
 	public final int raw() { return _raw; }
 
-	@Override public int getAsInt() { return _raw; }
+	@Override public int getAsInt() { return raw(); }
 
-	@Override public final int hashCode() { return Integer.hashCode(_raw); }
-	@Override public String toString() { return Integer.toString(_raw); }
+	@Override public final int hashCode() { return Integer.hashCode(raw()); }
+	@Override public String toString() { return Integer.toString(raw()); }
 
 	@Override
 	public final boolean equals(final Object other)
@@ -60,20 +60,20 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	}
 
 	@SuppressWarnings("AutoBoxing")
-	@Override public Integer asNumber() { return _raw; }
+	@Override public Integer asNumber() { return raw(); }
 
 	@Override public final int compareTo(final This that) { return Integer.compare(this.raw(), that.raw()); }
 
 	@Override public final int compareToNumber(final Number number)
 	{
-		return Integer.compare(this._raw, number.intValue());
+		return Integer.compare(this.raw(), number.intValue());
 	}
 
-	public final int compareToNumber(final int number) { return Integer.compare(this._raw, number); }
+	public final int compareToNumber(final int number) { return Integer.compare(this.raw(), number); }
 
-	@Override public boolean isZero() { return _raw == 0; }
-	@Override public boolean isPositive() { return _raw > 0; }
-	@Override public boolean isNegative() { return _raw < 0; }
+	@Override public boolean isZero() { return raw() == 0; }
+	@Override public boolean isPositive() { return raw() > 0; }
+	@Override public boolean isNegative() { return raw() < 0; }
 
 	@Override public final This plus(final Number number) { return plus(number.intValue()); }
 	@Override public final This minus(final Number number) { return minus(number.intValue()); }
@@ -90,10 +90,10 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	public final This multiplyBy(final IntSupplier number) { return multiplyBy(number.getAsInt()); }
 	public final This divideBy(final IntSupplier number) { return divideBy(number.getAsInt()); }
 
-	public final boolean isGreaterThan(final IntSupplier number) { return _raw > number.getAsInt(); }
-	public final boolean isGreaterThanOrEqualTo(final IntSupplier number) { return _raw >= number.getAsInt(); }
-	public final boolean isLessThan(final IntSupplier number) { return _raw < number.getAsInt(); }
-	public final boolean isLessThanOrEqualTo(final IntSupplier number) { return _raw <= number.getAsInt(); }
+	public final boolean isGreaterThan(final IntSupplier number) { return raw() > number.getAsInt(); }
+	public final boolean isGreaterThanOrEqualTo(final IntSupplier number) { return raw() >= number.getAsInt(); }
+	public final boolean isLessThan(final IntSupplier number) { return raw() < number.getAsInt(); }
+	public final boolean isLessThanOrEqualTo(final IntSupplier number) { return raw() <= number.getAsInt(); }
 
 	/**
 	 * Test the raw value with {@code condition}.
@@ -103,10 +103,10 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
 	 *    {@code false} otherwise.
 	 */
-	public final boolean is(final IntPredicate condition) { return condition.test(_raw); }
+	public final boolean is(final IntPredicate condition) { return condition.test(raw()); }
 
 	/** Reverse of {@link #is(IntPredicate)}. */
 	public final boolean isNot(final IntPredicate condition) { return !is(condition); }
@@ -131,9 +131,9 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 */
 	public final This map(final IntUnaryOperator mapper)
 	{
-		final int mapped = mapper.applyAsInt(_raw);
+		final int mapped = mapper.applyAsInt(raw());
 		@SuppressWarnings("unchecked") final This self = (This)this;
-		if(mapped == _raw) return self;
+		if(mapped == raw()) return self;
 		return _constructor.apply(mapped);
 	}
 
@@ -143,5 +143,5 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 * @param mapper The mapping function to apply to the raw underlying value.
 	 * @return The value returned by {@code mapper}.
 	 */
-	public final This flatMap(final IntFunction<? extends This> mapper) { return mapper.apply(_raw); }
+	public final This flatMap(final IntFunction<? extends This> mapper) { return mapper.apply(raw()); }
 }

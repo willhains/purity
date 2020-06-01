@@ -47,7 +47,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 
 	public final long raw() { return _raw; }
 
-	@Override public long getAsLong() { return _raw; }
+	@Override public long getAsLong() { return raw(); }
 
 	@Override public final int hashCode() { return Long.hashCode(_raw); }
 	@Override public String toString() { return Long.toString(_raw); }
@@ -70,18 +70,18 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	}
 
 	@SuppressWarnings("AutoBoxing")
-	@Override public Long asNumber() { return _raw; }
+	@Override public Long asNumber() { return raw(); }
 
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw(), that.raw()); }
 
 	@Override
-	public final int compareToNumber(final Number number) { return Long.compare(this._raw, number.longValue()); }
+	public final int compareToNumber(final Number number) { return Long.compare(this.raw(), number.longValue()); }
 
-	public final int compareToNumber(final long number) { return Long.compare(this._raw, number); }
+	public final int compareToNumber(final long number) { return Long.compare(this.raw(), number); }
 
-	@Override public boolean isZero() { return _raw == 0L; }
-	@Override public boolean isPositive() { return _raw > 0L; }
-	@Override public boolean isNegative() { return _raw < 0L; }
+	@Override public boolean isZero() { return raw() == 0L; }
+	@Override public boolean isPositive() { return raw() > 0L; }
+	@Override public boolean isNegative() { return raw() < 0L; }
 
 	@Override public final This plus(final Number number) { return plus(number.longValue()); }
 	@Override public final This minus(final Number number) { return minus(number.longValue()); }
@@ -98,10 +98,10 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	public final This multiplyBy(final LongSupplier number) { return multiplyBy(number.getAsLong()); }
 	public final This divideBy(final LongSupplier number) { return divideBy(number.getAsLong()); }
 
-	public final boolean isGreaterThan(final LongSupplier number) { return _raw > number.getAsLong(); }
-	public final boolean isGreaterThanOrEqualTo(final LongSupplier number) { return _raw >= number.getAsLong(); }
-	public final boolean isLessThan(final LongSupplier number) { return _raw < number.getAsLong(); }
-	public final boolean isLessThanOrEqualTo(final LongSupplier number) { return _raw <= number.getAsLong(); }
+	public final boolean isGreaterThan(final LongSupplier number) { return raw() > number.getAsLong(); }
+	public final boolean isGreaterThanOrEqualTo(final LongSupplier number) { return raw() >= number.getAsLong(); }
+	public final boolean isLessThan(final LongSupplier number) { return raw() < number.getAsLong(); }
+	public final boolean isLessThanOrEqualTo(final LongSupplier number) { return raw() <= number.getAsLong(); }
 
 	/**
 	 * Test the raw value with {@code condition}.
@@ -111,10 +111,10 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link #raw} value satisfies {@code condition};
 	 *    {@code false} otherwise.
 	 */
-	public final boolean is(final LongPredicate condition) { return condition.test(_raw); }
+	public final boolean is(final LongPredicate condition) { return condition.test(raw()); }
 
 	/** Reverse of {@link #is(LongPredicate)}. */
 	public final boolean isNot(final LongPredicate condition) { return !is(condition); }
@@ -139,9 +139,9 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	public final This map(final LongUnaryOperator mapper)
 	{
-		final long mapped = mapper.applyAsLong(_raw);
+		final long mapped = mapper.applyAsLong(raw());
 		@SuppressWarnings("unchecked") final This self = (This)this;
-		if(mapped == _raw) return self;
+		if(mapped == raw()) return self;
 		return _constructor.apply(mapped);
 	}
 
@@ -151,5 +151,5 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 * @param mapper The mapping function to apply to the raw underlying value.
 	 * @return The value returned by {@code mapper}.
 	 */
-	public final This flatMap(final LongFunction<? extends This> mapper) { return mapper.apply(_raw); }
+	public final This flatMap(final LongFunction<? extends This> mapper) { return mapper.apply(raw()); }
 }
