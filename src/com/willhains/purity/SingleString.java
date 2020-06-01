@@ -12,6 +12,7 @@ import static java.util.Objects.*;
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleString<This extends SingleString<This>>
 	implements SingleComparable<This>, CharSequence, Supplier<String>
 {
@@ -115,7 +116,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 		if(other == this) return true;
 		if(other == null) return false;
 		if(!this.getClass().equals(other.getClass())) return false;
-		final This that = (This)other;
+		@SuppressWarnings("unchecked") final This that = (This)other;
 		return Single.equals(this.raw(), that.raw());
 	}
 
@@ -150,7 +151,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super String> condition)
 	{
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -163,7 +164,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	public final This map(final Function<? super String, ? extends String> mapper)
 	{
 		final String mapped = mapper.apply(raw());
-		final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This)this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}
