@@ -54,7 +54,12 @@ import static com.willhains.purity.SingleNumber.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
-		return DecimalRule.combine(rules.toArray(new DecimalRule[0]));
+		return raw ->
+		{
+			BigDecimal result = raw;
+			for(final DecimalRule rule: rules) result = rule.applyTo(result);
+			return result;
+		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
@@ -94,17 +99,6 @@ import static com.willhains.purity.SingleNumber.*;
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
-
-	/** Combine multiple rules into a single rule. */
-	static DecimalRule combine(final DecimalRule... combiningRules)
-	{
-		return raw ->
-		{
-			BigDecimal result = raw;
-			for(final DecimalRule rule: combiningRules) result = rule.applyTo(result);
-			return result;
-		};
-	}
 
 	/**
 	 * Convert the {@link Predicate} `condition` into a {@link DecimalRule} where `condition` must evaluate to `true`.

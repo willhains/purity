@@ -54,7 +54,12 @@ import java.util.function.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
-		return DoubleRule.combine(rules.toArray(new DoubleRule[0]));
+		return raw ->
+		{
+			double result = raw;
+			for(final DoubleRule rule: rules) result = rule.applyTo(result);
+			return result;
+		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
@@ -86,17 +91,6 @@ import java.util.function.*;
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
-
-	/** Combine multiple rules into a single rule. */
-	static DoubleRule combine(final DoubleRule... combiningRules)
-	{
-		return raw ->
-		{
-			double result = raw;
-			for(final DoubleRule rule: combiningRules) result = rule.applyTo(result);
-			return result;
-		};
-	}
 
 	/**
 	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `true`.

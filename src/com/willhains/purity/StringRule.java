@@ -69,7 +69,12 @@ import static com.willhains.purity.Trim.*;
 		}
 
 		// Build a new rule from the StringRule constants declared in the class
-		return StringRule.combine(rules.toArray(new StringRule[0]));
+		return raw ->
+		{
+			String result = raw;
+			for(final StringRule rule: rules) result = rule.applyTo(result);
+			return result;
+		};
 	}
 
 	/** Generate rule to allow only the characters of `allowedCharacters`. */
@@ -124,17 +129,6 @@ import static com.willhains.purity.Trim.*;
 		return validUnless(
 			raw -> raw.length() > length,
 			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
-	}
-
-	/** Combine multiple rules into a single rule. */
-	static StringRule combine(final StringRule... combiningRules)
-	{
-		return raw ->
-		{
-			String result = raw;
-			for(final StringRule rule: combiningRules) result = rule.applyTo(result);
-			return result;
-		};
 	}
 
 	/**
