@@ -17,7 +17,7 @@ import static com.willhains.purity.SingleNumber.*;
 	BigDecimal applyTo(BigDecimal d);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<DecimalRule> CACHE = new RulesCache<>();
+	RulesCache<DecimalRule> CACHE = new CopyOnWriteRulesCache<>();
 	static DecimalRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, DecimalRule::fromAnnotations);

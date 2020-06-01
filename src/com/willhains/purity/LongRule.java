@@ -14,7 +14,7 @@ import java.util.function.*;
 	long applyTo(long i);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<LongRule> CACHE = new RulesCache<>();
+	RulesCache<LongRule> CACHE = new CopyOnWriteRulesCache<>();
 	static LongRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, LongRule::fromAnnotations);

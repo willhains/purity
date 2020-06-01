@@ -14,7 +14,7 @@ import java.util.function.*;
 	int applyTo(int i);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<IntRule> CACHE = new RulesCache<>();
+	RulesCache<IntRule> CACHE = new CopyOnWriteRulesCache<>();
 	static IntRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, IntRule::fromAnnotations);

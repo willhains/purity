@@ -18,7 +18,7 @@ import static com.willhains.purity.Trim.*;
 	String applyTo(String d);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<StringRule> CACHE = new RulesCache<>();
+	RulesCache<StringRule> CACHE = new CopyOnWriteRulesCache<>();
 	static StringRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, StringRule::fromAnnotations);

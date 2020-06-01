@@ -14,7 +14,7 @@ import java.util.function.*;
 	double applyTo(double i);
 
 	// Lazy cache of rules for subclasses
-	RulesCache<DoubleRule> CACHE = new RulesCache<>();
+	RulesCache<DoubleRule> CACHE = new CopyOnWriteRulesCache<>();
 	static DoubleRule rulesForClass(final Class<?> singleClass)
 	{
 		return CACHE.computeIfAbsent(singleClass, DoubleRule::fromAnnotations);
