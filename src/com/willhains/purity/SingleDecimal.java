@@ -56,6 +56,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 		this(new BigDecimal(rawValue), constructor);
 	}
 
+	/** Return the raw underlying value. */
 	public final BigDecimal raw() { return _raw; }
 
 	@Override public BigDecimal get() { return _raw; }

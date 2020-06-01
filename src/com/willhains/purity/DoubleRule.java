@@ -94,11 +94,11 @@ import java.util.function.*;
 	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
 
 	/**
-	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `true`.
+	 * Convert the {@link Predicate} `condition` into a {@link DoubleRule} where `condition` must evaluate to `true`.
 	 *
 	 * @param condition the raw value must satisfy this condition to be valid.
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
-	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is not satisfied.
+	 * @return a {@link DoubleRule} that passes the value through as-is, unless `condition` is not satisfied.
 	 */
 	static DoubleRule validIf(
 		final DoublePredicate condition,
@@ -112,11 +112,11 @@ import java.util.function.*;
 	}
 
 	/**
-	 * Convert the {@link Predicate} `condition` into a {@link Rule} where `condition` must evaluate to `false`.
+	 * Convert the {@link Predicate} `condition` into a {@link DoubleRule} where `condition` must evaluate to `false`.
 	 *
 	 * @param condition the raw value must not satisfy this condition to be valid.
 	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
-	 * @return a {@link Rule} that passes the value through as-is, unless `condition` is satisfied.
+	 * @return a {@link DoubleRule} that passes the value through as-is, unless `condition` is satisfied.
 	 */
 	static DoubleRule validUnless(
 		final DoublePredicate condition,

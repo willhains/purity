@@ -8,7 +8,7 @@ import static java.util.Objects.*;
 
 /**
  * A value type wrapping an underlying data type.
- * This supertype and its abstract subtypes make it easy to implement {@link Pure} value types.
+ * This base class makes it easy to implement {@link Pure} value types.
  *
  * @param <Raw> The underlying type.
  * @param <This> Self-reference to the subclass type itself.
@@ -125,7 +125,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 * </pre>
 	 *
 	 * @param condition a {@link Predicate} that tests the raw value type.
-	 * @return {@code true} if the underlying {@link #_raw} value satisfies {@code condition};
+	 * @return {@code true} if the underlying {@link Raw} value satisfies {@code condition};
 	 *    {@code false} otherwise.
 	 */
 	public final boolean is(final Predicate<? super Raw> condition) { return condition.test(raw()); }
