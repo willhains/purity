@@ -5,7 +5,7 @@ package com.willhains.purity;
  *
  * @author willhains
  */
-public enum ValidationPolicy
+public @Pure enum ValidationPolicy
 {
 	/** Throw an {@link IllegalArgumentException}. */
 	THROW,

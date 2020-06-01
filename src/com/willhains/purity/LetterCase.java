@@ -5,7 +5,7 @@ package com.willhains.purity;
  *
  * @author willhains
  */
-public enum LetterCase
+public @Pure enum LetterCase
 {
 	LOWERCASE(String::toLowerCase),
 	UPPERCASE(String::toUpperCase);
