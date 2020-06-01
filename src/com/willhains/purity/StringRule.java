@@ -129,7 +129,7 @@ import static com.willhains.purity.Trim.*;
 	{
 		return validUnless(
 			raw -> raw.length() > length,
-			raw -> "Value \\\"\" + raw + \"\\\" too long: " + raw.length() + " > " + length);
+			raw -> "Value \"" + raw + "\" too long: " + raw.length() + " > " + length);
 	}
 
 	/**
