@@ -36,13 +36,6 @@ public @interface Validate
 
 	/** Number must be divisible by this. */
 	double[] multipleOf() default {};
-	double[] divisibleBy() default {}; // Same thing
-
-	/** Set false to disallow negative numeric values. */
-	boolean allowNegative() default true;
-
-	/** Set false to disallow zero numeric values. */
-	boolean allowZero() default true;
 
 	/** Set true to allow infinite floating-point values. */
 	boolean allowInfinity() default false;
