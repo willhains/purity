@@ -46,8 +46,6 @@ import static java.lang.Integer.*;
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
 				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-				if(!validate.allowNegative()) rules.add(min(0));
-//		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
 			}
 		}
 

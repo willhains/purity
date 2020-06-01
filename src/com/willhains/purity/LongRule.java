@@ -46,10 +46,6 @@ import static java.lang.Long.*;
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
 				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-//		   		if(!validate.allowEven()) rules.add(rejectEven); TODO
-//		   		if(!validate.allowOdd()) rules.add(rejectOdd); TODO
-				if(!validate.allowNegative()) rules.add(min(0));
-//		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
 			}
 		}
 

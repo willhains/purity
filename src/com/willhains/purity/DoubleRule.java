@@ -45,8 +45,6 @@ import java.util.*;
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
 				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-				if(!validate.allowNegative()) rules.add(min(0.0));
-//		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
 				if(!validate.allowInfinity()) rules.add(finite);
 				if(!validate.allowNaN()) rules.add(isNumber);
 			}

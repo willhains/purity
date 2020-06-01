@@ -46,8 +46,6 @@ import static com.willhains.purity.SingleNumber.*;
 				for(final double max: validate.max()) rules.add(max($(max)));
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
 				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound)));
-				if(!validate.allowNegative()) rules.add(min($(0.0)));
-				if(!validate.allowZero()) rules.add(notEqualTo("0"));
 			}
 		}
 
