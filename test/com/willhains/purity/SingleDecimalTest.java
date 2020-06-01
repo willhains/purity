@@ -291,6 +291,24 @@ public class SingleDecimalTest
 		assertThat(x.raw(), is($(15.0)));
 	}
 
+	@Validate(multipleOf = 0.1)
+	static final class L extends SingleDecimal<L>
+	{
+		L(final BigDecimal l) { super(l, L::new); }
+	}
+
+	@Test
+	public void shouldPassMultipleOfFraction()
+	{
+		new L($(1.7));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldFailMultipleOfFraction()
+	{
+		new L($(3.71));
+	}
+
 	@Test
 	public void shouldRoundToSpecifiedNumberOfPlaces()
 	{

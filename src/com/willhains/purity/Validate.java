@@ -34,7 +34,7 @@ public @interface Validate
 	/** Numeric upper bound (exclusive) for numeric values, or the length of strings. */
 	double[] lessThan() default {};
 
-	/** Number must be divisible by this. */
+	/** Number must be divisible by this. Note that floating point non-integer values only work if they end in '5'. */
 	double[] multipleOf() default {};
 
 	/** Set true to allow infinite floating-point values. */

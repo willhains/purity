@@ -45,7 +45,7 @@ import java.util.*;
 				for(final double max: validate.max()) rules.add(max(max, validationPolicy));
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound, validationPolicy));
 				for(final double bound: validate.lessThan()) rules.add(lessThan(bound, validationPolicy));
-//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy)); TODO
+				for(final double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy));
 				if(!validate.allowInfinity()) rules.add(finite(validationPolicy));
 				if(!validate.allowNaN()) rules.add(isNumber(validationPolicy));
 			}
@@ -127,6 +127,16 @@ import java.util.*;
 		return raw ->
 		{
 			if(Double.isNaN(raw)) validationPolicy.onFailure(raw + " is not a number");
+			return raw;
+		};
+	}
+
+	/** Generate rule to require values that are evenly divisible by an increment. */
+	static DoubleRule divisibleBy(final double increment, final ValidationPolicy validationPolicy)
+	{
+		return raw ->
+		{
+			if(raw % increment != 0) validationPolicy.onFailure(raw + " is not a multiple of " + increment);
 			return raw;
 		};
 	}

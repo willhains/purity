@@ -47,7 +47,7 @@ import static java.lang.Integer.*;
 				for(final double max: validate.max()) rules.add(max(max, validationPolicy));
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound, validationPolicy));
 				for(final double bound: validate.lessThan()) rules.add(lessThan(bound, validationPolicy));
-//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy)); TODO
+				for(final double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy));
 			}
 		}
 
@@ -107,6 +107,16 @@ import static java.lang.Integer.*;
 		return raw ->
 		{
 			if(raw >= upperBound) validationPolicy.onFailure(raw + " >= " + upperBound);
+			return raw;
+		};
+	}
+
+	/** Generate rule to require values that are evenly divisible by an increment. */
+	static IntRule divisibleBy(final double increment, final ValidationPolicy validationPolicy)
+	{
+		return raw ->
+		{
+			if(raw % increment != 0) validationPolicy.onFailure(raw + " is not a multiple of " + increment);
 			return raw;
 		};
 	}

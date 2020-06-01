@@ -303,6 +303,24 @@ public class SingleIntTest
 		assertThat(y.raw(), is(10));
 	}
 
+	@Validate(multipleOf = 5)
+	static final class L extends SingleInt<L>
+	{
+		L(final int l) { super(l, L::new); }
+	}
+
+	@Test
+	public void shouldPassMultipleOf()
+	{
+		new L(75);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldFailMultipleOf()
+	{
+		new L(176);
+	}
+
 	@Test
 	public void shouldCompareLarger()
 	{

@@ -4,6 +4,7 @@ import java.math.*;
 import java.util.*;
 
 import static com.willhains.purity.SingleNumber.*;
+import static java.math.BigDecimal.*;
 import static java.math.RoundingMode.*;
 
 /**
@@ -49,6 +50,7 @@ import static java.math.RoundingMode.*;
 				for(final double max: validate.max()) rules.add(max($(max), validationPolicy));
 				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound), validationPolicy));
 				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound), validationPolicy));
+				for(final double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy));
 			}
 		}
 
@@ -103,13 +105,25 @@ import static java.math.RoundingMode.*;
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static DecimalRule lessThan(
-		final @Returned BigDecimal upperBound,
-		final ValidationPolicy validationPolicy)
+	static DecimalRule lessThan(final @Returned BigDecimal upperBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
 			if(raw.compareTo(upperBound) >= 0) validationPolicy.onFailure(raw + " >= " + upperBound);
+			return raw;
+		};
+	}
+
+	/** Generate rule to require values that are evenly divisible by an increment. */
+	static DecimalRule divisibleBy(final double increment, final ValidationPolicy validationPolicy)
+	{
+		final BigDecimal decimalIncrement = $(increment);
+		return raw ->
+		{
+			if(raw.remainder(decimalIncrement).compareTo(ZERO) != 0)
+			{
+				validationPolicy.onFailure(raw + " is not a multiple of " + increment);
+			}
 			return raw;
 		};
 	}

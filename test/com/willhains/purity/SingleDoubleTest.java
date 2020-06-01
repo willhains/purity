@@ -368,6 +368,24 @@ public class SingleDoubleTest
 		assertThat(x.raw(), is(15.0));
 	}
 
+	@Validate(multipleOf = 0.25)
+	static final class Q extends SingleDouble<Q>
+	{
+		Q(final double q) { super(q, Q::new); }
+	}
+
+	@Test
+	public void shouldPassMultipleOfFraction()
+	{
+		new Q(0.75);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldFailMultipleOfFraction()
+	{
+		new Q(1.76);
+	}
+
 	@Test
 	public void shouldCompareLarger()
 	{
