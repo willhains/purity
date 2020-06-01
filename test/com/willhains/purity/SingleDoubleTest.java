@@ -4,7 +4,6 @@ import org.junit.*;
 
 import java.util.*;
 
-import static com.willhains.purity.DoubleRule.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -331,9 +330,9 @@ public class SingleDoubleTest
 		assertThat(y.raw(), equalTo(10.1));
 	}
 
+	// TODO: @Validate(multipleOf = 2)
 	static final class N extends SingleDouble<N>
 	{
-		static final DoubleRule EVEN = validUnless(raw -> raw % 2 > 0, "Must be even");
 		N(final double a) { super(a, N::new); }
 	}
 

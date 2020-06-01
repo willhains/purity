@@ -1,7 +1,6 @@
 package com.willhains.purity;
 
 import java.util.*;
-import java.util.function.*;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} object.
@@ -48,8 +47,8 @@ import java.util.function.*;
 //		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
 				if(!validate.allowNegative()) rules.add(min(0.0));
 //		    	if(!validate.allowZero()) rules.add(rejectZero); TODO
-				if(!validate.allowInfinity()) rules.add(validIf(Double::isFinite, "Must be finite"));
-				if(!validate.allowNaN()) rules.add(validUnless(Double::isNaN, "Not a number"));
+				if(!validate.allowInfinity()) rules.add(finite);
+				if(!validate.allowNaN()) rules.add(isNumber);
 			}
 		}
 
@@ -66,78 +65,60 @@ import java.util.function.*;
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
 	static DoubleRule min(final double minValue)
 	{
-		return validIf(raw -> raw >= minValue, raw -> raw + " < " + minValue);
+		return raw ->
+		{
+			if(raw >= minValue) return raw;
+			throw new IllegalArgumentException(raw + " < " + minValue);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
 	static DoubleRule max(final double maxValue)
 	{
-		return validIf(raw -> raw <= maxValue, raw -> raw + " > " + maxValue);
+		return raw ->
+		{
+			if(raw <= maxValue) return raw;
+			throw new IllegalArgumentException(raw + " > " + maxValue);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
 	static DoubleRule greaterThan(final double lowerBound)
 	{
-		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
+		return raw ->
+		{
+			if(raw > lowerBound) return raw;
+			throw new IllegalArgumentException(raw + " <= " + lowerBound);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
 	static DoubleRule lessThan(final double upperBound)
 	{
-		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
+		return raw ->
+		{
+			if(raw < upperBound) return raw;
+			throw new IllegalArgumentException(raw + " >= " + upperBound);
+		};
 	}
+
+	/** Rule to disallow infinite values. */
+	DoubleRule finite = raw ->
+	{
+		if(Double.isFinite(raw)) return raw;
+		throw new IllegalArgumentException(raw + " is not finite");
+	};
+
+	/** Rule to disallow not-a-number values. */
+	DoubleRule isNumber = raw ->
+	{
+		if(!Double.isNaN(raw)) return raw;
+		throw new IllegalArgumentException(raw + " is not a number");
+	};
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
 	static DoubleRule floor(final double minValue) { return raw -> Math.max(raw, minValue); }
 
 	/** Generate rule to normalise the raw value to a maximum ceiling value. */
 	static DoubleRule ceiling(final double maxValue) { return raw -> Math.min(raw, maxValue); }
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link DoubleRule} where `condition` must evaluate to `true`.
-	 *
-	 * @param condition the raw value must satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
-	 * @return a {@link DoubleRule} that passes the value through as-is, unless `condition` is not satisfied.
-	 */
-	static DoubleRule validIf(
-		final DoublePredicate condition,
-		final DoubleFunction<String> errorMessageFactory)
-	{
-		return raw ->
-		{
-			if(condition.test(raw)) return raw;
-			throw new IllegalArgumentException(errorMessageFactory.apply(raw));
-		};
-	}
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link DoubleRule} where `condition` must evaluate to `false`.
-	 *
-	 * @param condition the raw value must not satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
-	 * @return a {@link DoubleRule} that passes the value through as-is, unless `condition` is satisfied.
-	 */
-	static DoubleRule validUnless(
-		final DoublePredicate condition,
-		final DoubleFunction<String> errorMessageFactory)
-	{
-		return validIf(condition.negate(), errorMessageFactory);
-	}
-
-	/**
-	 * @see #validIf(DoublePredicate, DoubleFunction)
-	 */
-	static DoubleRule validIf(final DoublePredicate condition, final String errorMessage)
-	{
-		return validIf(condition, raw -> errorMessage);
-	}
-
-	/**
-	 * @see #validUnless(DoublePredicate, DoubleFunction)
-	 */
-	static DoubleRule validUnless(final DoublePredicate condition, final String errorMessage)
-	{
-		return validIf(condition.negate(), errorMessage);
-	}
 }

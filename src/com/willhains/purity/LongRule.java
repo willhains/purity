@@ -1,7 +1,6 @@
 package com.willhains.purity;
 
 import java.util.*;
-import java.util.function.*;
 
 import static java.lang.Long.*;
 
@@ -67,25 +66,41 @@ import static java.lang.Long.*;
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
 	static LongRule min(final double minValue)
 	{
-		return validIf(raw -> raw >= minValue, raw -> raw + " < " + minValue);
+		return raw ->
+		{
+			if(raw >= minValue) return raw;
+			throw new IllegalArgumentException(raw + " < " + minValue);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
 	static LongRule max(final double maxValue)
 	{
-		return validIf(raw -> raw <= maxValue, raw -> raw + " > " + maxValue);
+		return raw ->
+		{
+			if(raw <= maxValue) return raw;
+			throw new IllegalArgumentException(raw + " > " + maxValue);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
 	static LongRule greaterThan(final double lowerBound)
 	{
-		return validIf(raw -> raw > lowerBound, raw -> raw + " <= " + lowerBound);
+		return raw ->
+		{
+			if(raw > lowerBound) return raw;
+			throw new IllegalArgumentException(raw + " <= " + lowerBound);
+		};
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
 	static LongRule lessThan(final double upperBound)
 	{
-		return validIf(raw -> raw < upperBound, raw -> raw + " >= " + upperBound);
+		return raw ->
+		{
+			if(raw < upperBound) return raw;
+			throw new IllegalArgumentException(raw + " >= " + upperBound);
+		};
 	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
@@ -100,53 +115,5 @@ import static java.lang.Long.*;
 	{
 		@SuppressWarnings("NumericCastThatLosesPrecision") final long max = (long)Math.min(maxValue, MAX_VALUE);
 		return raw -> Math.min(raw, max);
-	}
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link LongRule} where `condition` must evaluate to `true`.
-	 *
-	 * @param condition the raw value must satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
-	 * @return a {@link LongRule} that passes the value through as-is, unless `condition` is not satisfied.
-	 */
-	static LongRule validIf(
-		final LongPredicate condition,
-		final LongFunction<String> errorMessageFactory)
-	{
-		return raw ->
-		{
-			if(condition.test(raw)) return raw;
-			throw new IllegalArgumentException(errorMessageFactory.apply(raw));
-		};
-	}
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link LongRule} where `condition` must evaluate to `false`.
-	 *
-	 * @param condition the raw value must not satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
-	 * @return a {@link LongRule} that passes the value through as-is, unless `condition` is satisfied.
-	 */
-	static LongRule validUnless(
-		final LongPredicate condition,
-		final LongFunction<String> errorMessageFactory)
-	{
-		return validIf(condition.negate(), errorMessageFactory);
-	}
-
-	/**
-	 * @see #validIf(LongPredicate, LongFunction)
-	 */
-	static LongRule validIf(final LongPredicate condition, final String errorMessage)
-	{
-		return validIf(condition, raw -> errorMessage);
-	}
-
-	/**
-	 * @see #validUnless(LongPredicate, LongFunction)
-	 */
-	static LongRule validUnless(final LongPredicate condition, final String errorMessage)
-	{
-		return validIf(condition.negate(), errorMessage);
 	}
 }

@@ -1,7 +1,6 @@
 package com.willhains.purity;
 
 import java.util.*;
-import java.util.function.*;
 import java.util.regex.*;
 
 import static com.willhains.purity.LetterCase.*;
@@ -83,9 +82,12 @@ import static com.willhains.purity.Trim.*;
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		allowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
-		return validIf(
-			raw -> raw.chars().allMatch(charIndex -> validCharMap[charIndex]),
-			raw -> "\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
+		return raw ->
+		{
+			if(raw.chars().allMatch(charIndex -> validCharMap[charIndex])) return raw;
+			throw new IllegalArgumentException(
+				"\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
+		};
 	}
 
 	/** Generate rule to disallow the characters of `disallowedCharacters`. */
@@ -93,90 +95,53 @@ import static com.willhains.purity.Trim.*;
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		disallowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
-		return validIf(
-			raw -> raw.chars().noneMatch(charIndex -> validCharMap[charIndex]),
-			raw -> "\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
+		return raw ->
+		{
+			if(raw.chars().noneMatch(charIndex -> validCharMap[charIndex])) return raw;
+			throw new IllegalArgumentException(
+				"\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
+		};
 	}
 
 	/** Generate rules to allow only raw strings that match `regExPattern`. */
 	static StringRule validPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return validIf(
-			raw -> pattern.matcher(raw).matches(),
-			raw -> "\"" + raw + "\" does not match pattern: " + regExPattern);
+		return raw ->
+		{
+			if(pattern.matcher(raw).matches()) return raw;
+			throw new IllegalArgumentException("\"" + raw + "\" does not match pattern: " + regExPattern);
+		};
 	}
 
 	/** Generate rules to disallow raw strings that match `regExPattern`. */
 	static StringRule invalidPattern(final String regExPattern)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
-		return validUnless(
-			raw -> pattern.matcher(raw).matches(),
-			raw -> "\"" + raw + "\" matches pattern: " + regExPattern);
+		return raw ->
+		{
+			if(!pattern.matcher(raw).matches()) return raw;
+			throw new IllegalArgumentException("\"" + raw + "\" matches pattern: " + regExPattern);
+		};
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
 	static StringRule minLength(final double length)
 	{
-		return validUnless(
-			raw -> raw.length() < length,
-			raw -> "Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
+		return raw ->
+		{
+			if(raw.length() >= length) return raw;
+			throw new IllegalArgumentException("Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
+		};
 	}
 
 	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
 	static StringRule maxLength(final double length)
 	{
-		return validUnless(
-			raw -> raw.length() > length,
-			raw -> "Value \"" + raw + "\" too long: " + raw.length() + " > " + length);
-	}
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link StringRule} where `condition` must evaluate to `true`.
-	 *
-	 * @param condition the raw value must satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is not met.
-	 * @return a {@link StringRule} that passes the value through as-is, unless `condition` is not satisfied.
-	 */
-	static StringRule validIf(
-		final Predicate<? super String> condition,
-		final Function<? super String, String> errorMessageFactory)
-	{
 		return raw ->
 		{
-			if(condition.test(raw)) return raw;
-			throw new IllegalArgumentException(errorMessageFactory.apply(raw));
+			if(raw.length() <= length) return raw;
+			throw new IllegalArgumentException("Value \"" + raw + "\" too long: " + raw.length() + " > " + length);
 		};
-	}
-
-	/**
-	 * Convert the {@link Predicate} `condition` into a {@link StringRule} where `condition` must evaluate to `false`.
-	 *
-	 * @param condition the raw value must not satisfy this condition to be valid.
-	 * @param errorMessageFactory generate the text of {@link IllegalArgumentException} when the condition is met.
-	 * @return a {@link StringRule} that passes the value through as-is, unless `condition` is satisfied.
-	 */
-	static StringRule validUnless(
-		final Predicate<String> condition,
-		final Function<String, String> errorMessageFactory)
-	{
-		return validIf(condition.negate(), errorMessageFactory);
-	}
-
-	/**
-	 * @see #validIf(Predicate, Function)
-	 */
-	static StringRule validIf(final Predicate<String> condition, final String errorMessage)
-	{
-		return validIf(condition, raw -> errorMessage);
-	}
-
-	/**
-	 * @see #validUnless(Predicate, Function)
-	 */
-	static StringRule validUnless(final Predicate<String> condition, final String errorMessage)
-	{
-		return validIf(condition.negate(), errorMessage);
 	}
 }
