@@ -38,10 +38,16 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	/** Return the raw underlying value. */
 	public final String raw() { return _raw; }
 
-	@Override public String get() { return raw(); }
+	@Override public final String get() { return raw(); }
 
+	/**
+	 * Override this method to provide custom {@link Object#toString} formatting.
+	 * The default returns the raw string value.
+	 */
+	@SuppressWarnings("DesignForExtension")
 	@Override public String toString() { return raw(); }
-	@Override public int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
+
+	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
 
 	@Override public final int length() { return raw().length(); }
 	@Override public final char charAt(final int position) { return raw().charAt(position); }
