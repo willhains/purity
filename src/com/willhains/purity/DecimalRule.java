@@ -14,7 +14,7 @@ import static com.willhains.purity.SingleNumber.*;
 @FunctionalInterface interface DecimalRule
 {
 	/** Applies this rule to the raw value. */
-	BigDecimal applyTo(BigDecimal d);
+	BigDecimal applyTo(BigDecimal raw);
 
 	// Lazy cache of rules for subclasses
 	RulesCache<DecimalRule> CACHE = new CopyOnWriteRulesCache<>();

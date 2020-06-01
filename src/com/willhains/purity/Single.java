@@ -60,12 +60,12 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	}
 
 	@Override
-	public final boolean equals(final Object other)
+	public final boolean equals(final Object obj)
 	{
-		if(other == this) return true;
-		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		final This that = (This)other;
+		if(obj == this) return true;
+		if(obj == null) return false;
+		if(!this.getClass().equals(obj.getClass())) return false;
+		final This that = (This)obj;
 		return equals(this.raw(), that.raw());
 	}
 

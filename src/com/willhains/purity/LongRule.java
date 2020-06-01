@@ -11,7 +11,7 @@ import java.util.function.*;
 @FunctionalInterface interface LongRule
 {
 	/** Applies this rule to the raw value. */
-	long applyTo(long i);
+	long applyTo(long raw);
 
 	// Lazy cache of rules for subclasses
 	RulesCache<LongRule> CACHE = new CopyOnWriteRulesCache<>();

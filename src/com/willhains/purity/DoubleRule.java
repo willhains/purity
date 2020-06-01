@@ -11,7 +11,7 @@ import java.util.function.*;
 @FunctionalInterface interface DoubleRule
 {
 	/** Applies this rule to the raw value. */
-	double applyTo(double i);
+	double applyTo(double raw);
 
 	// Lazy cache of rules for subclasses
 	RulesCache<DoubleRule> CACHE = new CopyOnWriteRulesCache<>();

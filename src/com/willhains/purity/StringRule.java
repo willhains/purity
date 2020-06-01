@@ -15,7 +15,7 @@ import static com.willhains.purity.Trim.*;
 @FunctionalInterface interface StringRule
 {
 	/** Applies this rule to the raw value. */
-	String applyTo(String d);
+	String applyTo(String raw);
 
 	// Lazy cache of rules for subclasses
 	RulesCache<StringRule> CACHE = new CopyOnWriteRulesCache<>();
