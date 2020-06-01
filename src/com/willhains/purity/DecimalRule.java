@@ -26,7 +26,7 @@ import static com.willhains.purity.SingleNumber.*;
 	static DecimalRule fromAnnotations(final Class<?> singleClass)
 	{
 		// Build a new rule from the annotations on the class
-		final List<DecimalRule> rules = new ArrayList<>();
+		final ArrayList<DecimalRule> rules = new ArrayList<>();
 
 		// Raw value adjustments
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
@@ -54,6 +54,7 @@ import static com.willhains.purity.SingleNumber.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
+		rules.trimToSize();
 		return raw ->
 		{
 			BigDecimal result = raw;

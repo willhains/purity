@@ -23,7 +23,7 @@ import java.util.function.*;
 	static IntRule fromAnnotations(final Class<?> singleClass)
 	{
 		// Build a new rule from the annotations on the class
-		final List<IntRule> rules = new ArrayList<>();
+		final ArrayList<IntRule> rules = new ArrayList<>();
 
 		// Raw value adjustments
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
@@ -51,6 +51,7 @@ import java.util.function.*;
 		}
 
 		// Build a new rule from the Rule constants declared in the class
+		rules.trimToSize();
 		return raw ->
 		{
 			int result = raw;

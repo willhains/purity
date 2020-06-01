@@ -27,7 +27,7 @@ import static com.willhains.purity.Trim.*;
 	static StringRule fromAnnotations(final Class<?> singleClass)
 	{
 		// Build a new rule from the annotations on the class
-		final List<StringRule> rules = new ArrayList<>();
+		final ArrayList<StringRule> rules = new ArrayList<>();
 
 		// Raw value adjustments
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
@@ -69,6 +69,7 @@ import static com.willhains.purity.Trim.*;
 		}
 
 		// Build a new rule from the StringRule constants declared in the class
+		rules.trimToSize();
 		return raw ->
 		{
 			String result = raw;
