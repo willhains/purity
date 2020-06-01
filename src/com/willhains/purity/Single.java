@@ -43,7 +43,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@SuppressWarnings({"WeakerAccess", "DesignForExtension"})
 	protected Raw defensiveCopy(final Raw raw) { return raw; }
 
-	@Override public final int hashCode() { return hashCode(raw()); }
+	@Override public final int hashCode() { return Single.hashCode(raw()); }
 
 	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
 	@SuppressWarnings("ChainOfInstanceofChecks")
@@ -70,14 +70,14 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(obj == null) return false;
 		if(!this.getClass().equals(obj.getClass())) return false;
 		@SuppressWarnings("unchecked") final This that = (This)obj;
-		return equals(this.raw(), that.raw());
+		return Single.equals(this.raw(), that.raw());
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return equals(this.raw(), that.raw());
+		return Single.equals(this.raw(), that.raw());
 	}
 
 	/** Compare two objects for equality. If they are arrays, compare their elements. */
@@ -104,7 +104,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@Override
 	public String toString()
 	{
-		return toString(raw());
+		return Single.toString(raw());
 	}
 
 	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */
