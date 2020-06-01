@@ -3,9 +3,6 @@ package com.willhains.purity;
 import java.util.*;
 import java.util.regex.*;
 
-import static com.willhains.purity.LetterCase.*;
-import static com.willhains.purity.Trim.*;
-
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.
  *
@@ -32,15 +29,8 @@ import static com.willhains.purity.Trim.*;
 		final Adjust adjust = singleClass.getAnnotation(Adjust.class);
 		if(adjust != null)
 		{
-			for(final Trim trim: adjust.trim())
-			{
-				if(trim == WHITESPACE) rules.add(String::trim);
-			}
-			for(final LetterCase adjustCase: adjust.transformTo())
-			{
-				if(adjustCase == LOWERCASE) rules.add(String::toLowerCase);
-				if(adjustCase == UPPERCASE) rules.add(String::toUpperCase);
-			}
+			for(final Trim trim: adjust.trim()) rules.add(trim.stringRule);
+			for(final LetterCase adjustCase: adjust.transformTo()) rules.add(adjustCase.stringRule);
 			if(adjust.intern()) rules.add(String::intern);
 		}
 

@@ -7,5 +7,13 @@ package com.willhains.purity;
  */
 public @Pure enum Trim
 {
-	WHITESPACE
+	/**
+	 * Trim whitespace from the beginning and end of the string value.
+	 *
+	 * @see String#trim
+	 */
+	WHITESPACE(String::trim);
+
+	final StringRule stringRule;
+	Trim(final StringRule rule) { this.stringRule = rule; }
 }

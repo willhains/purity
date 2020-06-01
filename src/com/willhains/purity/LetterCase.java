@@ -7,6 +7,9 @@ package com.willhains.purity;
  */
 public enum LetterCase
 {
-	LOWERCASE,
-	UPPERCASE
+	LOWERCASE(String::toLowerCase),
+	UPPERCASE(String::toUpperCase);
+
+	final StringRule stringRule;
+	LetterCase(final StringRule rule) { this.stringRule = rule; }
 }
