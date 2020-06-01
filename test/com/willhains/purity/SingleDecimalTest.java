@@ -5,6 +5,7 @@ import org.junit.*;
 import java.math.*;
 
 import static com.willhains.purity.SingleNumber.*;
+import static com.willhains.purity.ValidationPolicy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -177,13 +178,13 @@ public class SingleDecimalTest
 		new B($(1));
 	}
 
-	@Validate(max = 5)
+	@Validate(onFailure = ASSERT, max = 5)
 	static final class C extends SingleDecimal<C>
 	{
 		C(final BigDecimal a) { super(a, C::new); }
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = AssertionError.class)
 	public void shouldTrapGreaterThanExclusive()
 	{
 		new C($(6));

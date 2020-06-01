@@ -39,13 +39,14 @@ import static java.lang.Long.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
+			final ValidationPolicy validationPolicy = validate.onFailure();
+			if(validationPolicy != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double min: validate.min()) rules.add(min(min));
-				for(final double max: validate.max()) rules.add(max(max));
-				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
-				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
-//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
+				for(final double min: validate.min()) rules.add(min(min, validationPolicy));
+				for(final double max: validate.max()) rules.add(max(max, validationPolicy));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound, validationPolicy));
+				for(final double bound: validate.lessThan()) rules.add(lessThan(bound, validationPolicy));
+//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy)); TODO
 			}
 		}
 
@@ -70,42 +71,42 @@ import static java.lang.Long.*;
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static LongRule min(final double minValue)
+	static LongRule min(final double minValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw >= minValue) return raw;
-			throw new IllegalArgumentException(raw + " < " + minValue);
+			if(raw < minValue) validationPolicy.onFailure(raw + " < " + minValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static LongRule max(final double maxValue)
+	static LongRule max(final double maxValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw <= maxValue) return raw;
-			throw new IllegalArgumentException(raw + " > " + maxValue);
+			if(raw > maxValue) validationPolicy.onFailure(raw + " > " + maxValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static LongRule greaterThan(final double lowerBound)
+	static LongRule greaterThan(final double lowerBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw > lowerBound) return raw;
-			throw new IllegalArgumentException(raw + " <= " + lowerBound);
+			if(raw <= lowerBound) validationPolicy.onFailure(raw + " <= " + lowerBound);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static LongRule lessThan(final double upperBound)
+	static LongRule lessThan(final double upperBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw < upperBound) return raw;
-			throw new IllegalArgumentException(raw + " >= " + upperBound);
+			if(raw >= upperBound) validationPolicy.onFailure(raw + " >= " + upperBound);
+			return raw;
 		};
 	}
 

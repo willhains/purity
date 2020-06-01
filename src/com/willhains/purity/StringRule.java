@@ -39,21 +39,22 @@ import java.util.regex.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
+			final ValidationPolicy validationPolicy = validate.onFailure();
+			if(validationPolicy != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double length: validate.min()) rules.add(minLength(length));
-				for(final double length: validate.max()) rules.add(maxLength(length));
+				for(final double length: validate.min()) rules.add(minLength(length, validationPolicy));
+				for(final double length: validate.max()) rules.add(maxLength(length, validationPolicy));
 
 				final String allowedCharacters = String.join("", validate.chars());
-				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters));
+				if(!allowedCharacters.isEmpty()) rules.add(validCharacters(allowedCharacters, validationPolicy));
 
-				final String disallowedCharacters = String.join("", validate.notChars());
-				if(!disallowedCharacters.isEmpty()) rules.add(invalidCharacters(disallowedCharacters));
+				final String disallowedChars = String.join("", validate.notChars());
+				if(!disallowedChars.isEmpty()) { rules.add(invalidCharacters(disallowedChars, validationPolicy)); }
 
-				final String allowedPattern = String.join("|", validate.match());
-				if(!allowedPattern.isEmpty()) rules.add(validPattern(allowedPattern));
+				final String validPattern = String.join("|", validate.match());
+				if(!validPattern.isEmpty()) rules.add(validPattern(validPattern, validationPolicy));
 
-				for(final String disallowedPattern: validate.notMatch()) rules.add(invalidPattern(disallowedPattern));
+				for(final String invalid: validate.notMatch()) rules.add(invalidPattern(invalid, validationPolicy));
 			}
 		}
 
@@ -78,70 +79,94 @@ import java.util.regex.*;
 	}
 
 	/** Generate rule to allow only the characters of `allowedCharacters`. */
-	static StringRule validCharacters(final String allowedCharacters)
+	static StringRule validCharacters(final String allowedCharacters, final ValidationPolicy validationPolicy)
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		allowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
 		return raw ->
 		{
-			if(raw.chars().allMatch(charIndex -> validCharMap[charIndex])) return raw;
-			throw new IllegalArgumentException(
-				"\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
+			if(!raw.chars().allMatch(charIndex -> validCharMap[charIndex]))
+			{
+				validationPolicy.onFailure(
+					"\"" + raw + "\" contains invalid characters (valid = " + allowedCharacters + ")");
+			}
+			return raw;
 		};
 	}
 
 	/** Generate rule to disallow the characters of `disallowedCharacters`. */
-	static StringRule invalidCharacters(final String disallowedCharacters)
+	static StringRule invalidCharacters(
+		final String disallowedCharacters,
+		final ValidationPolicy validationPolicy)
 	{
 		final boolean[] validCharMap = new boolean[Character.MAX_VALUE + 1];
 		disallowedCharacters.chars().forEach(charIndex -> validCharMap[charIndex] = true);
 		return raw ->
 		{
-			if(raw.chars().noneMatch(charIndex -> validCharMap[charIndex])) return raw;
-			throw new IllegalArgumentException(
-				"\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
+			if(raw.chars().anyMatch(charIndex -> validCharMap[charIndex]))
+			{
+				validationPolicy.onFailure(
+					"\"" + raw + "\" contains invalid characters (invalid = " + disallowedCharacters + ")");
+			}
+			return raw;
 		};
 	}
 
 	/** Generate rules to allow only raw strings that match `regExPattern`. */
-	static StringRule validPattern(final String regExPattern)
+	static StringRule validPattern(
+		final String regExPattern,
+		final ValidationPolicy validationPolicy)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
 		return raw ->
 		{
-			if(pattern.matcher(raw).matches()) return raw;
-			throw new IllegalArgumentException("\"" + raw + "\" does not match pattern: " + regExPattern);
+			if(!pattern.matcher(raw).matches())
+			{
+				validationPolicy.onFailure("\"" + raw + "\" does not match pattern: " + regExPattern);
+			}
+			return raw;
 		};
 	}
 
 	/** Generate rules to disallow raw strings that match `regExPattern`. */
-	static StringRule invalidPattern(final String regExPattern)
+	static StringRule invalidPattern(
+		final String regExPattern,
+		final ValidationPolicy validationPolicy)
 	{
 		final Pattern pattern = Pattern.compile(regExPattern);
 		return raw ->
 		{
-			if(!pattern.matcher(raw).matches()) return raw;
-			throw new IllegalArgumentException("\"" + raw + "\" matches pattern: " + regExPattern);
+			if(pattern.matcher(raw).matches())
+			{
+				validationPolicy.onFailure("\"" + raw + "\" matches pattern: " + regExPattern);
+			}
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw strings of length greater than or equal to `length`. */
-	static StringRule minLength(final double length)
+	static StringRule minLength(final double length, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.length() >= length) return raw;
-			throw new IllegalArgumentException("Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
+			if(raw.length() < length)
+			{
+				validationPolicy.onFailure("Value \"" + raw + "\" too short: " + raw.length() + " < " + length);
+			}
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw strings of length less than or equal to `length`. */
-	static StringRule maxLength(final double length)
+	static StringRule maxLength(final double length, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.length() <= length) return raw;
-			throw new IllegalArgumentException("Value \"" + raw + "\" too long: " + raw.length() + " > " + length);
+			if(raw.length() > length)
+			{
+				validationPolicy.onFailure("Value \"" + raw + "\" too long: " + raw.length() + " > " + length);
+			}
+			return raw;
 		};
 	}
 }

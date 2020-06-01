@@ -40,12 +40,13 @@ import static com.willhains.purity.SingleNumber.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
+			final ValidationPolicy validationPolicy = validate.onFailure();
+			if(validationPolicy != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double min: validate.min()) rules.add(min($(min)));
-				for(final double max: validate.max()) rules.add(max($(max)));
-				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound)));
-				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound)));
+				for(final double min: validate.min()) rules.add(min($(min), validationPolicy));
+				for(final double max: validate.max()) rules.add(max($(max), validationPolicy));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound), validationPolicy));
+				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound), validationPolicy));
 			}
 		}
 
@@ -70,42 +71,44 @@ import static com.willhains.purity.SingleNumber.*;
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static DecimalRule min(final @Returned BigDecimal minValue)
+	static DecimalRule min(final @Returned BigDecimal minValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.compareTo(minValue) >= 0) return raw;
-			throw new IllegalArgumentException(raw + " < " + minValue);
+			if(raw.compareTo(minValue) < 0) validationPolicy.onFailure(raw + " < " + minValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static DecimalRule max(final @Returned BigDecimal maxValue)
+	static DecimalRule max(final @Returned BigDecimal maxValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.compareTo(maxValue) <= 0) return raw;
-			throw new IllegalArgumentException(raw + " > " + maxValue);
+			if(raw.compareTo(maxValue) > 0) validationPolicy.onFailure(raw + " > " + maxValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static DecimalRule greaterThan(final @Returned BigDecimal lowerBound)
+	static DecimalRule greaterThan(final @Returned BigDecimal lowerBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.compareTo(lowerBound) > 0) return raw;
-			throw new IllegalArgumentException(raw + " <= " + lowerBound);
+			if(raw.compareTo(lowerBound) <= 0) validationPolicy.onFailure(raw + " <= " + lowerBound);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static DecimalRule lessThan(final @Returned BigDecimal upperBound)
+	static DecimalRule lessThan(
+		final @Returned BigDecimal upperBound,
+		final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw.compareTo(upperBound) < 0) return raw;
-			throw new IllegalArgumentException(raw + " >= " + upperBound);
+			if(raw.compareTo(upperBound) >= 0) validationPolicy.onFailure(raw + " >= " + upperBound);
+			return raw;
 		};
 	}
 

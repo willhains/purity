@@ -38,15 +38,16 @@ import java.util.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			if(validate.onFailure() != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
+			final ValidationPolicy validationPolicy = validate.onFailure();
+			if(validationPolicy != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double min: validate.min()) rules.add(min(min));
-				for(final double max: validate.max()) rules.add(max(max));
-				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound));
-				for(final double bound: validate.lessThan()) rules.add(lessThan(bound));
-//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment)); TODO
-				if(!validate.allowInfinity()) rules.add(finite);
-				if(!validate.allowNaN()) rules.add(isNumber);
+				for(final double min: validate.min()) rules.add(min(min, validationPolicy));
+				for(final double max: validate.max()) rules.add(max(max, validationPolicy));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan(bound, validationPolicy));
+				for(final double bound: validate.lessThan()) rules.add(lessThan(bound, validationPolicy));
+//		   		for(double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy)); TODO
+				if(!validate.allowInfinity()) rules.add(finite(validationPolicy));
+				if(!validate.allowNaN()) rules.add(isNumber(validationPolicy));
 			}
 		}
 
@@ -71,58 +72,64 @@ import java.util.*;
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static DoubleRule min(final double minValue)
+	static DoubleRule min(final double minValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw >= minValue) return raw;
-			throw new IllegalArgumentException(raw + " < " + minValue);
+			if(raw < minValue) validationPolicy.onFailure(raw + " < " + minValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static DoubleRule max(final double maxValue)
+	static DoubleRule max(final double maxValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw <= maxValue) return raw;
-			throw new IllegalArgumentException(raw + " > " + maxValue);
+			if(raw > maxValue) validationPolicy.onFailure(raw + " > " + maxValue);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static DoubleRule greaterThan(final double lowerBound)
+	static DoubleRule greaterThan(final double lowerBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw > lowerBound) return raw;
-			throw new IllegalArgumentException(raw + " <= " + lowerBound);
+			if(raw <= lowerBound) validationPolicy.onFailure(raw + " <= " + lowerBound);
+			return raw;
 		};
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static DoubleRule lessThan(final double upperBound)
+	static DoubleRule lessThan(final double upperBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
-			if(raw < upperBound) return raw;
-			throw new IllegalArgumentException(raw + " >= " + upperBound);
+			if(raw >= upperBound) validationPolicy.onFailure(raw + " >= " + upperBound);
+			return raw;
 		};
 	}
 
-	/** Rule to disallow infinite values. */
-	DoubleRule finite = raw ->
+	/** Generate rule to disallow infinite values. */
+	static DoubleRule finite(final ValidationPolicy validationPolicy)
 	{
-		if(Double.isFinite(raw)) return raw;
-		throw new IllegalArgumentException(raw + " is not finite");
-	};
+		return raw ->
+		{
+			if(Double.isInfinite(raw)) validationPolicy.onFailure(raw + " is not finite");
+			return raw;
+		};
+	}
 
-	/** Rule to disallow not-a-number values. */
-	DoubleRule isNumber = raw ->
+	/** Generate rule to disallow not-a-number values. */
+	static DoubleRule isNumber(final ValidationPolicy validationPolicy)
 	{
-		if(!Double.isNaN(raw)) return raw;
-		throw new IllegalArgumentException(raw + " is not a number");
-	};
+		return raw ->
+		{
+			if(Double.isNaN(raw)) validationPolicy.onFailure(raw + " is not a number");
+			return raw;
+		};
+	}
 
 	/** Generate rule to normalise the raw value to a minimum floor value. */
 	static DoubleRule floor(final double minValue) { return raw -> Math.max(raw, minValue); }

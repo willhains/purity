@@ -11,5 +11,16 @@ public enum ValidationPolicy
 	THROW,
 
 	/** If JVM assertions are enabled, throw an {@link AssertionError}. */
-	ASSERT
+	ASSERT;
+
+	void onFailure(final String message)
+	{
+		switch(this)
+		{
+			case THROW:
+				throw new IllegalArgumentException(message);
+			case ASSERT:
+				throw new AssertionError(message);
+		}
+	}
 }
