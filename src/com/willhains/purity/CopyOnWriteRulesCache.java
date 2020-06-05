@@ -28,9 +28,4 @@ final @Mutable class CopyOnWriteRulesCache<RuleType> implements RulesCache<RuleT
 		_rules = copy;
 		return newRule;
 	}
-
-	@Override public String toString()
-	{
-		return _rules.toString();
-	}
 }
