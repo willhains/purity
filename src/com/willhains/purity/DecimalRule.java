@@ -14,6 +14,9 @@ import static java.math.RoundingMode.*;
  */
 @FunctionalInterface interface DecimalRule
 {
+	/** Do-nothing rule. */
+	DecimalRule NONE = raw -> raw;
+
 	/** Applies this rule to the raw value. */
 	BigDecimal applyTo(BigDecimal raw);
 

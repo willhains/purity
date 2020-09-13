@@ -1,6 +1,6 @@
 package com.willhains.purity;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} object.
@@ -9,6 +9,9 @@ import java.util.*;
  */
 @FunctionalInterface interface DoubleRule
 {
+	/** Do-nothing rule. */
+	DoubleRule NONE = raw -> raw;
+
 	/** Applies this rule to the raw value. */
 	double applyTo(double raw);
 
