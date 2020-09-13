@@ -1,9 +1,8 @@
 package com.willhains.purity;
 
-import org.junit.*;
-
-import java.math.*;
-import java.text.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import org.junit.Test;
 
 import static com.willhains.purity.SingleNumber.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -19,7 +18,7 @@ public class SingleNumberTest
 
 		@Override public Number asNumber() { return raw; }
 
-		@Override public int compareTo(final Height that) { return Float.compare(this.raw, that.raw); }
+		@Override public int compareTo(final Height that) { return Float.compare(raw, that.raw); }
 		@Override public int compareToNumber(final Number number) { return Float.compare(raw, number.floatValue()); }
 
 		@Override public boolean isZero() { return raw == 0f; }

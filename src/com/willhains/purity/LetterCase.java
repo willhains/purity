@@ -11,5 +11,5 @@ public @Pure enum LetterCase
 	UPPERCASE(String::toUpperCase);
 
 	final StringRule stringRule;
-	LetterCase(final StringRule rule) { this.stringRule = rule; }
+	LetterCase(final StringRule rule) { stringRule = rule; }
 }

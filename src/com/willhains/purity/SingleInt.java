@@ -1,8 +1,12 @@
 package com.willhains.purity;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Optional;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
+import java.util.function.IntSupplier;
+import java.util.function.IntUnaryOperator;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.*;
 
@@ -30,7 +34,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 */
 	protected SingleInt(final int rawValue, final IntFunction<? extends This> constructor)
 	{
-		_raw = IntRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = IntRule.rulesForClass(getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
@@ -53,29 +57,29 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	{
 		if(other == this) return true;
 		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
-		return this.raw() == that.raw();
+		if(!getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return raw() == that.raw();
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return this.raw() == that.raw();
+		return raw() == that.raw();
 	}
 
 	@SuppressWarnings("AutoBoxing")
 	@Override public final Integer asNumber() { return raw(); }
 
-	@Override public final int compareTo(final This that) { return Integer.compare(this.raw(), that.raw()); }
+	@Override public final int compareTo(final This that) { return Integer.compare(raw(), that.raw()); }
 
 	@Override public final int compareToNumber(final Number number)
 	{
-		return Integer.compare(this.raw(), number.intValue());
+		return Integer.compare(raw(), number.intValue());
 	}
 
-	public final int compareToNumber(final int number) { return Integer.compare(this.raw(), number); }
+	public final int compareToNumber(final int number) { return Integer.compare(raw(), number); }
 
 	@Override public final boolean isZero() { return raw() == 0; }
 	@Override public final boolean isPositive() { return raw() > 0; }
@@ -125,7 +129,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	 */
 	public final Optional<This> filter(final IntPredicate condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -138,7 +142,7 @@ public abstract @Pure class SingleInt<This extends SingleInt<This>> implements S
 	public final This map(final IntUnaryOperator mapper)
 	{
 		final int mapped = mapper.applyAsInt(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		if(mapped == raw()) return self;
 		return _constructor.apply(mapped);
 	}

@@ -1,8 +1,10 @@
 package com.willhains.purity;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.*;
 
@@ -28,7 +30,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 */
 	protected Single(final Raw rawValue, final Function<? super Raw, ? extends This> constructor)
 	{
-		this._raw = requireNonNull(rawValue);
+		_raw = requireNonNull(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
@@ -43,7 +45,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@SuppressWarnings({"WeakerAccess", "DesignForExtension"})
 	protected Raw defensiveCopy(final Raw raw) { return raw; }
 
-	@Override public final int hashCode() { return Single.hashCode(raw()); }
+	@Override public final int hashCode() { return hashCode(raw()); }
 
 	/** Generate a hash code for {@code object}. If {@code object} is an array, combine the hashes of each element. */
 	@SuppressWarnings("ChainOfInstanceofChecks")
@@ -51,15 +53,15 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	{
 		if(!object.getClass().isArray()) return object.hashCode();
 
-		if(object instanceof Object[]) return Arrays.deepHashCode((Object[])object);
-		if(object instanceof int[]) return Arrays.hashCode((int[])object);
-		if(object instanceof byte[]) return Arrays.hashCode((byte[])object);
-		if(object instanceof boolean[]) return Arrays.hashCode((boolean[])object);
-		if(object instanceof long[]) return Arrays.hashCode((long[])object);
-		if(object instanceof double[]) return Arrays.hashCode((double[])object);
-		if(object instanceof float[]) return Arrays.hashCode((float[])object);
-		if(object instanceof char[]) return Arrays.hashCode((char[])object);
-		if(object instanceof short[]) return Arrays.hashCode((short[])object);
+		if(object instanceof Object[]) return Arrays.deepHashCode((Object[]) object);
+		if(object instanceof int[]) return Arrays.hashCode((int[]) object);
+		if(object instanceof byte[]) return Arrays.hashCode((byte[]) object);
+		if(object instanceof boolean[]) return Arrays.hashCode((boolean[]) object);
+		if(object instanceof long[]) return Arrays.hashCode((long[]) object);
+		if(object instanceof double[]) return Arrays.hashCode((double[]) object);
+		if(object instanceof float[]) return Arrays.hashCode((float[]) object);
+		if(object instanceof char[]) return Arrays.hashCode((char[]) object);
+		if(object instanceof short[]) return Arrays.hashCode((short[]) object);
 		throw new AssertionError("Missing array case in Purity");
 	}
 
@@ -68,16 +70,16 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	{
 		if(obj == this) return true;
 		if(obj == null) return false;
-		if(!this.getClass().equals(obj.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)obj;
-		return Single.equals(this.raw(), that.raw());
+		if(!getClass().equals(obj.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) obj;
+		return equals(raw(), that.raw());
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return Single.equals(this.raw(), that.raw());
+		return equals(raw(), that.raw());
 	}
 
 	/** Compare two objects for equality. If they are arrays, compare their elements. */
@@ -89,15 +91,15 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 		if(object1.equals(object2)) return true;
 		if(!object1.getClass().isArray()) return false;
 
-		if(object1 instanceof Object[]) return Arrays.deepEquals((Object[])object1, (Object[])object2);
-		if(object1 instanceof int[]) return Arrays.equals((int[])object1, (int[])object2);
-		if(object1 instanceof byte[]) return Arrays.equals((byte[])object1, (byte[])object2);
-		if(object1 instanceof boolean[]) return Arrays.equals((boolean[])object1, (boolean[])object2);
-		if(object1 instanceof long[]) return Arrays.equals((long[])object1, (long[])object2);
-		if(object1 instanceof double[]) return Arrays.equals((double[])object1, (double[])object2);
-		if(object1 instanceof float[]) return Arrays.equals((float[])object1, (float[])object2);
-		if(object1 instanceof char[]) return Arrays.equals((char[])object1, (char[])object2);
-		if(object1 instanceof short[]) return Arrays.equals((short[])object1, (short[])object2);
+		if(object1 instanceof Object[]) return Arrays.deepEquals((Object[]) object1, (Object[]) object2);
+		if(object1 instanceof int[]) return Arrays.equals((int[]) object1, (int[]) object2);
+		if(object1 instanceof byte[]) return Arrays.equals((byte[]) object1, (byte[]) object2);
+		if(object1 instanceof boolean[]) return Arrays.equals((boolean[]) object1, (boolean[]) object2);
+		if(object1 instanceof long[]) return Arrays.equals((long[]) object1, (long[]) object2);
+		if(object1 instanceof double[]) return Arrays.equals((double[]) object1, (double[]) object2);
+		if(object1 instanceof float[]) return Arrays.equals((float[]) object1, (float[]) object2);
+		if(object1 instanceof char[]) return Arrays.equals((char[]) object1, (char[]) object2);
+		if(object1 instanceof short[]) return Arrays.equals((short[]) object1, (short[]) object2);
 		throw new AssertionError("Missing array case in Purity");
 	}
 
@@ -108,7 +110,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	@SuppressWarnings("DesignForExtension")
 	@Override public String toString()
 	{
-		return Single.toString(raw());
+		return toString(raw());
 	}
 
 	/** Format a string to represent {@code object}. If {@code object} is an array, include each element. */
@@ -117,15 +119,15 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	{
 		if(!object.getClass().isArray()) return String.valueOf(object);
 
-		if(object instanceof Object[]) return Arrays.toString((Object[])object);
-		if(object instanceof int[]) return Arrays.toString((int[])object);
-		if(object instanceof byte[]) return Arrays.toString((byte[])object);
-		if(object instanceof boolean[]) return Arrays.toString((boolean[])object);
-		if(object instanceof long[]) return Arrays.toString((long[])object);
-		if(object instanceof double[]) return Arrays.toString((double[])object);
-		if(object instanceof float[]) return Arrays.toString((float[])object);
-		if(object instanceof char[]) return Arrays.toString((char[])object);
-		if(object instanceof short[]) return Arrays.toString((short[])object);
+		if(object instanceof Object[]) return Arrays.toString((Object[]) object);
+		if(object instanceof int[]) return Arrays.toString((int[]) object);
+		if(object instanceof byte[]) return Arrays.toString((byte[]) object);
+		if(object instanceof boolean[]) return Arrays.toString((boolean[]) object);
+		if(object instanceof long[]) return Arrays.toString((long[]) object);
+		if(object instanceof double[]) return Arrays.toString((double[]) object);
+		if(object instanceof float[]) return Arrays.toString((float[]) object);
+		if(object instanceof char[]) return Arrays.toString((char[]) object);
+		if(object instanceof short[]) return Arrays.toString((short[]) object);
 		throw new AssertionError("Missing array case in Purity");
 	}
 
@@ -153,7 +155,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super Raw> condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -166,7 +168,7 @@ public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 	public final This map(final Function<? super Raw, ? extends Raw> mapper)
 	{
 		final Raw mapped = mapper.apply(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}

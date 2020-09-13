@@ -1,9 +1,11 @@
 package com.willhains.purity;
 
-import java.math.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.willhains.purity.SingleNumber.*;
 import static java.math.BigDecimal.*;
@@ -35,7 +37,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 */
 	protected SingleDecimal(final BigDecimal rawValue, final Function<? super BigDecimal, ? extends This> constructor)
 	{
-		_raw = DecimalRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = DecimalRule.rulesForClass(getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
@@ -71,7 +73,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 
 	@Override public final BigDecimal asNumber() { return raw(); }
 
-	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
+	@Override public final int compareTo(final This that) { return raw().compareTo(that.raw()); }
 	@Override public final int compareToNumber(final Number number) { return raw().compareTo($(number)); }
 
 	@Override public final boolean isZero() { return raw().compareTo(ZERO) == 0; }
@@ -81,7 +83,12 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	@Override public final This plus(final Number number) { return map(raw -> raw.add($(number))); }
 	@Override public final This minus(final Number number) { return map(raw -> raw.subtract($(number))); }
 	@Override public final This multiplyBy(final Number number) { return map(raw -> raw.multiply($(number))); }
-	@Override public final This divideBy(final Number number) { return map(raw -> raw.divide($(number), HALF_UP)); }
+	@Override public final This divideBy(final Number number)
+	{
+		return map(raw -> raw.divide(
+			$(number),
+			HALF_UP));
+	}
 
 	public final This round() { return map(raw -> raw.setScale(0, HALF_UP)); }
 	public final This roundUp() { return map(raw -> raw.setScale(0, CEILING)); }
@@ -89,23 +96,23 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	public final This roundToPrecision(final int decimals) { return map(raw -> raw.setScale(decimals, HALF_UP)); }
 
 	@Override
-	public final int hashCode() { return Single.hashCode(this.raw()); }
+	public final int hashCode() { return Single.hashCode(raw()); }
 
 	@Override
 	public final boolean equals(final Object other)
 	{
 		if(other == this) return true;
 		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
-		return Single.equals(this.raw(), that.raw());
+		if(!getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return Single.equals(raw(), that.raw());
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return Single.equals(this.raw(), that.raw());
+		return Single.equals(raw(), that.raw());
 	}
 
 	/**
@@ -132,7 +139,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super BigDecimal> condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -145,7 +152,7 @@ public abstract @Pure class SingleDecimal<This extends SingleDecimal<This>>
 	public final This map(final Function<? super BigDecimal, ? extends BigDecimal> mapper)
 	{
 		final BigDecimal mapped = mapper.apply(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}

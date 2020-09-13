@@ -15,5 +15,5 @@ public @Pure enum Trim
 	WHITESPACE(String::trim);
 
 	final StringRule stringRule;
-	Trim(final StringRule rule) { this.stringRule = rule; }
+	Trim(final StringRule rule) { stringRule = rule; }
 }

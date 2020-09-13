@@ -30,7 +30,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	protected SingleDouble(final double rawValue, final DoubleFunction<? extends This> constructor)
 	{
-		_raw = DoubleRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = DoubleRule.rulesForClass(getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
@@ -53,9 +53,9 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	{
 		if(other == this) return true;
 		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
-		@SuppressWarnings("FloatingPointEquality") final boolean same = this.raw() == that.raw();
+		if(!getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		@SuppressWarnings("FloatingPointEquality") final boolean same = raw() == that.raw();
 		return same;
 	}
 
@@ -63,19 +63,19 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		@SuppressWarnings("FloatingPointEquality") final boolean same = this.raw() == that.raw();
+		@SuppressWarnings("FloatingPointEquality") final boolean same = raw() == that.raw();
 		return same;
 	}
 
 	@SuppressWarnings("AutoBoxing")
 	@Override public final Double asNumber() { return raw(); }
 
-	@Override public final int compareTo(final This that) { return Double.compare(this.raw(), that.raw()); }
+	@Override public final int compareTo(final This that) { return Double.compare(raw(), that.raw()); }
 
 	@Override
-	public final int compareToNumber(final Number number) { return Double.compare(this.raw(), number.doubleValue()); }
+	public final int compareToNumber(final Number number) { return Double.compare(raw(), number.doubleValue()); }
 
-	public final int compareToNumber(final double number) { return Double.compare(this.raw(), number); }
+	public final int compareToNumber(final double number) { return Double.compare(raw(), number); }
 
 	@Override public final boolean isZero() { return raw() == 0.0; }
 	@Override public final boolean isPositive() { return raw() > 0.0; }

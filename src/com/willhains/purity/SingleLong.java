@@ -1,8 +1,12 @@
 package com.willhains.purity;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Optional;
+import java.util.function.LongFunction;
+import java.util.function.LongPredicate;
+import java.util.function.LongSupplier;
+import java.util.function.LongUnaryOperator;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.*;
 
@@ -43,7 +47,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 		_constructor = requireNonNull(constructor);
 	}
 
-	private LongRule _rules() { return LongRule.rulesForClass(this.getClass()); }
+	private LongRule _rules() { return LongRule.rulesForClass(getClass()); }
 
 	public final long raw() { return _raw; }
 
@@ -63,8 +67,8 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	{
 		if(other == this) return true;
 		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
+		if(!getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
 		return this.raw() == that.raw();
 	}
 
@@ -81,9 +85,9 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	@Override public final int compareTo(final This that) { return Long.compare(this.raw(), that.raw()); }
 
 	@Override
-	public final int compareToNumber(final Number number) { return Long.compare(this.raw(), number.longValue()); }
+	public final int compareToNumber(final Number number) { return Long.compare(raw(), number.longValue()); }
 
-	public final int compareToNumber(final long number) { return Long.compare(this.raw(), number); }
+	public final int compareToNumber(final long number) { return Long.compare(raw(), number); }
 
 	@Override public final boolean isZero() { return raw() == 0L; }
 	@Override public final boolean isPositive() { return raw() > 0L; }
@@ -133,7 +137,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	 */
 	public final Optional<This> filter(final LongPredicate condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -146,7 +150,7 @@ public abstract @Pure class SingleLong<This extends SingleLong<This>> implements
 	public final This map(final LongUnaryOperator mapper)
 	{
 		final long mapped = mapper.applyAsLong(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		if(mapped == raw()) return self;
 		return _constructor.apply(mapped);
 	}

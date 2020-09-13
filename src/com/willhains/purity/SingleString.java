@@ -1,8 +1,11 @@
 package com.willhains.purity;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.IntSupplier;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Objects.*;
 
@@ -31,7 +34,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 */
 	protected SingleString(final String rawValue, final Function<? super String, ? extends This> constructor)
 	{
-		_raw = StringRule.rulesForClass(this.getClass()).applyTo(rawValue);
+		_raw = StringRule.rulesForClass(getClass()).applyTo(rawValue);
 		_constructor = requireNonNull(constructor);
 	}
 
@@ -47,7 +50,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	@SuppressWarnings("DesignForExtension")
 	@Override public String toString() { return raw(); }
 
-	@Override public final int compareTo(final This that) { return this.raw().compareTo(that.raw()); }
+	@Override public final int compareTo(final This that) { return raw().compareTo(that.raw()); }
 
 	@Override public final int length() { return raw().length(); }
 	@Override public final char charAt(final int position) { return raw().charAt(position); }
@@ -114,23 +117,23 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	}
 
 	@Override
-	public final int hashCode() { return Single.hashCode(this.raw()); }
+	public final int hashCode() { return Single.hashCode(raw()); }
 
 	@Override
 	public final boolean equals(final Object other)
 	{
 		if(other == this) return true;
 		if(other == null) return false;
-		if(!this.getClass().equals(other.getClass())) return false;
-		@SuppressWarnings("unchecked") final This that = (This)other;
-		return Single.equals(this.raw(), that.raw());
+		if(!getClass().equals(other.getClass())) return false;
+		@SuppressWarnings("unchecked") final This that = (This) other;
+		return Single.equals(raw(), that.raw());
 	}
 
 	public final boolean equals(final This that)
 	{
 		if(that == this) return true;
 		if(that == null) return false;
-		return Single.equals(this.raw(), that.raw());
+		return Single.equals(raw(), that.raw());
 	}
 
 	/**
@@ -157,7 +160,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	 */
 	public final Optional<This> filter(final Predicate<? super String> condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -170,7 +173,7 @@ public abstract @Pure class SingleString<This extends SingleString<This>>
 	public final This map(final Function<? super String, String> mapper)
 	{
 		final String mapped = mapper.apply(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		if(mapped.equals(raw())) return self;
 		return _constructor.apply(mapped);
 	}
