@@ -1,7 +1,7 @@
 package com.willhains.purity;
 
-import java.math.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static com.willhains.purity.SingleNumber.*;
 import static java.math.BigDecimal.*;
@@ -35,7 +35,7 @@ import static java.math.RoundingMode.*;
 		{
 			for(final double limit: adjust.floor()) rules.add(floor($(limit)));
 			for(final double limit: adjust.ceiling()) rules.add(ceiling($(limit)));
-			for(final double increment: adjust.roundToIncrement()) rules.add(round(increment));
+			for(final double increment: adjust.roundToIncrement()) rules.add(round($(increment)));
 		}
 
 		// Raw value validations
@@ -43,14 +43,14 @@ import static java.math.RoundingMode.*;
 		if(validate != null)
 		{
 			// When the validation policy is ASSERT and assertions are disabled, don't even create the validation rules
-			final ValidationPolicy validationPolicy = validate.onFailure();
-			if(validationPolicy != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
+			final ValidationPolicy onFailure = validate.onFailure();
+			if(onFailure != ValidationPolicy.ASSERT || singleClass.desiredAssertionStatus())
 			{
-				for(final double min: validate.min()) rules.add(min($(min), validationPolicy));
-				for(final double max: validate.max()) rules.add(max($(max), validationPolicy));
-				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound), validationPolicy));
-				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound), validationPolicy));
-				for(final double increment: validate.multipleOf()) rules.add(divisibleBy(increment, validationPolicy));
+				for(final double min: validate.min()) rules.add(min($(min), onFailure));
+				for(final double max: validate.max()) rules.add(max($(max), onFailure));
+				for(final double bound: validate.greaterThan()) rules.add(greaterThan($(bound), onFailure));
+				for(final double bound: validate.lessThan()) rules.add(lessThan($(bound), onFailure));
+				for(final double increment: validate.multipleOf()) rules.add(divisibleBy($(increment), onFailure));
 			}
 		}
 
@@ -58,11 +58,10 @@ import static java.math.RoundingMode.*;
 		switch(rules.size())
 		{
 			case 0:
-				return raw -> raw;
+				return NONE;
 			case 1:
 				return rules.get(0);
 			default:
-			{
 				rules.trimToSize();
 				return raw ->
 				{
@@ -70,12 +69,11 @@ import static java.math.RoundingMode.*;
 					for(final DecimalRule rule: rules) result = rule.applyTo(result);
 					return result;
 				};
-			}
 		}
 	}
 
 	/** Generate rule to allow only raw integer values greater than or equal to `minValue`. */
-	static DecimalRule min(final @Returned BigDecimal minValue, final ValidationPolicy validationPolicy)
+	static DecimalRule min(@Returned final BigDecimal minValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
@@ -85,7 +83,7 @@ import static java.math.RoundingMode.*;
 	}
 
 	/** Generate rule to allow only raw integer values less than or equal to `maxValue`. */
-	static DecimalRule max(final @Returned BigDecimal maxValue, final ValidationPolicy validationPolicy)
+	static DecimalRule max(@Returned final BigDecimal maxValue, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
@@ -95,7 +93,7 @@ import static java.math.RoundingMode.*;
 	}
 
 	/** Generate rule to allow only raw integer values greater than (but not equal to) `lowerBound`. */
-	static DecimalRule greaterThan(final @Returned BigDecimal lowerBound, final ValidationPolicy validationPolicy)
+	static DecimalRule greaterThan(@Returned final BigDecimal lowerBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
@@ -105,7 +103,7 @@ import static java.math.RoundingMode.*;
 	}
 
 	/** Generate rule to allow only raw integer values less than (but not equal to) `upperBound`. */
-	static DecimalRule lessThan(final @Returned BigDecimal upperBound, final ValidationPolicy validationPolicy)
+	static DecimalRule lessThan(@Returned final BigDecimal upperBound, final ValidationPolicy validationPolicy)
 	{
 		return raw ->
 		{
@@ -115,7 +113,7 @@ import static java.math.RoundingMode.*;
 	}
 
 	/** Generate rule to require values that are evenly divisible by an increment. */
-	static DecimalRule divisibleBy(final double increment, final ValidationPolicy validationPolicy)
+	static DecimalRule divisibleBy(final BigDecimal increment, final ValidationPolicy validationPolicy)
 	{
 		final BigDecimal decimalIncrement = $(increment);
 		return raw ->
@@ -135,12 +133,8 @@ import static java.math.RoundingMode.*;
 	static DecimalRule ceiling(final BigDecimal maxValue) { return raw -> raw.min(maxValue); }
 
 	/** Generate rule to round the raw value to an increment. */
-	static DecimalRule round(final double increment)
+	static DecimalRule round(final BigDecimal increment)
 	{
-		return raw ->
-		{
-			final BigDecimal decimalIncrement = $(increment);
-			return raw.divide(decimalIncrement, HALF_UP).setScale(0, HALF_UP).multiply(decimalIncrement);
-		};
+		return raw -> raw.divide(increment, HALF_UP).setScale(0, HALF_UP).multiply(increment);
 	}
 }
