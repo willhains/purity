@@ -1,8 +1,7 @@
 package com.willhains.purity;
 
-import org.junit.*;
-
-import java.util.*;
+import java.util.Optional;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

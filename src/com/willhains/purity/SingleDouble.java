@@ -1,8 +1,12 @@
 package com.willhains.purity;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Optional;
+import java.util.function.DoubleFunction;
+import java.util.function.DoublePredicate;
+import java.util.function.DoubleSupplier;
+import java.util.function.DoubleUnaryOperator;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.*;
 
@@ -129,7 +133,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	 */
 	public final Optional<This> filter(final DoublePredicate condition)
 	{
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		return Optional.of(self).filter(it -> it.is(condition));
 	}
 
@@ -142,7 +146,7 @@ public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implem
 	public final This map(final DoubleUnaryOperator mapper)
 	{
 		final double mapped = mapper.applyAsDouble(raw());
-		@SuppressWarnings("unchecked") final This self = (This)this;
+		@SuppressWarnings("unchecked") final This self = (This) this;
 		@SuppressWarnings("FloatingPointEquality") final boolean same = mapped == raw();
 		if(same) return self;
 		return _constructor.apply(mapped);

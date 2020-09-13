@@ -1,6 +1,6 @@
 package com.willhains.purity;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static com.willhains.purity.Trim.*;
 import static com.willhains.purity.Validate.*;
@@ -19,7 +19,7 @@ public class SingleStringTest
 	@Validate(min = 1, max = 255, chars = LETTERS + DIGITS + "-._")
 	public static final @Pure class HostName extends SingleString<HostName>
 	{
-		public HostName(String hostName) { super(hostName, HostName::new); }
+		public HostName(final String hostName) { super(hostName, HostName::new); }
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class SingleStringTest
 	@Adjust(trim = WHITESPACE)
 	static final class A extends SingleString<A>
 	{
-		A(String a) { super(a, A::new); }
+		A(final String a) { super(a, A::new); }
 	}
 
 	@Test
@@ -114,7 +114,7 @@ public class SingleStringTest
 	@Validate(chars = "abcdefg")
 	static final class B extends SingleString<B>
 	{
-		B(String a) { super(a, B::new); }
+		B(final String a) { super(a, B::new); }
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class SingleStringTest
 	@Validate(chars = "abcdefg")
 	static final class C extends SingleString<C>
 	{
-		C(String a) { super(a, C::new); }
+		C(final String a) { super(a, C::new); }
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -135,7 +135,7 @@ public class SingleStringTest
 	@Validate(match = "[a-z]-[0-9]")
 	static final class D extends SingleString<D>
 	{
-		D(String a) { super(a, D::new); }
+		D(final String a) { super(a, D::new); }
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class SingleStringTest
 	@Validate(match = "[a-z]-[0-9]")
 	static final class E extends SingleString<E>
 	{
-		E(String a) { super(a, E::new); }
+		E(final String a) { super(a, E::new); }
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -153,7 +153,7 @@ public class SingleStringTest
 	@Validate(min = 2, max = 5)
 	static final class F extends SingleString<F>
 	{
-		F(String a) { super(a, F::new); }
+		F(final String a) { super(a, F::new); }
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class SingleStringTest
 	@Validate(min = 2, max = 5)
 	static final class G extends SingleString<G>
 	{
-		G(String a) { super(a, G::new); }
+		G(final String a) { super(a, G::new); }
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -174,7 +174,7 @@ public class SingleStringTest
 	@Validate(min = 2, max = 5)
 	static final class H extends SingleString<H>
 	{
-		H(String a) { super(a, H::new); }
+		H(final String a) { super(a, H::new); }
 	}
 
 	@Test(expected = IllegalArgumentException.class)
