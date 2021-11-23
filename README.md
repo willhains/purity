@@ -1,3 +1,5 @@
+> **NOTE:** Purity will be replaced by [UDTopia](/willhains/udtopia), completely rewritten and greatly improved!
+
 [![GitHub Release][release-badge]][release] 
 [![Build Status][build-badge]][build]
 [![Follow @willhains][twitter-badge]][twitter] 
