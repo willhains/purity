@@ -18,7 +18,7 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    name: Java 8 (Zulu) build
+    name: Build Alpha Snapshot on Java 8 (Zulu)
 
     steps:
     - name: Checkout Code
