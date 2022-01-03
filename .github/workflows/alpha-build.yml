@@ -1,0 +1,54 @@
+name: Alpha Snapshot Build
+
+on:
+  push:
+    branches: [ alpha ]
+
+jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump env
+        run: env | sort
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+  
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distribution: [ 'zulu', 'temurin' ]
+        java: [ '8', '11' ]
+        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+    name: Java ${{ matrix.distribution }} ${{ matrix.Java }} (${{ matrix.os }}) build
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ matrix.Java }}
+        distribution: ${{ matrix.distribution }}
+        cache: maven
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: MAVEN_USERNAME # env variable for username in deploy
+        server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+        
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      env:
+        derived.version: 'alpha-SNAPSHOT'
+
+    - name: Publish to Apache Maven Central
+      run: mvn deploy
+      env:
+        MAVEN_USERNAME: willhains
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
