@@ -18,12 +18,7 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        distribution: [ 'zulu', 'temurin' ]
-        java: [ '8', '11' ]
-        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
-    name: Java ${{ matrix.distribution }} ${{ matrix.Java }} (${{ matrix.os }}) build
+    name: Java 8 (Zulu) build
 
     steps:
     - name: Checkout Code
@@ -32,8 +27,8 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: ${{ matrix.Java }}
-        distribution: ${{ matrix.distribution }}
+        java-version: 8
+        distribution: zulu
         cache: maven
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: MAVEN_USERNAME # env variable for username in deploy
@@ -44,7 +39,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       env:
-        derived.version: 'alpha-SNAPSHOT'
+        DERIVED_VERSION: 'alpha-SNAPSHOT'
 
     - name: Publish to Apache Maven Central
       run: mvn deploy
