@@ -16,9 +16,9 @@ jobs:
       packages: write
     strategy:
       matrix:
-        distribution: [ 'zulu', 'temurin' ]
-        java: [ '8', '11' ]
-        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        distribution: [ 'zulu' ] #, 'temurin' ]
+        java: [ '8' ] #, '11' ]
+        os: [ 'ubuntu-latest' ] #, 'macos-latest', 'windows-latest' ]
     name: Java ${{ matrix.distribution }} ${{ matrix.Java }} (${{ matrix.os }}) publish
     
     steps:
