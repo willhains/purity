@@ -15,15 +15,15 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-  
+
   build:
     runs-on: ubuntu-latest
     name: Build Release Version on Java 8 (Zulu)
-    
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
-    
+
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
@@ -37,13 +37,13 @@ jobs:
         gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Publish to Apache Maven Central
-      run: mvn -B package deploy
+      run: mvn -B versions:set package deploy
       env:
-        revision: ${{ github.event.release.name }}
+        newVersion: ${{ github.event.release.name }}
         MAVEN_USERNAME: willhains
         MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-    
+
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
       with:

@@ -23,7 +23,7 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
-    
+
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
@@ -37,10 +37,10 @@ jobs:
         gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
 
     - name: Derive Beta Version Number
-      run: echo "revision=${GITHUB_REF_NAME##*/}-SNAPSHOT" >> $GITHUB_ENV
+      run: echo "newVersion=${GITHUB_REF_NAME##*/}-SNAPSHOT" >> $GITHUB_ENV
 
     - name: Build & Publish to Apache Maven Central
-      run: mvn -B package deploy
+      run: mvn -B versions:set package deploy
       env:
         MAVEN_USERNAME: willhains
         MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
