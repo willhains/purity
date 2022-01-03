@@ -23,6 +23,14 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Import GPG Key
+      id: import_gpg
+      uses: crazy-max/ghaction-import-gpg@v4
+      with:
+         gpg_private_key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+         passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
@@ -41,13 +49,6 @@ jobs:
       run: mvn deploy
       env:
         GITHUB_TOKEN: ${{ github.token }}
-    
-#     - name: Import GPG Key
-#       id: import_gpg
-#       uses: crazy-max/ghaction-import-gpg@v4
-#       with:
-#          gpg_private_key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-#          passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
     - name: Set up Apache Maven Central
       uses: actions/setup-java@v2
