@@ -1,16 +1,17 @@
-> **NOTE:** Purity will be replaced by [UDTopia](https://github.com/willhains/UDTopia), completely rewritten and greatly improved!
+> **NOTICE:**
+> Purity has been replaced by [UDTopia][udtopia], completely rewritten and greatly improved!
+> This project is now archived.
+> There will be no further development or updates.
+> See the deprecation notices in the Javadocs for the UDTopia equivalents.
 
-[![GitHub Release][release-badge]][release] 
-[![Build Status][build-badge]][build]
-[![Follow @willhains][twitter-badge]][twitter] 
+[udtopia]: https://github.com/willhains/UDTopia
 
-[release-badge]:  https://img.shields.io/github/v/release/willhains/purity?include_prereleases
-[build-badge]:    https://travis-ci.org/willhains/purity.svg?branch=master
-[twitter-badge]:  https://img.shields.io/twitter/follow/willhains
+In general, you can use the following to convert Purity to UDTopia API:
 
-[release]:  https://github.com/willhains/purity/releases
-[build]:    https://travis-ci.org/willhains/purity
-[twitter]:  https://twitter.com/intent/follow?screen_name=willhains
+| Purity    | UDTopia  |
+|-----------|----------|
+| `raw()`   | `get*()` |
+| `Single*` | `Pure*`  |
 
 # Purity
 
@@ -98,12 +99,9 @@ At a high level, refactoring a codebase to Purity is done in four steps:
 
 ## Development Status
 
-Purity is currently is in an early development stage, but is based on a design that is already used in mission-critical systems of a large financial institution. (No guarantees of safety or quality are made or implied. Use at your own risk.) Comments and contributions are welcome and encouraged. Public APIs are <s>un</s>likely to change<s>, but may do so</s> without notice.
+Purity is dead. Long live [UDTopia][udtopia]!
 
 ## Contribution
 
-1. Fork
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+> NOTICE: This project is archived, and replaced by [UDTopia][udtopia].
+> Feel free to fork it if you like, but I strongly recommend you check out UDTopia first! :)
