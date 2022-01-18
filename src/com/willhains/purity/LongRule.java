@@ -8,7 +8,10 @@ import static java.lang.Long.*;
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleLong} object.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.LongNormalizer} and {@link org.udtopia.rules.LongValidator} instead.
  */
+@Deprecated
 @FunctionalInterface interface LongRule
 {
 	/** Applies this rule to the raw value. */

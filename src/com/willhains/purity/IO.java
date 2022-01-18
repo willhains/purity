@@ -22,7 +22,10 @@ import static java.lang.annotation.RetentionPolicy.*;
  * @see Pure
  * @see Mutable
  * @see Barrier
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.IO} instead.
  */
+@Deprecated
 @Retention(SOURCE)
 @Target({TYPE, TYPE_PARAMETER})
 public @interface IO { }

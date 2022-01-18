@@ -8,7 +8,10 @@ import java.util.function.*;
  *
  * @param <RuleType> the *Rule interface to cache.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.RulesCache} instead.
  */
+@Deprecated
 final @Mutable class CopyOnWriteRulesCache<RuleType> implements RulesCache<RuleType>
 {
 	private Map<Class<?>, RuleType> _rules = new HashMap<>();

@@ -4,7 +4,10 @@ package com.willhains.purity;
  * Choices for trimming string values.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.Trim} instead.
  */
+@Deprecated
 public @Pure enum Trim
 {
 	/**

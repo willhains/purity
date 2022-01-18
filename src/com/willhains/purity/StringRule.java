@@ -7,7 +7,10 @@ import java.util.regex.*;
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleString} object.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.StringNormalizer} and {@link org.udtopia.rules.StringValidator} instead.
  */
+@Deprecated
 @FunctionalInterface interface StringRule
 {
 	/** Applies this rule to the raw value. */

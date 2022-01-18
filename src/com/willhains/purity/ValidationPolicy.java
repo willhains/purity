@@ -4,7 +4,10 @@ package com.willhains.purity;
  * Choices for what to do when validation fails.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.ApplyRuleWhen} instead.
  */
+@Deprecated
 public @Pure enum ValidationPolicy
 {
 	/** Throw an {@link IllegalArgumentException}. */

@@ -14,7 +14,10 @@ import static java.util.Objects.*;
  *
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.pure.PureString} instead.
  */
+@Deprecated
 @SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleString<This extends SingleString<This>>
 	implements SingleComparable<This>, CharSequence, Supplier<String>

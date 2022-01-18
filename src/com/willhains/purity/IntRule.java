@@ -8,7 +8,10 @@ import static java.lang.Integer.*;
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleInt} object.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.IntNormalizer} and {@link org.udtopia.rules.IntValidator} instead.
  */
+@Deprecated
 @FunctionalInterface interface IntRule
 {
 	/** Applies this rule to the raw value. */

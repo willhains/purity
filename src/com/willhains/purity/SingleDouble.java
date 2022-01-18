@@ -15,7 +15,10 @@ import static java.util.Objects.*;
  *
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.pure.PureDouble} instead.
  */
+@Deprecated
 @SuppressWarnings("ClassWithTooManyMethods")
 public abstract @Pure class SingleDouble<This extends SingleDouble<This>> implements SingleNumber<This>, DoubleSupplier
 {

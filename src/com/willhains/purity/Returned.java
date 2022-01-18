@@ -22,7 +22,9 @@ import static java.lang.annotation.ElementType.*;
  * @author willhains
  * @see Retained
  * @see Released
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
  */
+@Deprecated
 @Retention(RetentionPolicy.CLASS)
 @Target(PARAMETER)
 public @interface Returned { }

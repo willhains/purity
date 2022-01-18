@@ -5,7 +5,10 @@ package com.willhains.purity;
  *
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.UDTComparable} instead.
  */
+@Deprecated
 public @Pure interface SingleComparable<This extends SingleComparable<This>> extends Comparable<This>
 {
 	/** @return the larger of {@code this} and {@code that}. */

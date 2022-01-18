@@ -6,7 +6,10 @@ import java.util.ArrayList;
  * Normalise and/or validate raw data before it is wrapped in a {@link SingleDouble} object.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.rules.DoubleNormalizer} and {@link org.udtopia.rules.DoubleValidator} instead.
  */
+@Deprecated
 @FunctionalInterface interface DoubleRule
 {
 	/** Do-nothing rule. */

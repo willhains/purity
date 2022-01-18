@@ -9,7 +9,10 @@ import java.util.function.*;
  *
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.UDTNumber} instead.
  */
+@Deprecated
 @SuppressWarnings({"ClassWithTooManyMethods", "DollarSignInName"})
 public @Pure interface SingleNumber<This extends SingleNumber<This>> extends SingleComparable<This>
 {

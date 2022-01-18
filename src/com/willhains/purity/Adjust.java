@@ -13,7 +13,10 @@ import static java.lang.annotation.RetentionPolicy.*;
  * the need to think about the possibility of invalid values.
  *
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use normalizer annotations in {@link org.udtopia.rules} instead.
  */
+@Deprecated
 @Documented @Retention(RUNTIME) @Target(TYPE)
 public @interface Adjust
 {

@@ -15,7 +15,10 @@ import static java.util.Objects.*;
  * @param <Raw> The underlying type.
  * @param <This> Self-reference to the subclass type itself.
  * @author willhains
+ * @deprecated Purity has moved to <a href="https://github.com/willhains/udtopia">UDTopia</a>.
+ *   Use {@link org.udtopia.pure.PureValue} instead.
  */
+@Deprecated
 public abstract @Pure class Single<Raw, This extends Single<Raw, This>>
 {
 	// The single-argument constructor of the subclass
